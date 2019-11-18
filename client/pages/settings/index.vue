@@ -1,51 +1,73 @@
 <template>
-  <div class="row">
-    <div class="col-md-3">
-      <card :title="$t('settings')" class="settings-card">
-        <ul class="nav flex-column nav-pills">
-          <li v-for="tab in tabs" :key="tab.route" class="nav-item">
-            <router-link :to="{ name: tab.route }" class="nav-link" active-class="active">
-              <fa :icon="tab.icon" fixed-width />
-              {{ tab.name }}
-            </router-link>
-          </li>
-        </ul>
-      </card>
-    </div>
-
-    <div class="col-md-9">
-      <transition name="fade" mode="out-in">
-        <router-view />
-      </transition>
-    </div>
-  </div>
+	<div>
+		<section class="section-profile-cover section-shaped my-0">
+			<div class="shape shape-style-1 shape-primary shape-skew alpha-4">
+			</div>
+		</section>
+		<section class="section section-skew">
+			<div class="container">
+				<div class="card card-profile mt--500 shadow rounded"><!----><!---->
+					<div class="p-5">
+						<div class="row">
+							<div class="col-lg-2 border-right">
+								<h5><b>Account Settings</b></h5>
+								<ul class="list-unstyled mt-3">
+									<li class="mt-2" v-for="tab in tabs" :key="tab.id">
+										<router-link :to="{ name: tab.route }" class="text-dark">{{tab.name}}</router-link>
+									</li>
+								</ul>
+							</div>
+							<div class="col-lg-9 ml-lg-4">
+								<transition name="fade" mode="out-in">
+									<router-view />
+								</transition>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
 </template>
 
 <script>
-export default {
-  middleware: 'auth',
+	import { mapGetters } from 'vuex'
 
-  computed: {
-    tabs () {
-      return [
-        {
-          icon: 'user',
-          name: this.$t('profile'),
-          route: 'settings.profile'
-        },
-        {
-          icon: 'lock',
-          name: this.$t('password'),
-          route: 'settings.password'
-        }
-      ]
-    }
-  }
-}
+	export default {
+
+		middleware: 'auth',
+
+		computed: {
+			...mapGetters({
+				user: 'auth/user'
+			}),
+			tabs () {
+				return [
+					{
+						icon: 'user',
+						name: this.$t('account'),
+						route: 'settings.account'
+					},
+					{
+						icon: 'lock',
+						name: this.$t('password'),
+						route: 'settings.password'
+					},
+					{
+						name: 'Avatar',
+						route: 'settings.avatar'
+					}
+				]
+			}
+		}
+	}
 </script>
 
-<style>
-.settings-card .card-body {
-  padding: 0;
-}
+<style scoped>
+	.settings-card .card-body {
+		padding: 0;
+	}
+	.mt--500 {
+		margin-top: -500px !important;
+	}
 </style>

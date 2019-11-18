@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Rules\MatchOldPassword;
 
 class PasswordController extends Controller
 {
@@ -16,6 +17,7 @@ class PasswordController extends Controller
     public function update(Request $request)
     {
         $this->validate($request, [
+            'current_password' => ['required', new MatchOldPassword],
             'password' => 'required|confirmed|min:8',
         ]);
 
