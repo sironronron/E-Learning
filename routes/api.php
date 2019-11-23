@@ -13,16 +13,40 @@ use Illuminate\Http\Request;
 |
 */
 
+// Welcome Page
+Route::get('/welcome', 'PageController@welcome');
+Route::get('/getCategories', 'PageController@navCategories');
+
+Route::prefix('/course')->group(function (){
+    // Course Pages
+    Route::get('/{slug}', 'PageController@showCourse');
+    // Course Instructor Page
+    Route::get('/instructor/{username}', 'PageController@showInstructor');
+    //Search Course
+    Route::get('/search', 'SearchController@search');
+});
+
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('logout', 'Auth\LoginController@logout');
 
+    // Fetch User Data for Auth
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
 
+    // User Settings
     Route::patch('settings/profile', 'Settings\ProfileController@update');
     Route::patch('settings/password', 'Settings\PasswordController@update');
     Route::patch('settings/change-avatar', 'Settings\AvatarController@update');
+});
+
+// Course
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::prefix('/instructor')->group(function () {
+        Route::get('/courses', 'Instructor\Courses\CourseController@index');
+        Route::get('/courses/create', 'Instructor\Courses\CourseController@create');
+        Route::post('/courses/create', 'Instructor\Courses\CourseController@store');
+    });
 });
 
 Route::group(['middleware' => 'guest:api'], function () {
@@ -43,5 +67,6 @@ Route::group(['middleware' => 'guest:api'], function () {
 Route::prefix('help-center')->group(function () {
     Route::get('/', 'HelpCenter\PageController@index');
     Route::get('/category/{slug}', 'HelpCenter\PageController@category');
-    Route::get('/category/post/{categorySlug}/{postSlug}', 'HelpCenter\PageController@post');
+    Route::get('/category/post/{categoryId}/{postSlug}', 'HelpCenter\PageController@post');
+    Route::get('/search', 'HelpCenter\SearchController@search');
 });

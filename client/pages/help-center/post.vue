@@ -8,20 +8,21 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb bg-transparent small p-0">
                                 <li class="breadcrumb-item" aria-current="page">
-                                    <router-link :to="{ name: 'help-center' }" class="text-white">Home</router-link>
+                                    <router-link :to="{ name: 'help-center.index' }" class="text-white">Home</router-link>
                                 </li>
                                 <li class="breadcrumb-item active text-white" aria-current="page">{{category.name}}</li>
                             </ol>
                         </nav>
                         <div class="mt-5">
-                            <h1 class="text-white">{{category.name}} - {{post.title}}</h1>
+                            <h1 class="text-white">{{category.name}}</h1>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="align-content-lg-end">
-                            <form class="my-auto d-inline w-25">
+                            <!-- // Search Form  -->
+                            <form class="my-auto d-inline w-25" @submit.prevent="submit">
 								<div class="input-group input-group-alternative">
-									<input aria-describedby="addon-right addon-left" type="text" name="search" placeholder="Search for solutions" class="form-inline form-control">
+									<input aria-describedby="addon-right addon-left" v-model="search" type="text" name="search" placeholder="Search for solutions" class="form-inline form-control">
 									<div class="input-group-prepend">
 										<span class="input-group-text rounded-right">
 										    <fa icon="search" fixed-width class="text-danger" />
@@ -61,6 +62,9 @@
                             <div class="container">
                                 <div class="ml-2">
                                     <div class="article">
+                                        <h3 class="mb-0">{{post.title}}</h3>
+                                        <h6 class="text-muted mt-2"><small><fa icon="clock" /> {{ post.created_at | moment('MMMM D, YYYY') }} &middot; <router-link :to="{ name: 'help-center.category', params: { slug: category.slug } }">{{category.name}}</router-link> </small></h6>
+                                        <hr>
                                         <span v-html="post.body">{{post.body}}</span>
                                     </div>
                                 </div>
@@ -82,6 +86,16 @@
 
         head() {
             return { title: `${this.post.title}` }
+        },
+
+        data: () => ({
+            search: ''
+        }),
+
+        methods: {
+            submit() {
+                this.$router.push('/help-center/search?q=' + this.search)
+            }
         },
 
         async asyncData({ params, error }) {

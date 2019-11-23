@@ -98,8 +98,10 @@ class OAuthController extends Controller
     {
         $user = User::create([
             'name' => $sUser->getName(),
+            'username' => str_slug($sUser->getName, '-'),
             'email' => $sUser->getEmail(),
             'email_verified_at' => now(),
+            'role_id' => 2
         ]);
 
         $user->oauthProviders()->create([

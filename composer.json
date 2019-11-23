@@ -9,9 +9,11 @@
         "fideloper/proxy": "^4.0",
         "jrm2k6/cloudder": "0.4.*",
         "laravel/framework": "^6.4",
+        "laravel/helpers": "^1.1",
         "laravel/socialite": "^4.0",
         "laravel/tinker": "~1.0",
         "spatie/laravel-cors": "1.6.*",
+        "spatie/laravel-searchable": "^1.4",
         "tymon/jwt-auth": "^1.0.0-rc.5"
     },
     "require-dev": {

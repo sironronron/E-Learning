@@ -9,7 +9,7 @@ class CourseRequirement extends Model
     protected $table = 'course_requirements';
 
     protected $fillable = [
-        'course_id', 'description'
+        'course_id','description'
     ];
 
     public $timestamps = false;

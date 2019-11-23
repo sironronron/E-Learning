@@ -9,15 +9,20 @@
 				<div class="card card-profile mt--500 shadow rounded"><!----><!---->
 					<div class="p-5">
 						<div class="row">
-							<div class="col-lg-2 border-right">
-								<h5><b>Account Settings</b></h5>
-								<ul class="list-unstyled mt-3">
-									<li class="mt-2" v-for="tab in tabs" :key="tab.id">
-										<router-link :to="{ name: tab.route }" class="text-dark">{{tab.name}}</router-link>
-									</li>
-								</ul>
+							<div class="col-lg-3 border-right">
+								<div class="mr-lg-4">
+									<img :src="user.photo_url" class="img-fluid img-thumbnail" alt="">
+									<div class="mt-4">
+										<h5><b>Account Settings</b></h5>
+										<ul class="list-unstyled mt-3">
+											<li class="mt-2" v-for="tab in tabs" :key="tab.id">
+												<router-link :to="{ name: tab.route }" class="text-dark">{{tab.name}}</router-link>
+											</li>
+										</ul>
+									</div>
+								</div>
 							</div>
-							<div class="col-lg-9 ml-lg-4">
+							<div class="col-lg-8 ml-lg-4">
 								<transition name="fade" mode="out-in">
 									<router-view />
 								</transition>
@@ -53,10 +58,6 @@
 						name: this.$t('password'),
 						route: 'settings.password'
 					},
-					{
-						name: 'Avatar',
-						route: 'settings.avatar'
-					}
 				]
 			}
 		}

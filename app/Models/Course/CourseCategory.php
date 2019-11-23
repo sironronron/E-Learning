@@ -11,4 +11,9 @@ class CourseCategory extends Model
     protected $fillable = [
         'parent_id', 'name', 'slug', 'order', 'icon'  
     ];
+
+    public function parentId()
+    {
+        return $this->belongsTo(self::class);
+    }
 }

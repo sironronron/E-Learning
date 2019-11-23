@@ -1,76 +1,53 @@
 <template>
 	<div>
-		<div class="jumbotron py-5 bg-default rounded-0">
-			<div class="container-lg">
-				<h6 class="text-muted"><router-link :to="{ name: 'welcome' }" class="text-muted">Home</router-link> / Reset Password</h6></h6>
-				<h3 class="text-white mb-0">Change Account Password</h3>
-			</div>
-		</div>
-		
-		<section class="section-sm">
+		<section class="section">
 			<div class="container">
 
 				<div class="row justify-content-center">
-					<div class="col-lg-7">
+					<div class="col-lg-4">
 
-						<card class="p-3 shadow rounded">
+						<h6><b>Change Password. Secure your Account</b></h6>
+						<hr class="full-width-hr mb-4 mt-4">
+
+						<form @submit.prevent="reset" @keydown="form.onKeydown($event)">
+
+							<div class="form-group mb-3">
+								<input type="email" name="email" v-model="form.email" :class="{ 'is-invalid' : form.errors.has('email') }" class="form-control rounded" placeholder="Email Address" disabled>
+								<has-error :form="form" field="email"></has-error>
+							</div>
+
+							<div class="form-group mb-3">
+								<client-only>
+									<password-strength class="m-b-0"
+										v-model="form.password" 
+										:strength-meter-only="false"
+										:toggle="true"
+										name="password"
+									/>
+								</client-only>
+								<has-error :form="form" field="password"></has-error>
+							</div>
+
+							<div class="form-group mb-3">
+								<input type="password" name="password_confimration" v-model="form.password_confirmation" :class="{ 'is-invalid' : form.errors.has('password_confirmation') }" class="form-control rounded" placeholder="Password Confirmation">
+								<has-error :form="form" field="password_confirmation"></has-error>
+							</div>
+								
 							<div class="text-center">
-								<h2 class="">Change Password Form</h2>
-								<h6>Secure your account, please don't use a basic password.</h6>
-							</div>
-							<hr>
-
-							<div class="row justify-content-center">
-								<div class="col-lg-8">
-									<form @submit.prevent="reset" @keydown="form.onKeydown($event)">
-
-										<div class="form-group">
-											<label for="email" class="col-form-label">Email</label>
-											<div>
-												<input type="email" name="email" v-model="form.email" :class="{ 'is-invalid' : form.errors.has('email') }" class="form-control" placeholder="Email Address" disabled>
-												<has-error :form="form" field="email"></has-error>
-											</div>
-										</div>
-
-										<div class="form-group">
-											<label for="password" class="col-form-label">Password</label>
-											<div>
-												<input type="password" name="password" v-model="form.password" :class="{ 'is-invalid' : form.errors.has('password') }" class="form-control" placeholder="New Password">
-												<has-error :form="form" field="password"></has-error>
-												<client-only>
-													<password-strength class="m-b-0"
-														v-model="form.password" 
-														:strength-meter-only="true"
-														:toggle="true"
-														@feedback="showFeedback"
-													/>
-												</client-only>
-												<p class="text-muted mb-0 suggestions-warns">
-													<small>{{ suggs[0] }} {{ warns }}</small>
-												</p>
-											</div>
-										</div>
-
-										<div class="form-group">
-											<label for="password" class="col-form-label">Confirm Password</label>
-											<div>
-												<input type="password" name="password_confirmation" v-model="form.password_confirmation" :class="{ 'is-invalid' : form.errors.has('password_confirmation') }" class="form-control" placeholder="Confirm Password">
-												<has-error :form="form" field="password_confirmation"></has-error>
-											</div>
-										</div>
-
-										<v-button :loading="form.busy" class="btn-block">
-											{{$t('send_password_reset_link')}}
-										</v-button>
-
-									</form>
-
-									<h6 class="mt-4">If you're still having problem, please contact us by clicking <a href="#">here</a>.</h6>
-
-								</div>
+								<v-button :loading="form.busy" class="btn-block btn-lg">
+									{{ $t('reset_password') }}
+								</v-button>
 							</div>
 
-						</card>
+						</form>
+
+						<h6 class="text-center mt-3">
+							Don't have an account? <router-link :to="{ name: 'register' }">Register</router-link>
+						</h6>
+
+						<hr class="full-width-hr my-3">
+
+						<h6 class="mt-4">If you're still having problem, please contact us by clicking <a href="#">here</a>.</h6>
 
 					</div>
 				</div>

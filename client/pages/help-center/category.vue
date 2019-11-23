@@ -7,7 +7,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb bg-transparent small p-0">
                                 <li class="breadcrumb-item" aria-current="page">
-                                    <router-link :to="{ name: 'help-center' }" class="text-white">Home</router-link>
+                                    <router-link :to="{ name: 'help-center.index' }" class="text-white">Home</router-link>
                                 </li>
                                 <li class="breadcrumb-item active text-white" aria-current="page">{{category.name}}</li>
                             </ol>
@@ -18,9 +18,10 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="align-content-lg-end">
-                            <form class="my-auto d-inline w-25">
+                            <!-- // Search Form  -->
+                            <form class="my-auto d-inline w-25" @submit.prevent="submit">
 								<div class="input-group input-group-alternative">
-									<input aria-describedby="addon-right addon-left" type="text" name="search" placeholder="Search for solutions" class="form-inline form-control">
+									<input aria-describedby="addon-right addon-left" v-model="search" type="text" name="search" placeholder="Search for solutions" class="form-inline form-control">
 									<div class="input-group-prepend">
 										<span class="input-group-text rounded-right">
 										    <fa icon="search" fixed-width class="text-danger" />
@@ -61,18 +62,27 @@
                                 <div class="ml-2" v-if="posts.length != 0">
                                     <div class="article" v-for="post in posts" :key="post.id">
                                         <h5>{{post.title}}</h5>
-                                        <h6 class="mt-4 mb-5">
+                                        <h6 class="text-muted mt-2"><small><fa icon="clock" /> {{ post.created_at | moment('MMMM D, YYYY') }}</small></h6>
+                                        <p class="mt-4 mb-5">
                                             {{post.excerpt}}
-                                        </h6>
+                                        </p>
                                         <h6>
-                                            <router-link :to="{ name: 'help-center.post', params: { categorySlug: post.category.slug, postSlug: post.slug } }" class="text-primary ">Read Article</router-link> 
+                                            <router-link :to="{ name: 'help-center.post', params: { categorySlug: post.category_id, postSlug: post.slug } }" class="btn btn-outline-default text-capitalize btn-sm">
+                                                Read More
+                                            </router-link>
                                         </h6>
                                         <hr style="margin-left: -15px;">
                                     </div>
                                 </div>
-                                <div v-else>
-                                    <div class="text-center">
-                                        <h1>No Articles</h1>
+                                <div v-else class="row justify-content-center align-items-center">
+                                    <div class="col-lg-8">
+                                        <div class="text-center">
+                                            <svg width="100" height="100"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <image xlink:href="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,h_100/v1574303740/Logos/search_fi9mlk.svg" width="100" height="100"/>
+                                            </svg>
+                                            <h4 class="mt-3">No Articles found for "{{category.name}}"</h4>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -94,6 +104,16 @@
         
         head() {
             return { title: `${this.category.name}` }
+        },
+
+        data: () => ({
+            search: ''
+        }),
+
+        methods: {
+            submit() {
+                this.$router.push('/help-center/search?q=' + this.search)
+            }
         },
 
         async asyncData({params}) {

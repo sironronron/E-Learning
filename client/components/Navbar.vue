@@ -1,5 +1,5 @@
 <template>
-	<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm" style="border-top: solid 5px #bc4e9c">
+	<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
 		<div class="container">
 			<router-link :to="{ name: user ? 'home' : 'welcome' }" class="navbar-brand">
 				<img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,w_150/v1573175311/Logos/logo-dark_uaqwbf.png" alt="E-Learning" class="m-t-5 img-fluid" />
@@ -17,10 +17,18 @@
 							Courses
 						</a>
 						<div class="dropdown-menu">
-							<a href="#" class="dropdown-item" v-for="tab in tabs" :key="tab.id">
-								<fa :icon="tab.icon" fixed-width />
-								{{tab.name}}
-							</a>
+							<template v-if="!isLoading">
+								<a href="#" class="dropdown-item" v-for="tab in categories" :key="tab.id">
+									{{tab.name}}
+								</a>
+							</template>
+							<template v-else>
+								<div class="mx-lg-4">
+									<div class="text-center">
+										<img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,h_20/v1574394025/Loader/ajax-loader_sln1xw.gif" alt="">
+									</div>
+								</div>
+							</template>
 						<div class="dropdown-divider"></div>
 							<a href="#" class="dropdown-item">
 								<fa icon="th" fixed-width />
@@ -33,9 +41,9 @@
 					</li> -->
 				</ul>
 
-				<form class="mx-2 my-auto d-inline w-47">
+				<form class="mx-2 my-auto d-inline w-47" @submit.prevent="submit">
 					<div class="input-group input-group-alternative">
-						<input aria-describedby="addon-right addon-left" type="text" name="search" placeholder="Search for courses" class="form-inline form-control rounded-left">
+						<input aria-describedby="addon-right addon-left" type="text" v-model="search" name="search" placeholder="Search for courses" class="form-inline form-control rounded-left">
 						<div class="input-group-prepend">
 							<span class="input-group-text btn btn-default">
 								<fa icon="search" fixed-width />
@@ -45,12 +53,23 @@
 				</form>
 
 				<ul class="navbar-nav ml-auto navbar-nav-hover">
-					<li class="nav-item border-right">
+					<li class="nav-item border-right" v-if="!user">
 						<router-link :to="{ name: 'teach' }" class="nav-link m-t-1">
 							Teach in E-Learning
 						</router-link>
 					</li>
 					<template v-if="user">
+						<li class="nav-item border-right">
+							<router-link v-if="user.role_id != 3 && user.role_id != 1" :to="{ name: 'teach' }" class="nav-link m-t-1">
+								Teach in E-Learning
+							</router-link>
+							<router-link v-if="user.role_id === 3" :to="{ name: 'instructor.courses' }" class="nav-link m-t-1">
+								Instructor Panel
+							</router-link>
+							<a href="#" v-if="user.role_id === 1" class="nav-link m-t-1">
+								Admin Panel
+							</a>
+						</li>
 						<li class="nav-item dropdown">
 							<a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								My Courses
@@ -90,7 +109,7 @@
 								<img :src="user.photo_url" class="rounded-circle profile-photo mr-1">
 							</a>
 							<div class="dropdown-menu dropdown-menu-right">
-								<div class="p-2">
+								<div >
 									<a href="#" class="dropdown-item mb-2 dropdown-item-2">
 										<div class="row">
 											<div class="col-lg-2">
@@ -136,52 +155,29 @@
 <script>
 	import { mapGetters } from 'vuex'
 	import LocaleDropdown from './LocaleDropdown'
+	import axios from 'axios'
 
 	export default {
+
 		components: {
 			LocaleDropdown
 		},
 
 		data: () => ({
-			appName: process.env.appName
+			appName: process.env.appName,
+			categories: [],
+			isLoading: false,
+			search: ''
 		}),
 		
 		computed: {
 			...mapGetters({
 				user: 'auth/user'
 			}),
-			tabs () {
-				return [
-					{
-						icon: 'desktop',
-						name: 'Web Design'
-					},
-					{
-						icon: 'pencil-alt',
-						name: 'Graphic Design'
-					},
-					{
-						icon: 'male',
-						name: 'User Experience'
-					},
-					{
-						icon: 'magic',
-						name: 'Interior Design'
-					},
-					{
-						icon: 'cube',
-						name: '3D and Animation'
-					},
-					{
-						icon: 'user-secret',
-						name: 'Fashion'
-					},
-					{
-						icon: ['fab', 'css3-alt'],
-						name: 'Front-end Development'
-					},
-				]
-			}
+		},
+
+		created() {
+			this.getCategories()
 		},
 
 		methods: {
@@ -190,6 +186,17 @@
 				await this.$store.dispatch('auth/logout')
 				// Redirect to login.
 				this.$router.push({ name: 'logout' })
+			},
+			getCategories() {
+				this.isLoading = true
+				axios.get('/getCategories')
+				.then((res) => {
+					this.isLoading = false
+					this.categories = res.data.categories
+				})
+			},
+			submit() {
+				this.$router.push('/course/search?q=' + this.search)
 			}
 		}
 	}

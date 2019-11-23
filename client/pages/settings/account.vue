@@ -11,6 +11,10 @@
 
 			<alert-success :form="form" :message="$t('info_updated')" />
 
+			<div v-if="user.role_id == 3" class="alert alert-danger">
+				<h6 class="mb-0 text-white">Please complete your profile information, it will be displayed on your instructor page.</h6>
+			</div>
+
 			<h5 class="mb-4"><b>Basic Information</b></h5>
 
 			<div class="row justify-content-center">
@@ -126,6 +130,10 @@
 					const { data } = await this.form.patch('/settings/profile')
 					this.$store.dispatch('auth/updateUser', { user: data })
 					this.$swal({
+						toast: true,
+						position: 'bottom-end',
+						timer: 5000,
+						showConfirmButton: false,
 						type: 'success',
 						text: this.$t('info_updated')
 					})

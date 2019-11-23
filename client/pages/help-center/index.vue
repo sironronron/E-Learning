@@ -9,12 +9,12 @@
                         <div class="col-lg-7 text-center">
                             <h1 class="display-3 text-white">How can we help?</h1>
                             <div class="form-group mt-4">
-								<form class="my-auto">
+								<form class="my-auto d-inline w-25" @submit.prevent="submit">
 									<div class="input-group input-group-alternative">
-										<input aria-describedby="addon-right addon-left" type="text" name="search" placeholder="Search for solutions" class="form-inline form-control form-control-lg rounded-left search-welcome">
+										<input aria-describedby="addon-right addon-left" type="text" v-model="search" name="search" placeholder="Search for solutions" class="form-inline form-control">
 										<div class="input-group-prepend">
-											<span class="input-group-text btn btn-lg btn-default rounded-right p-lg-3">
-												<fa icon="search" fixed-width />
+											<span class="input-group-text rounded-right">
+												<fa icon="search" fixed-width class="text-danger" />
 											</span>
 										</div>
 									</div>
@@ -115,6 +115,10 @@
 			return { title: 'Help Center' }
 		},
 
+		data: () => ({
+			search: ''
+		}),
+
 		async asyncData() {
 			try {
 				let { data } = await axios.get('/help-center')
@@ -125,6 +129,12 @@
 				console.log(e)
 			}
 		},
+
+		methods: {
+            submit() {
+                this.$router.push('/help-center/search?q=' + this.search)
+            }
+        },
 
 	}
 </script>

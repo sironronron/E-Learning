@@ -7,8 +7,17 @@ Vue.use(Router)
 const page = path => () => import(`~/pages/${path}`).then(m => m.default || m)
 
 const routes = [
+  // Welcome Path
   { path: '/', name: 'welcome', component: page('welcome.vue') },
 
+  // Course View
+  { path: '/course/:slug', name: 'course.show', component: page('course/show.vue') },
+    // Course Instructor
+    { path: '/course/instructor/:username', name: 'course.instructor.show', component: page('course/instructor.vue') },
+    // Course Search
+    { path: '/course/search', name: 'course.search', component: page('course/search.vue') },
+
+  // User Authentication
   { path: '/login', name: 'login', component: page('auth/login.vue') },
   { path: '/register', name: 'register', component: page('auth/register.vue') },
   { path: '/logout', name: 'logout', component: page('auth/logout.vue') },
@@ -17,6 +26,7 @@ const routes = [
   { path: '/email/verify/:id', name: 'verification.verify', component: page('auth/verification/verify.vue') },
   { path: '/email/resend', name: 'verification.resend', component: page('auth/verification/resend.vue') },
 
+  // User Settings
   { path: '/home', name: 'home', component: page('home.vue') },
   { path: '/settings',
     component: page('settings/index.vue'),
@@ -32,11 +42,23 @@ const routes = [
   { path: '/help-center', name: 'help-center.index', component: page('help-center/index.vue') },
   { path: '/help-center/category/:slug', name: 'help-center.category', component: page('help-center/category.vue') },
   { path: '/help-center/category/:categorySlug/:postSlug', name: 'help-center.post', component: page('help-center/post.vue') },
+  { path: '/help-center/search', name: 'help-center.search', component: page('help-center/search.vue') },
 
   // Teach in E-Learning
   { path: '/teach-with-us', name: 'teach', component: page('teach.vue') },
+  // Register as Instructor
+  { path: '/register/instructor', name: 'register.instructor', component: page('auth/instructor-register.vue') },
 
-  { path: '/register/instructor', name: 'register.instructor', component: page('auth/instructor-register.vue') }
+  // Instructor Pages
+  { 
+    path: '/instructor',
+    component: page('instructor/index.vue'),
+    children: [
+      { path: '', redirect: { name: 'instructor.courses' } },
+      { path: 'courses', name: 'instructor.courses', component: page('instructor/courses/courses.vue') },
+      { path: 'courses/create', name: 'instructor.courses.create', component: page('instructor/courses/create.vue') }
+    ] 
+  },
 
 ]
 

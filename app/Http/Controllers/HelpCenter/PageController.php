@@ -42,9 +42,9 @@ class PageController extends Controller
             ]);
     }
 
-    public function post($categorySlug, $postSlug)
+    public function post($categoryId, $postSlug)
     {
-        $category = Category::where('slug', $categorySlug)
+        $category = Category::where('id', $categoryId)
             ->where('parent_id', 3)
             ->firstOrFail();
 

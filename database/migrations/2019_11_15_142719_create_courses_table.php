@@ -33,10 +33,12 @@ class CreateCoursesTable extends Migration
             // $table->foreign('category_id')->references('id')->on('course_categories');
 
             // Published
-            $table->enum('status', ['PUBLISHED', 'DRAFT', 'PENDING'])->default('DRAFT');
+            $table->enum('status', ['PUBLISHED', 'DRAFT', 'PENDING'])->default('PENDING');
 
             // Language
-            $table->integer('language_id')->unsigned();
+            $table->enum('language', ['ENGLISH'])->default('ENGLISH');
+
+            // Befire $table->integer('language_id')->unsigned();
 
             // Level
             $table->enum('level', ['BEGINNER', 'ADVANCE', 'INTERMEDIATE'])->default('BEGINNER');

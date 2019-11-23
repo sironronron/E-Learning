@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm" style="border-top: solid 5px #bc4e9c">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
 		<div class="container">
 			<router-link :to="{ name: 'help-center.index' }" class="navbar-brand">
 				<img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,w_150/v1573175311/Logos/logo-dark_uaqwbf.png" alt="E-Learning" class="m-t-5 img-fluid" />

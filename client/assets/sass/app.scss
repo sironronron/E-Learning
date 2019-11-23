@@ -114,7 +114,7 @@ body {
 
 @media (min-width: 1200px) { 
     .container {
-    	max-width: 1200px !important;
+    	max-width: 1140px !important;
     }
     .item-col-lg-3 {
         flex: 0 0 20% !important;
@@ -122,9 +122,9 @@ body {
     }
 }
 
-a:hover {
-    color: #172B4D !important;
-}
+// a:hover {
+//     color: #172B4D !important;
+// }
 
 .rounded {
     border-radius: 0.225rem !important;
@@ -158,4 +158,64 @@ a:hover {
 .swal2-popup.swal2-toast .swal2-header {
     flex-direction: row;
     margin-right: 1rem;
+}
+
+.fr-toolbar .fr-command.fr-btn {
+    margin: 4px -3px !important;
+}
+
+.grid-course-name {
+    height: 43px;
+}
+.grid-course-name {
+    position: relative;
+    font-size: 13px;
+    height: 38px;
+    display: -webkit-box;
+    line-height: 1.15em;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.grid-course-name {
+    text-overflow: ellipsis;
+    text-transform: capitalize;
+    overflow: hidden;
+}
+
+.grid-course-description {
+    height: 43px;
+}
+.grid-course-description {
+    position: relative;
+    height: 38px;
+    display: -webkit-box;
+    line-height: 1.15em;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.grid-course-description {
+    text-overflow: ellipsis;
+    text-transform: capitalize;
+    overflow: hidden;
+}
+.card-img-top {
+    height: 130px !important;
+    object-fit: cover;
+}
+
+.offline-alert {
+    color: $white !important;
+    background: linear-gradient(150deg, #281483 15%, #8f6ed5 70%, #d782d9 94%) !important;
+    box-shadow: rgba(0, 0, 0, 0.176) 0px 1rem 3rem !important;
+    z-index: 10000 !important;
+    border-radius: 0.125rem !important;
+}
+
+@media only screen and (min-width: 768px) {
+    .offline-alert {
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 500px;
+    }
 }

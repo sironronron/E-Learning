@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\SetLocale::class,
         \Spatie\Cors\Cors::class,
+        \App\Http\Middleware\CheckInstructor::class
     ];
 
     /**
@@ -62,6 +63,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'instructor' => \App\Http\Middleware\CheckInstructor::class
     ];
 
     /**

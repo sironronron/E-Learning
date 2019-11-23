@@ -1,9 +1,12 @@
 <template>
 	<div>
+		<client-only>
+			<offline-alert/>
+		</client-only>
 		<!-- jumbotron -->
 		<div class="jumbotron bg-image mb-0 rounded-0">
-			<section class="section">
-				<div class="container-lg">
+			<section class="section-sm">
+				<div class="container">
 					<!-- // Slogan -->
 					<div class="row row-grid align-items-end">
 						<div class="col-lg-5">
@@ -19,21 +22,67 @@
 			</section>
 		</div>
 
-		<!-- section -->
-		<section class="section-sm">
+		<div class="section-sm">
 			<div class="container">
-				<h4>Featured Courses</h4>
+				<h4>Top Courses</h4>
+				<div class="mt-4">
+					<div class="row">
+						<div class="col-lg-3 col-sm-6 item-col-lg-3 mb-4" v-for="course in courses" :key="course.id">
+							<router-link :to="{ name: 'course.show', params: { slug: course.slug } }">
+								<div class="card shadow-sm shadow--hover card-lift--hover rounded">
+									<img src="http://demo.academy-lms.com/default/uploads/thumbnails/course_thumbnails/course_thumbnail_default_16.jpg" class="card-img-top" alt="">
+									<div class="card-body py-3">
+										<div class="grid-course-name">
+											<h6 class="text-capitalize">
+												<strong>{{course.title}}</strong>
+											</h6>
+										</div>
+										<p class="mt-1 mb-1 small text-muted">{{course.user.name}}</p>
+										<div class="rating">
+											<fa icon="star" fixed-width style="color: #f4c150" />
+											<fa icon="star" fixed-width style="color: #f4c150" />
+											<fa icon="star" fixed-width style="color: #f4c150" />
+											<fa icon="star" fixed-width style="color: #f4c150" />
+											<fa icon="star" fixed-width style="color: #f4c150" />
+										</div>
+										<div class="price float-right">
+											<h6 class="mt-3" v-if="course.has_discount == 1"><small class="text-muted"><strike>${{course.price}}</strike> </small>&nbsp; <b>${{course.discount}}</b> </h6>
+											<h6 class="mt-3" v-else>
+												<client-only>
+													₱{{course.price | numeral('₱0,0.00')}}
+												</client-only>
+											</h6>
+										</div>
+									</div>
+								</div>
+							</router-link>
+						</div>
+					</div>
+				</div>
 			</div>
-		</section>
+		</div>
 	</div>
 </template>
 
 <script>
+	import axios from 'axios'
+
 	export default {
 		middleware: 'auth',
 
 		head() {
 			return { title: 'Welcome to E-Learning' }
+		},
+
+		async asyncData({ error }) {
+			try {
+				let { data } = await axios.get('/welcome')
+				return {
+					courses: data.courses
+				}
+			} catch (e) {
+				error({ statusCode: 500, message: 'Something went wrong' })
+			}
 		}
 	}
 </script>
@@ -49,5 +98,20 @@
 		background-position: center;
 		background-repeat: no-repeat;
 		background-size: cover;
-		}
+	}
+	.rating {
+		margin-top: 7px;
+		font-size: 11px;
+	}
+	.home-fact-area {
+		color: #fff;
+		padding: 15px 0;
+	}
+	.home-fact-box .text-box {
+		padding: 10px 0 10px 63px;
+	}
+	.home-fact-box svg {
+		font-size: 47px;
+		margin-top: 8px;
+	}
 </style>

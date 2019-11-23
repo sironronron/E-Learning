@@ -9,7 +9,7 @@ class CourseOutcome extends Model
     protected $table = 'course_outcomes';
 
     protected $fillable = [
-        'course_id', 'description'
+        'course_id','description'
     ];
 
     public $timestamps = false;

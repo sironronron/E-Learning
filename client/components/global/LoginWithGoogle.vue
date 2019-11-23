@@ -42,7 +42,7 @@ export default {
       this.$store.dispatch('auth/saveToken', {
         token: e.data.token
       })
-      this.$router.push({ name: 'app.dashboard', params: { customer_id: e.data.customer_id } })
+      this.$router.push({ name: 'welcome' })
     }
   }
 }

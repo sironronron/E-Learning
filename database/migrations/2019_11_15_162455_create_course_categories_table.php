@@ -17,10 +17,17 @@ class CreateCourseCategoriesTable extends Migration
             $table->bigIncrements('id');
             $table->integer('parent_id')->unsigned()->nullable()->default(null);
             // $table->foreign('parent_id')->references('id')->on('course_categories')->onUpdate('cascade')->onDelete('set null');
+            // Category Order
             $table->integer('order')->default(1);
-            $table->string('icon');
+            
+            // Category Icon
+            $table->string('icon')->nullable();
+
             $table->string('name');
+            
+            // Category URL Friendly
             $table->string('slug')->unique();
+            
             $table->timestamps();
         });
     }
