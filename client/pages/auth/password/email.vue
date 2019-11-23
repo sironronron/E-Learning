@@ -1,56 +1,86 @@
 <template>
-  <div class="row">
-    <div class="col-lg-8 m-auto">
-      <card :title="$t('reset_password')">
-        <form @submit.prevent="send" @keydown="form.onKeydown($event)">
-          <alert-success :form="form" :message="status" />
+	<div>
+		<section class="section">
+			<div class="container">
 
-          <!-- Email -->
-          <div class="form-group row">
-            <label class="col-md-3 col-form-label text-md-right">{{ $t('email') }}</label>
-            <div class="col-md-7">
-              <input v-model="form.email" :class="{ 'is-invalid': form.errors.has('email') }" type="email" name="email" class="form-control">
-              <has-error :form="form" field="email" />
-            </div>
-          </div>
+				<div class="row justify-content-center">
+					<div class="col-lg-4">
 
-          <!-- Submit Button -->
-          <div class="form-group row">
-            <div class="col-md-9 ml-md-auto">
-              <v-button :loading="form.busy">
-                {{ $t('send_password_reset_link') }}
-              </v-button>
-            </div>
-          </div>
-        </form>
-      </card>
-    </div>
-  </div>
+						<h6><b>Request Reset Password Email</b></h6>
+						<hr class="full-width-hr mb-4 mt-4">
+
+						<form @submit.prevent="send" @keydown="form.onKeydown($event)">
+
+							<div class="form-group">
+								<input type="email" name="email" v-model="form.email" :class="{ 'is-invalid' : form.errors.has('email') }" class="form-control rounded" placeholder="Email Address">
+								<has-error :form="form" field="email"></has-error>
+							</div>
+
+							<!-- <client-only>
+								<vue-recaptcha sitekey="6LdL2MMUAAAAAGiVxrd_nF34cUozqfQ3TSs1QedU" :loadRecaptchaScript="true"></vue-recaptcha>
+							</client-only> -->
+
+							<v-button :loading="form.busy" class="btn-block btn-lg mt-2">
+								{{$t('send_password_reset_link')}}
+							</v-button>
+
+							<h6 class="mt-3">If you're still having problem, please contact us by clicking <a href="#">here</a>.</h6>
+
+						</form>
+
+					</div>
+				</div>
+
+			</div>
+		</section>
+	</div>
 </template>
 
 <script>
-import Form from 'vform'
+	import Form from 'vform'
+	import VueRecaptcha from 'vue-recaptcha'
 
-export default {
-  head () {
-    return { title: this.$t('reset_password') }
-  },
+	export default {
 
-  data: () => ({
-    status: '',
-    form: new Form({
-      email: ''
-    })
-  }),
+		components: {
+			VueRecaptcha
+		},
 
-  methods: {
-    async send () {
-      const { data } = await this.form.post('/password/email')
+		middleware: 'guest',
 
-      this.status = data.status
+		head () {
+			return { title: this.$t('reset_password') }
+		},
 
-      this.form.reset()
-    }
-  }
-}
+		data: () => ({
+			status: '',
+			form: new Form({
+				email: ''
+			})
+		}),
+
+		methods: {
+			async send () {
+				try {
+					const { data } = await this.form.post('/password/email')
+					this.status = data.status
+					this.form.reset()
+					this.$swal({
+						toast: true,
+						position: 'bottom-end',
+						type: 'success',
+						text: 'Password reset link is sent to your email',
+						showConfirmButton: false,
+						timer: 5000
+					})
+				} catch (e) {
+					return
+				}
+			}
+		}
+	}
 </script>
+
+<style>
+
+</style>

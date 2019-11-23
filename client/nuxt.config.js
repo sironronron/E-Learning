@@ -9,9 +9,11 @@ module.exports = {
 
   env: {
     apiUrl: process.env.API_URL || process.env.APP_URL + '/api',
-    appName: process.env.APP_NAME || 'Laravel Nuxt',
+    appName: process.env.APP_NAME || 'E-Learning',
     appLocale: process.env.APP_LOCALE || 'en',
-    githubAuth: !!process.env.GITHUB_CLIENT_ID
+    githubAuth: !!process.env.GITHUB_CLIENT_ID,
+    facebookAuth: !!process.env.FACEBOOK_CLIENT_ID,
+    googleAuth: !!process.env.GOOGLE_CLIENT_ID,
   },
 
   head: {
@@ -23,7 +25,8 @@ module.exports = {
       { hid: 'description', name: 'description', content: 'Nuxt.js project' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Open+Sans&display=swap' }
     ]
   },
 
@@ -43,7 +46,16 @@ module.exports = {
     '~plugins/vform',
     '~plugins/axios',
     '~plugins/fontawesome',
+    '~plugins/password-strength',
+    '~plugins/flat-pickr',
+    '~plugins/moment',
+    '~plugins/pagination',
     // '~plugins/nuxt-client-init', // Comment this for SSR
+    { src: '~plugins/offline-alert', mode: 'client' },
+    { src: '~plugins/numerals', mode: 'client' },
+    { src: '~plugins/recaptchaV3', mode: 'client' },
+    { src: '~plugins/froala', mode: 'client' },
+    { src: '~plugins/vue-sweetalert2', mode: 'client' },
     { src: '~plugins/bootstrap', mode: 'client' }
   ],
 
