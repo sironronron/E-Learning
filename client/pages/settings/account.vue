@@ -15,6 +15,7 @@
 				<h6 class="mb-0 text-white">Please complete your profile information, it will be displayed on your instructor page.</h6>
 			</div>
 
+
 			<h5 class="mb-4"><b>Basic Information</b></h5>
 
 			<div class="row justify-content-center">

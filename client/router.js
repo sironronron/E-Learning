@@ -12,11 +12,10 @@ const routes = [
 
   // Course View
   { path: '/course/:slug', name: 'course.show', component: page('course/show.vue') },
-    // Course Instructor
-    { path: '/course/instructor/:username', name: 'course.instructor.show', component: page('course/instructor.vue') },
-    // Course Search
-    { path: '/course/search', name: 'course.search', component: page('course/search.vue') },
-
+  // Course Instructor
+  { path: '/course/instructor/:username', name: 'course.instructor.show', component: page('course/instructor.vue') },
+  { path: '/search_query', name: 'course.search', component: page('course/search.vue') },
+  { path: '/course/categpry/:slug', name: 'course.category', component: page('course/category.vue') },
   // User Authentication
   { path: '/login', name: 'login', component: page('auth/login.vue') },
   { path: '/register', name: 'register', component: page('auth/register.vue') },
@@ -35,7 +34,7 @@ const routes = [
       { path: 'account', name: 'settings.account', component: page('settings/account.vue') },
       { path: 'password', name: 'settings.password', component: page('settings/password.vue') },
       { path: 'change-avatar', name: 'settings.avatar', component: page('settings/avatar.vue') }
-    ] 
+    ]
   },
 
   // Help Center
@@ -50,15 +49,22 @@ const routes = [
   { path: '/register/instructor', name: 'register.instructor', component: page('auth/instructor-register.vue') },
 
   // Instructor Pages
-  { 
+  {
     path: '/instructor',
     component: page('instructor/index.vue'),
     children: [
       { path: '', redirect: { name: 'instructor.courses' } },
       { path: 'courses', name: 'instructor.courses', component: page('instructor/courses/courses.vue') },
-      { path: 'courses/create', name: 'instructor.courses.create', component: page('instructor/courses/create.vue') }
-    ] 
-  },
+      // Course Creation
+      { path: 'courses/create', name: 'instructor.courses.create', component: page('instructor/courses/create.vue') },
+      // Course Show
+      { path: 'courses/show/:slug', name: 'instructor.courses.show', component: page('instructor/courses/show.vue') },
+      // Course Edit
+      { path: 'courses/:slug/edit', name: 'instructor.courses.edit', component: page('instructor/courses/edit.vue') },
+      // Course Statuses
+      { path: 'courses/active-courses', name: 'instructor.courses.active', component: page('instructor/courses/active_courses.vue') }
+    ]
+  }
 
 ]
 

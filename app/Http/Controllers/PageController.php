@@ -63,6 +63,17 @@ class PageController extends Controller
             ]);
     }
 
+    public function showCategory($slug)
+    {
+        $category = CourseCategory::where('slug', $slug)
+            ->firstOrFail();
+            
+        return response()
+            ->json([
+                'category' => $category
+            ]);
+    }
+
     public function navCategories()
     {
         $categories = CourseCategory::get(['id', 'name', 'slug']);

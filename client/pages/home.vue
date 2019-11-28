@@ -30,7 +30,7 @@
 						<div class="col-lg-3 col-sm-6 item-col-lg-3 mb-4" v-for="course in courses" :key="course.id">
 							<router-link :to="{ name: 'course.show', params: { slug: course.slug } }">
 								<div class="card shadow-sm shadow--hover card-lift--hover rounded">
-									<img src="http://demo.academy-lms.com/default/uploads/thumbnails/course_thumbnails/course_thumbnail_default_16.jpg" class="card-img-top" alt="">
+									<img :src="course.image" class="card-img-top border-bottom" alt="">
 									<div class="card-body py-3">
 										<div class="grid-course-name">
 											<h6 class="text-capitalize">

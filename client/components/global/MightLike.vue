@@ -13,7 +13,7 @@
 				<div class="col-lg-3 col-sm-6 item-col-lg-3 " v-for="course in mightLikes" :key="course.id">
 				    <router-link :to="{ name: 'course.show', params: { slug: course.slug } }">
 					    <div class="card shadow-sm shadow--hover card-lift--hover rounded">
-						    <img src="http://demo.academy-lms.com/default/uploads/thumbnails/course_thumbnails/course_thumbnail_default_16.jpg" class="card-img-top" alt="">
+						    <img :src="course.image" class="card-img-top border-bottom" alt="">
 							<div class="card-body py-3">
 							    <div class="grid-course-name">
 								    <h6 class="text-capitalize">
@@ -32,7 +32,7 @@
 									<h6 class="mt-3" v-if="course.has_discount == 1"><small class="text-muted"><strike>${{course.price}}</strike> </small>&nbsp; <b>${{course.discount}}</b> </h6>
 									<h6 class="mt-3" v-else>
 									    <client-only>
-									    	₱{{course.price | numeral('0,0.00')}}
+									    	<b>₱{{course.price | numeral('0,0.00')}}</b>
 								    	</client-only>
 									</h6>
 								</div>
@@ -85,6 +85,9 @@
     
 </script>
 
-<style>
-
+<style scoped>
+    .rating {
+		margin-top: 7px;
+		font-size: 11px;
+	}
 </style>

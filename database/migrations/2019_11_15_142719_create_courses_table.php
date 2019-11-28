@@ -45,10 +45,10 @@ class CreateCoursesTable extends Migration
             $table->boolean('top_course')->default(false);
 
             // Price
-            $table->boolean('free_course')->default(0);
+            $table->boolean('free_course')->default(false);
             $table->decimal('price', 15, 2)->nullable();
-            $table->boolean('has_discount')->default(0);
-            $table->integer('discount')->default(0)->nullable();
+            $table->boolean('has_discount')->default(false);
+            $table->decimal('discount', 15, 2)->default(0)->nullable();
 
             // Media
             $table->string('image')->nullable();
