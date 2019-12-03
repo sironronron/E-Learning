@@ -11,13 +11,13 @@
                 Add New Course
             </router-link>
         </card>
-                
+        
         <!-- // Table of Courses -->
         <div class="mt-4">
             <div class="row">
                 <div class="col-lg-12 h-100">
                     <card class="shadow-sm" style="height: 777px;">
-                        <h4 class="mb-3 header-title">Course list</h4>
+                        <h4 class="mb-3 header-title">Active Course Lists</h4>
 
                         <!-- // Filter -->
                         <form class="row justify-content-center" method="get">
@@ -66,7 +66,7 @@
                         </div>
 
                         <div v-else>
-                            <div v-if="courses == 0">
+                            <div v-if="countCourses == 0">
                                 <section class="section">
                                     <div class="row justify-content-center">
                                         <div class="col-lg-12">
@@ -115,7 +115,7 @@
                                         <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 46.6px;" aria-label="Status">Status</th>
                                     </thead>
                                     <tbody>
-                                        <tr role="row" class="odd" v-for="course in allCourses.data" :key="course.id">
+                                        <tr role="row" class="odd" v-for="course in activeCourses.data" :key="course.id">
                                             <td>
                                                 <strong>
                                                     <router-link :to="{ name: 'instructor.courses.edit', params: { slug: course.slug } }" class="small">
@@ -162,7 +162,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <pagination :data="allCourses" @pagination-change-page="getCourses"></pagination>
+                                <pagination :data="activeCourses" @pagination-change-page="getActiveCourses"></pagination>
                             </div>
                         </div>
                     </card>
@@ -182,40 +182,39 @@
         components: {
             Pagination
         },
-        
+
         middleware: 'auth',
 
         scrollToTop: true,
-        
+
         head() {
-            return { title: 'My Courses' }
+            return { title: 'All Active Course' }
         },
 
         data: () => ({
-            allCourses: [],
-            courses: '',
+            activeCourses: [],
+            countCourses: '',
             isLoading: false
         }),
 
         created() {
-            this.getCourses()
+            this.getActiveCourses()
         },
 
         methods: {
-            getCourses(page = 1) {
-                axios.get('/instructor/courses?page=' + page)
+            getActiveCourses() {
+                axios.get('/instructor/courses/active-courses')
                 .then((res) => {
-                    this.allCourses = res.data.allCourses
-                    this.courses = res.data.courses
+                    this.activeCourses = res.data.activeCourses
+                    this.countCourses = res.data.countCourses
                 })
                 .catch((err) => {
                     console.log(err)
                 })
             }
-        },
+        }
 
     }
-
 </script>
 
 <style scoped>

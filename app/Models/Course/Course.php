@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
-class Course extends Model
+class Course extends Model implements Searchable
 {
     protected $table = 'courses';
 
@@ -42,13 +42,13 @@ class Course extends Model
         return $this->hasMany('App\Models\Course\CourseWho');
     }
 
-    public function getSearchResult(): SearchResult 
+    public function getSearchResult(): \Spatie\Searchable\SearchResult
     {
-        $url = url('/course/'. $this->slug);
+        $url = url('course/' . $this->slug);
         return new SearchResult(
             $this,
             $this->title,
             $url
         );
-    } 
+    }
 }

@@ -4,7 +4,10 @@ namespace App\Models\Course;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CourseCategory extends Model
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
+
+class CourseCategory extends Model implements Searchable
 {
     protected $table = 'course_categories';
 
@@ -15,5 +18,16 @@ class CourseCategory extends Model
     public function parentId()
     {
         return $this->belongsTo(self::class);
+    }
+
+    public function getSearchResult(): SearchResult
+    {
+        $url = url('/course/category/', $this->slug);
+ 
+        return new SearchResult(
+            $this,
+            $this->name,
+            $url
+        );
     }
 }

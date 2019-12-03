@@ -3,7 +3,27 @@
 		<section class="section">
 			<div class="container">
 
-				<div class="row justify-content-center">
+				<div v-if="mustVerifyEmail">
+					<div class="text-center">
+						<img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,w_250/v1573175311/Logos/logo-dark_uaqwbf.png" alt="E-Learning" class="img-fluid" />
+						<h1 class="text-weight-light mt-3">Verify your e-mail address</h1>
+						<h5 class="text-muted mt-2">You're almost done! A verification link is sent to your e-mail address (<b>{{ form.email }}</b>).</h5>
+						<img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,w_120/v1573184488/Logos/email_urnhbj.svg" class="m-t-20" height="120" width="120" alt="">
+					</div>
+					<hr>
+					<h6 class="text-muted text-center">
+						Can't find the email? Click 
+						<router-link :to="{ name: 'verification.resend', query: { email: form.email } }"> 
+							here
+						</router-link> 
+						to resend e-mail verification link or visit the 
+						<router-link :to="{ name: 'company.dashboard' }">
+							Help Center <fa icon="info-circle" fixed-width />
+						</router-link>
+					</h6>
+				</div>
+
+				<div v-else class="row justify-content-center">
 					<div class="col-lg-4">
 
 						<h6><b>Sign Up as An Instructor</b></h6>

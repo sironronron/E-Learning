@@ -70,7 +70,7 @@
                                                     {{item.searchable.excerpt}}
                                                 </h6>
                                                 <h6>
-                                                    <router-link :to="{ name: 'help-center.post', params: { categorySlug: item.searchable.category_id, postSlug: item.searchable.slug } }" class="btn btn-outline-default text-capitalize btn-sm">
+                                                    <router-link :to="{ name: 'help-center.post', params: { categoryId: item.searchable.category_id, postSlug: item.searchable.slug } }" class="btn btn-outline-default text-capitalize btn-sm">
                                                         Read More
                                                     </router-link>
                                                 </h6>
@@ -109,7 +109,7 @@
         scrollToTop: false,
         
         head() {
-            return { title: 'Searched for' + this.searchQuery }
+            return { title: `Searched for ${this.searchQuery}` }
         },
 
         data: () => ({

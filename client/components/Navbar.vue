@@ -181,6 +181,9 @@
 		},
 
 		methods: {
+			submit() {
+                this.$router.push('/search_query?q=' + this.search)
+            },
 			async logout () {
 				// Log out the user.
 				await this.$store.dispatch('auth/logout')
@@ -194,9 +197,6 @@
 					this.isLoading = false
 					this.categories = res.data.categories
 				})
-			},
-			submit() {
-				this.$router.push('/course/search?q=' + this.search)
 			}
 		}
 	}

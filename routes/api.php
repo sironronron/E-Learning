@@ -17,13 +17,15 @@ use Illuminate\Http\Request;
 Route::get('/welcome', 'PageController@welcome');
 Route::get('/getCategories', 'PageController@navCategories');
 
-Route::prefix('/course')->group(function (){
+Route::get('/search_query', 'SearchController@searchCourses');
+
+Route::prefix('course')->group(function () {
     // Course Pages
     Route::get('/{slug}', 'PageController@showCourse');
     // Course Instructor Page
     Route::get('/instructor/{username}', 'PageController@showInstructor');
-    //Search Course
-    Route::get('/search', 'SearchController@search');
+    // Course Category
+    Route::get('/category/{slug}', 'PageController@showCategory');
 });
 
 Route::group(['middleware' => 'auth:api'], function () {
@@ -42,10 +44,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 // Course
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::prefix('/instructor')->group(function () {
-        Route::get('/courses', 'Instructor\Courses\CourseController@index');
-        Route::get('/courses/create', 'Instructor\Courses\CourseController@create');
-        Route::post('/courses/create', 'Instructor\Courses\CourseController@store');
+    Route::prefix('instructor')->group(function () {
+        Route::resource('/courses', 'Instructor\Courses\CourseController');
+        Route::get('/courses/active-courses', 'Instructor\Courses\PageController@activeCourses')->name('courses.activeCourses');
     });
 });
 

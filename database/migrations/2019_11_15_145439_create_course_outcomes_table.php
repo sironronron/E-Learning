@@ -16,7 +16,7 @@ class CreateCourseOutcomesTable extends Migration
         Schema::create('course_outcomes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('course_id')->unsigned();
-            $table->string('description');
+            $table->text('description');
             $table->timestamps();
         });
     }

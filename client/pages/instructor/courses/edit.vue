@@ -5,7 +5,7 @@
 		</client-only>
          <!-- Title Page -->
         <card class="shadow-sm p-3">
-            <h4 class="mb-0 float-left font-weight-400"><fa icon="book-open" fixed-width /> Add New Course</h4>
+            <h4 class="mb-0 float-left font-weight-400"><fa icon="book-open" fixed-width /> Edit Course</h4>
         </card>
 
         <div class="mt-3">
@@ -13,7 +13,7 @@
                 <div class="col-lg-12">
                     <card class="shadow-sm">
                         <h4 class="header-title mb-3">
-                            Course adding form
+                            Edit Course Form
                             <router-link :to="{ name: 'instructor.courses' }" class="btn btn-outline-secondary btn-rounded btn-sm float-right">
                                 <fa icon="backspace" fixed-width class="mr-2" />
                                 Back to course list
@@ -81,7 +81,7 @@
                                 </ul>
                             </div>
                             <div class="tab-content mt-4">
-                                <form @submit.prevent="save" @keydown="form.onKeydown($event)">
+                                <form @submit.prevent="update" @keydown="form.onKeydown($event)">
 
                                     <!-- // Basic Course Information -->
                                     <div id="basic" class="tab-pane fade active show" aria-expanded="true">
@@ -156,7 +156,7 @@
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
-                                                <div class="form-group row mb-2" v-for="(requirement, index) in form.requirements" :key="requirement.id">
+                                                <div class="form-group row mb-2" v-for="(requirement, index) in form.requirements" :key="`${index+1}-${requirement.id}`">
                                                     <label for="description" class="col-lg-2 col-form-label">Requirement {{index + 1}} <span class="text-danger">*</span></label>
                                                     <div class="col-lg-9">
                                                         <input type="text" name="description" v-model="requirement.description" :class="{ 'is-invalid' : form.errors.has(`requirements.${index}.description`) }" class="form-control rounded" placeholder="Place your requirement">
@@ -177,7 +177,7 @@
 
                                                 <hr>
 
-                                                <div class="form-group row mb-3" v-for="(who, index) in form.whos" :key="who.id">
+                                                <div class="form-group row mb-3" v-for="(who, index) in form.whos" :key="`${index}-${who.id}`">
                                                     <label for="description" class="col-lg-2 col-form-label">For Who? {{index + 1}} <span class="text-danger">*</span></label>
                                                     <div class="col-lg-9">
                                                         <input type="text" name="description" v-model="who.description" :class="{ 'is-invalid' : form.errors.has(`whos.${index}.description`) }" class="form-control rounded" placeholder="Who needs to learn this?">
@@ -206,7 +206,7 @@
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
-                                                <div class="form-group row mb-3" v-for="(outcome, index) in form.outcomes" :key="outcome.id">
+                                                <div class="form-group row mb-3" v-for="(outcome, index) in form.outcomes" :key="`${index}-${outcome.id}`">
                                                     <label for="description" class="col-lg-2 col-form-label">Outcome {{index + 1}} <span class="text-danger">*</span></label>
                                                     <div class="col-lg-9">
                                                         <input type="text" name="description" v-model="outcome.description" :class="{ 'is-invalid' : form.errors.has(`outcomes.${index}.description`) }" class="form-control rounded" placeholder="Place your outcome">
@@ -286,8 +286,8 @@
                                                     <div class="col-lg-10">
                                                         <select name="course_overview_provider" v-model="form.course_overview_provider" :class="{ 'is-invalid' : form.errors.has('course_overview_provider') }" class="custom-select form-control rounded">
                                                             <option value="">Select Provider</option>
-                                                            <option value="YOUTUBE">Youtube</option>
-                                                            <option value="VIMEO">Vimeo</option>
+                                                            <option value="Youtube">Youtube</option>
+                                                            <option value="Vimeo">Vimeo</option>
                                                             <option value="HTML5">HTML5</option>
                                                         </select>
                                                         <has-error :form="form" field="course_overview_provider"></has-error>
@@ -305,7 +305,7 @@
                                                 <div class="form-group row mb-4">
                                                     <label for="image" class="col-form-label col-lg-2">Image <span class="text-danger">*</span></label>
                                                     <div class="col-lg-10">
-                                                        <input type="file" name="image" @change="selectFile">
+                                                        <input class="mt-3" type="file" name="image" @change="selectFile">
                                                     </div>
                                                 </div>
 
@@ -348,7 +348,7 @@
                                                     <h4>Thank you!</h4>
                                                     <h6 class="text-muted">You're just one click away.</h6>
                                                     <v-button :loading="form.busy" class="mt-1">
-                                                        Submit
+                                                        Update Course
                                                     </v-button>
                                                 </div>
 
@@ -364,14 +364,14 @@
             </div>
         </div>
 
-
-
     </div>
 </template>
 
 <script>
+   
     import axios from 'axios'
     import Form from 'vform'
+
     if (process.client) {
         let objectToFormData = document.createElement('script')
         objectToFormData.setAttribute('src', "https://cdn.rawgit.com/cretueusebiu/412715093d6e8980e7b176e9de663d97/raw/aea128d8d15d5f9f2d87892fb7d18b5f6953e952/objectToFormData.js")
@@ -380,21 +380,15 @@
 
     export default {
 
+        scrollToTop: true,
+
         middleware: 'auth',
 
         head() {
-            return { title: 'Create Course' }
-        },
-
-        async asyncData () {
-            let { data } = await axios.get('/instructor/courses/create')
-            return {
-                categories: data.categories,
-            }
+            return { title: `Edit Course "${this.course.title}"` }
         },
 
         data: () => ({
-            step: 1,
             form: new Form({
                 title: '',
                 excerpt: '',
@@ -429,9 +423,10 @@
             }),
             percentage: '',
             config: {
-               
-            },
+                
+            }
         }),
+
 
         methods: {
             selectFile(e) {
@@ -439,10 +434,17 @@
                 this.form.image = file
             },
 
-            async save() {
+            update() {
                 try {
-                    const { data } = await this.form.submit('post', '/instructor/courses/create', {
+                    // const { data } = await this.form.submit('patch', `/instructor/courses/${this.course.id}`, {
+                    //     transformRequest: [function (data, headers) {
+                    //         data['_method'] = 'PUT'
+                    //         return objectToFormData(data)
+                    //     }]
+                    // })
+                    this.form.post(`/instructor/courses/${this.course.id}`, {
                         transformRequest: [function (data, headers) {
+                            data['_method'] = 'PUT'
                             return objectToFormData(data)
                         }]
                     })
@@ -468,6 +470,7 @@
                         })
                     })
                 } catch (e) {
+                    console.log(e)
                     return
                 }
             },
@@ -503,7 +506,23 @@
             prev: function () {
                 this.step--
             }
-            
+
+        },
+
+        async asyncData({ params, error }) {
+            let { data } = await axios.get(`/instructor/courses/${params.slug}/edit`)
+            return {
+                categories: data.categories,
+                course: data.course
+            }
+        },
+
+        created() {
+            this.form.keys().forEach((key) => {
+                if(!this.form['imageUpdate']) {
+                    this.form[key] = this.course[key]
+                }
+            })
         },
 
         computed: {
@@ -512,6 +531,7 @@
             }
         }
 
+    
     }
 
 </script>
@@ -531,5 +551,10 @@
         font-size: 13px;
         line-height: 1.5;
     }
-    
+    .image-display {
+        height: 200px;
+        width: 250px;
+        object-fit: cover;
+
+    }
 </style>>

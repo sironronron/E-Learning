@@ -21,8 +21,8 @@ export default {
   props: {
     id: { type: String, default: null },
     name: { type: String, default: 'checkbox' },
-    value: { type: Boolean, default: false },
-    checked: { type: Boolean, default: false }
+    value: { default: 0 },
+    checked: { default: 0 }
   },
 
   data: () => ({

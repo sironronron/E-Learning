@@ -37,7 +37,8 @@ module.exports = {
   },
 
   css: [
-    { src: '~assets/sass/app.scss', lang: 'scss' }
+    { src: '~assets/sass/app.scss', lang: 'scss' },
+    { src: 'plyr/dist/plyr.css' }
   ],
 
   plugins: [
@@ -50,6 +51,7 @@ module.exports = {
     '~plugins/flat-pickr',
     '~plugins/moment',
     '~plugins/pagination',
+    '~plugins/vue-plyr',
     // '~plugins/nuxt-client-init', // Comment this for SSR
     { src: '~plugins/offline-alert', mode: 'client' },
     { src: '~plugins/numerals', mode: 'client' },

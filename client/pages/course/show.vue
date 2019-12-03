@@ -97,8 +97,11 @@
                         <div class="card shadow-sm mt---1">
                             <div class="card-body p-0">
                                 <div class="preview-video-box">
-                                    <a data-toggle="modal" data-target="#CoursePreviewModal">
-                                        <img src="http://demo.academy-lms.com/default/uploads/thumbnails/course_thumbnails/course_thumbnail_default_12.jpg" alt="" class="img-fluid">
+                                    <a href="#" data-toggle="modal" data-target="#videoModal">
+                                        <vue-plyr>
+                                            <video :poster="course.image">
+                                            </video>
+                                        </vue-plyr>
                                     </a>
                                 </div>
                                 <div class="p-4">
@@ -150,6 +153,29 @@
             </div>
         </section>
 
+        <!-- // Modal Dialog -->
+        <div class="modal fade bg-dark" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">{{course.title}} Overview</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <vue-plyr>
+                            <div class="plyr__video-embed">
+                                <iframe
+                                    :src="course.course_overview_url" allowfullscreen allowtransparency>
+                                </iframe>
+                            </div>
+                        </vue-plyr>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -169,6 +195,10 @@
             return { title: this.course.title }
         },
 
+        data: () => ({
+            isModalVisible: false
+        }),      
+
         async asyncData({ params, error }) {
             try {
                 let { data } = await axios.get(`/course/${params.slug}`)
@@ -177,6 +207,15 @@
                 }
             } catch (e) {
                 error({ statusCode: 500, message: 'Something went wrong!' })
+            }
+        },
+
+        methods: {
+            showModal() {
+                this.isModalVisible = true
+            },
+            closeModal() {
+                this.isModalVisible = false
             }
         }
     }
@@ -254,7 +293,16 @@
         left: 0;
         top: 4px;
     }
+    .what-you-get-box ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
     .mt---1 {
-        margin-top: -100%;
+        margin-top: -87%;
     }
 </style>
