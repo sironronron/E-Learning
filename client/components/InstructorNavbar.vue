@@ -17,12 +17,12 @@
 				</ul>
 
 				<ul class="navbar-nav ml-auto navbar-nav-hover">
-					<template v-if="user">
+					<template v-if="user && user.role_id === 3 ">
 						<li class="nav-item dropdown">
 							<a href="#" class="nav-link" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<fa :icon="['far', 'envelope']" class="h5 mb-0 text-white" fixed-width />
 							</a>
-							<div class="dropdown-menu dropdown-menu-right">
+							<div class="dropdown-menu dropdown-menu-2 dropdown-menu-right">
 								<div class="p-3 text-center">
 									<h6 class="mb-0">You don't have any new messages.</h6>
 								</div>
@@ -32,9 +32,26 @@
 							<a href="#" class="nav-link" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<fa icon="bell" class="h5 mb-0 text-white" fixed-width />
 							</a>
-							<div class="dropdown-menu dropdown-menu-right">
+							<div class="dropdown-menu dropdown-menu-2 dropdown-menu-right">
 								<div class="p-3 text-center">
 									<h6 class="mb-0">You don't have any new notifications.</h6>
+								</div>
+							</div>
+						</li>
+						<li class="nav-item dropdown">
+							<a href="#" class="nav-link" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<fa icon="th" class="h5 mb-0 text-white" fixed-width />
+							</a>
+							<div class="dropdown-menu dropdown-menu-2 dropdown-menu-right dropdown-menu-menus">
+								<div class="p-4">
+									<div class="row justify-content-center">
+										<div class="col-lg-4 text-center" v-for="tab in tabs" :key="tab.id">
+											<router-link :to="{name: tab.route}">
+												<img :src="tab.icon" class="img-fluid category-logo mb-1" alt="">
+												<span class="mt-2 text-dark">{{tab.name}}</span>
+											</router-link>
+										</div>
+									</div>
 								</div>
 							</div>
 						</li>
@@ -42,28 +59,18 @@
 							<a class="nav-link"
 							href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
 							>
-								<img :src="user.photo_url" class="rounded-circle profile-photo mr-1">
-								<span class="text-white">{{user.name}}</span>
+								<img v-if="user.avatar == 'users/default.png'" :src="user.photo_url" class="rounded-circle profile-photo mr-1">
+								<img v-if="user.avatar != 'users/default.png'" :src="user.avatar" class="rounded-circle profile-photo mr-1">
 							</a>
 							<div class="dropdown-menu dropdown-menu-right">
 								<div>
-									<a href="#" class="dropdown-item mb-2 dropdown-item-2">
-										<div class="row">
-											<div class="col-lg-2">
-												<img :src="user.photo_url" class="profile-photo-2 rounded-circle" :alt="user.name">
-											</div>
-											<div class="col-lg-10">
-												<div class="ml-2 mt-1">
-													<h6 class="font-weight-600 mb-0">{{user.name}}</h6>
-													<h6 class="text-muted">{{user.email}}</h6>
-												</div>
-											</div>
-										</div>
-									</a>
 									<router-link :to="{ name: 'home' }" class="dropdown-item dropdown-item-2">
 										Go to home
 									</router-link>
-									<router-link :to="{ name: 'settings.account' }" class="dropdown-item dropdown-item-2">
+									<router-link :to="{ name: 'settings.account' }" class="dropdown-item dropdown-item-2" v-if="user.role_id === 2">
+										Account
+									</router-link>
+									<router-link :to="{ name: 'instructor.settings' }" class="dropdown-item dropdown-item-2" v-if="user.role_id === 3">
 										Account
 									</router-link>
 									<div class="dropdown-divider"></div>
@@ -105,38 +112,25 @@
 			...mapGetters({
 				user: 'auth/user'
 			}),
-			tabs () {
-				return [
-					{
-						icon: 'desktop',
-						name: 'Web Design'
-					},
-					{
-						icon: 'pencil-alt',
-						name: 'Graphic Design'
-					},
-					{
-						icon: 'male',
-						name: 'User Experience'
-					},
-					{
-						icon: 'magic',
-						name: 'Interior Design'
-					},
-					{
-						icon: 'cube',
-						name: '3D and Animation'
-					},
-					{
-						icon: 'user-secret',
-						name: 'Fashion'
-					},
-					{
-						icon: ['fab', 'css3-alt'],
-						name: 'Front-end Development'
-					},
-				]
-			}
+			tabs() {
+                return [
+                    {
+                        icon: 'https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,h_6/v1576222206/Logos/online-learning_osijg7.svg',
+                        name: 'Courses',
+                        route: 'instructor.courses'
+                    },
+                    {
+                        icon: 'https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,h_60/v1576221878/Logos/wallet_hky1rf.svg',
+                        name: 'Instructor Revenue',
+                        route: 'instructor.revenue'
+                    },
+                    {
+                        icon: 'https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,h_60/v1576222108/Logos/maintenance_kzbydu.svg',
+                        name: 'Settings',
+                        route: 'instructor.settings.account'
+                    }
+                ]
+            }
 		},
 
 		methods: {
@@ -155,6 +149,10 @@
 		.container {
 			max-width: 100% !important;
 		}
+	}
+	.category-logo {
+		width: 60px !important;
+		height: 60px !important;
 	}
 	.profile-photo {
 		width: 2rem;
@@ -199,10 +197,13 @@
 	.w-47 {
 		width: 45% !important;
 	}
-	.dropdown-menu {
-		width: 330px !important;
+	.dropdown-menu-2 {
+		width: 300px !important;
 	}
 	.dropdown-item-2 {
 		font-size: 0.888rem !important;
+	}
+	.dropdown-menu-menus {
+		width: 400px !important;
 	}
 </style>

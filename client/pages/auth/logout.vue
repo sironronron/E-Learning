@@ -11,16 +11,16 @@
 
                 <div class="jumbotron bg-image mb-0 rounded-0">
                     <section class="section-sm">
-                        <div class="container-lg">
+                        <div class="container">
                             <!-- // Slogan -->
                             <div class="row row-grid">
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <h1 class="display-3 text-white">
                                         Unlock Opportunity
                                     </h1>
-                                    <p class="lead text-white">
+                                    <h6 class="lead text-white mb-0">
                                         Study any topic, anytime. Explore thousands of courses for the lowest price ever!
-                                    </p>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                                                 <fa icon="star" fixed-width style="color: #f4c150" />
                                             </div>
                                             <div class="price float-right">
-                                                <h6 class="mt-3" v-if="course.has_discount == 1"><small class="text-muted"><strike>${{course.price}}</strike> </small>&nbsp; <b>${{course.discount}}</b> </h6>
+                                                <h6 class="mt-3" v-if="course.has_discount == 1"><small class="text-muted"><strike>₱{{course.price}}</strike> </small>&nbsp; <b>₱{{course.discount}}</b> </h6>
                                                 <h6 class="mt-3" v-else>
                                                     <client-only>
                                                         <b>₱{{course.price | numeral('0,0.00')}}</b>
@@ -97,14 +97,11 @@
 
 <style scoped>
     .bg-image {
-		background-image: url('https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,h_500/v1573196577/HQ%20Images/ali-yahya-ytNFYf4d_30-unsplash_lrzlrw.jpg'); 
+		background-image: url('https://i.udemycdn.com/notices/featured_banner/image/0d4f1c65-363c-4c91-af1a-b8b10c8cb3ff.jpg'); 
 		-webkit-background-size: cover;
 		-moz-background-size: cover;
 		-o-background-size: cover;
 		background-size: cover;
-		background-attachment: fixed;
-		background-position: center;
 		background-repeat: no-repeat;
-		background-size: cover;
-		}
+	}
 </style>

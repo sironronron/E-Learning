@@ -45,8 +45,18 @@ Route::group(['middleware' => 'auth:api'], function () {
 // Course
 Route::group(['middleware' => 'auth:api'], function () {
     Route::prefix('instructor')->group(function () {
+        // CRUD for Courses
         Route::resource('/courses', 'Instructor\Courses\CourseController');
-        Route::get('/courses/active-courses', 'Instructor\Courses\PageController@activeCourses')->name('courses.activeCourses');
+
+        // Course Section
+        Route::post('/courses/section/add_section/{id}', 'Instructor\Courses\CourseSectionController@store');
+
+        // Course Section Lesson
+        Route::get('/courses/section/add_lesson/get/{id}', 'Instructor\Courses\CourseSectionLessonController@create');
+        Route::post('/courses/section/add_lesson/post', 'Instructor\Courses\CourseSectionLessonController@store');
+
+        Route::patch('/settings/email', 'Settings\ProfileController@updateEmail');
+        Route::post('/settings/avatar', 'Settings\ProfileController@updateAvatar');
     });
 });
 

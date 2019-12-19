@@ -27,6 +27,11 @@ class Course extends Model implements Searchable
         return $this->belongsTo('App\Models\Course\CourseCategory');
     }
 
+    public function sections()
+    {
+        return $this->hasMany('App\Models\Course\CourseSection');
+    }
+
     public function requirements()
     {
         return $this->hasMany('App\Models\Course\CourseRequirement');

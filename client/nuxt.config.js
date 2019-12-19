@@ -21,7 +21,7 @@ module.exports = {
     titleTemplate: '%s - ' + process.env.APP_NAME,
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      // { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: 'Nuxt.js project' }
     ],
     link: [
@@ -53,6 +53,8 @@ module.exports = {
     '~plugins/pagination',
     '~plugins/vue-plyr',
     // '~plugins/nuxt-client-init', // Comment this for SSR
+    '~plugins/cloudinary',
+    { src: '~plugins/readmore', mode: 'client' },
     { src: '~plugins/offline-alert', mode: 'client' },
     { src: '~plugins/numerals', mode: 'client' },
     { src: '~plugins/recaptchaV3', mode: 'client' },
@@ -64,6 +66,11 @@ module.exports = {
   modules: [
     '@nuxtjs/router'
   ],
+
+  server: {
+    port: 3000, // default: 3000
+    host: '0.0.0.0' // default: localhost
+  },
 
   build: {
     extractCSS: true

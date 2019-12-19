@@ -1,37 +1,31 @@
 <template>
 	<div>
-		<section class="section-profile-cover section-shaped my-0">
-			<div class="shape shape-style-1 shape-primary shape-skew alpha-4">
-			</div>
-		</section>
-		<section class="section section-skew">
-			<div class="container">
-				<div class="card card-profile mt--500 shadow rounded"><!----><!---->
-					<div class="p-5">
-						<div class="row">
-							<div class="col-lg-3 border-right">
-								<div class="mr-lg-4">
-									<img :src="user.photo_url" class="img-fluid img-thumbnail" alt="">
-									<div class="mt-4">
-										<h5><b>Account Settings</b></h5>
-										<ul class="list-unstyled mt-3">
-											<li class="mt-2" v-for="tab in tabs" :key="tab.id">
-												<router-link :to="{ name: tab.route }" class="text-dark">{{tab.name}}</router-link>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-8 ml-lg-4">
-								<transition name="fade" mode="out-in">
-									<router-view />
-								</transition>
-							</div>
-						</div>
+		<div class="jumbotron bg-gradient-default mb-0 rounded-0 pb-0 pt-lg-5">
+			<section>
+				<div class="container">
+					<div>
+						<h2 class="text-white">Account Settings</h2>
+						<ul class="list-unstyled pt-3">
+							<li class="d-inline-block mr-4" v-for="tab in tabs" :key="tab.id">
+								<router-link :to="{ name: tab.route }" class="page-header text-white">
+									{{tab.name}}
+								</router-link>
+							</li>
+						</ul>
 					</div>
 				</div>
+			</section>
+		</div>
+
+		<!-- // Main Component -->
+		<section class="section-sm">
+			<div class="container">
+				<transition name="fade" mode="out-in">
+					<router-view></router-view>
+				</transition>
 			</div>
 		</section>
+
 	</div>
 </template>
 
@@ -50,7 +44,7 @@
 				return [
 					{
 						icon: 'user',
-						name: this.$t('account'),
+						name: 'Edit Profile',
 						route: 'settings.account'
 					},
 					{
@@ -58,6 +52,10 @@
 						name: this.$t('password'),
 						route: 'settings.password'
 					},
+					{
+						name: 'Avatar',
+						route: 'settings.avatar'
+					}
 				]
 			}
 		}
@@ -65,10 +63,26 @@
 </script>
 
 <style scoped>
-	.settings-card .card-body {
-		padding: 0;
+	.jumbotron {
+		padding-top: 2rem;
+		padding-left: 2rem;
+		padding-right: 2rem;
 	}
-	.mt--500 {
-		margin-top: -500px !important;
+
+	.page-header {
+		padding: 0 0 5px;
+		border-bottom: 6px solid hsla(0, 0%, 100%, 0);
+		color: #fff;
+		display: block;
+	}
+
+	.router-link-active {
+		border-bottom: 5px solid red;
+		cursor: text;
+	}
+
+	.page-header:hover {
+		color: white;
+		border-bottom: 5px solid red;
 	}
 </style>

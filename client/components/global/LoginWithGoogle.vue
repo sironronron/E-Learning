@@ -1,6 +1,6 @@
 <template>
     
-    <button v-if="googleAuth" type="button" class="btn btn-google btn-icon" @click="login">
+    <button v-if="googleAuth" type="button" class="btn btn-google btn-icon rounded" @click="login">
         <span class="btn-inner--icon">
             <fa :icon="['fab', 'google']" fixed-width />
         </span>

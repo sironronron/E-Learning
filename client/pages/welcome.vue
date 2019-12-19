@@ -13,9 +13,9 @@
 							<h1 class="display-2 text-white">
 								Learn on your schedule
 							</h1>
-							<p class="lead text-white">
+							<h6 class="lead text-white">
 								Study any topic, anytime. Explore thousands of courses for the lowest price ever!
-							</p>
+							</h6>
 							<div class="form-group mt-4">
 								<form class="my-auto">
 									<div class="input-group input-group-alternative">
@@ -37,7 +37,7 @@
 		<!-- // Contents -->
 		<div class="jumbotron p-0 mb-0 rounded-0">
 			<section class="home-fact-area bg-gradient-danger">
-				<div class="container container-facts">
+				<div class="container-facts">
 					<div class="row justify-content-center">
 						<div class="col-md-4 d-flex">
 							<div class="home-fact-box mr-md-auto ml-auto mr-auto">
@@ -97,14 +97,17 @@
 											<fa icon="star" fixed-width style="color: #f4c150" />
 										</div>
 										<div class="price float-right">
-											<h6 class="mt-3" v-if="course.has_discount == 1">
-												<small class="text-muted"><strike>₱{{course.price}}</strike> </small>&nbsp; <b>₱{{course.discount | numeral('0,0.00')}}</b> 
-											</h6>
-											<h6 class="mt-3" v-else>
-												<client-only>
-													<b>₱{{course.price | numeral('0,0.00')}}</b>
-												</client-only>
-											</h6>
+											<template v-if="course.free_course != 1">
+												<h6 class="mt-3" v-if="course.has_discount == 1"><small class="text-muted"><strike>₱{{course.price}}</strike> </small>&nbsp; <b>₱{{course.discount}}</b> </h6>
+												<h6 class="mt-3" v-else>
+													<client-only>
+														<b>₱{{ course.price | numeral('0,0') }}</b>
+													</client-only>
+												</h6>
+											</template>
+											<template v-else>													
+												<h6 class="mt-3">Free Course</h6>
+											</template>
 										</div>
 									</div>
 								</div>
@@ -151,10 +154,9 @@
 
 <style scoped>
 	.container-facts {
-		max-width: 93% !important;
 	}
 	.bg-image {
-		background-image: url('https://res.cloudinary.com/dl9phqhv0/image/upload/b_rgb:000000,c_scale,h_500,o_62/v1573179687/HQ%20Images/alexis-brown-omeaHbEFlN4-unsplash_m9sxu6.jpg'); 
+		background-image: url('https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,w_1400/v1576218442/HQ%20Images/bonnie-kittle-GiIZSko7Guk-unsplash_lalbmf.jpg'); 
 		-webkit-background-size: cover;
 		-moz-background-size: cover;
 		-o-background-size: cover;
@@ -165,7 +167,7 @@
 		background-size: cover;
 	}
 	.search-welcome {
-	font-size: 20px !important;
+		font-size: 20px !important;
 	}
 	.rating {
 		margin-top: 7px;

@@ -1,4 +1,10 @@
 import Vue from 'vue'
 import VuePlyr from 'vue-plyr/dist/vue-plyr.ssr.js'
 
-Vue.use(VuePlyr, { plyr: { fullscreen: { enabled: true }, settings: { quality: true } }, emit: ['ended'] })
+Vue.use(VuePlyr, {
+  plyr: {
+    fullscreen: { enabled: true },
+    settings: { quality: true, captions: true }
+  },
+  emit: ['ended']
+})

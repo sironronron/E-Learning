@@ -1,5 +1,5 @@
 <template>
-    <div style="background: whitesmoke !important;">
+    <div>
         <div>
             <navbar />
         </div>
@@ -9,14 +9,16 @@
         </div>
 
         <!-- // If not instructor -->
-        <div v-else class="section">
-            <div class="row justify-content-center">
-                <div class="col-lg-6 text-center">
-                   <img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,w_250/v1573175311/Logos/logo-dark_uaqwbf.png" alt="E-Learning" class="img-fluid" />
-                    <h1 class="text-center mt-3">You'd have to be an Instructor to access this page!</h1>
-                    <router-link :to="{ name: 'welcome' }" class="btn btn-white mt-4">
-                        Go Back to Home Page
-                    </router-link>
+        <div v-else class="section-lg">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 text-center">
+                    <img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,w_250/v1573175311/Logos/logo-dark_uaqwbf.png" alt="E-Learning" class="img-fluid" />
+                        <h1 class="text-center mt-3">You'd have to be an Instructor to access this page!</h1>
+                        <router-link :to="{ name: 'welcome' }" class="btn btn-white mt-5">
+                            Go Back to Home Page
+                        </router-link>
+                    </div>
                 </div>
             </div>
         </div>

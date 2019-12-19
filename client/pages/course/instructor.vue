@@ -12,7 +12,7 @@
                         <div class="ml-5 mt-3">
                             <h3 class="text-white font-weight-500">{{instructor.name}}</h3>
                             <h5 class="text-muted font-weight-300 mt-2">@{{instructor.username}}</h5>
-                            <p class="mt-3 text-white">
+                            <p class="mt-3 text-white" v-html="instructor.biography">
                                 {{instructor.biography}}
                             </p>
                             <div class="social-media">

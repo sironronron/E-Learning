@@ -10,11 +10,11 @@
                             <h1 class="display-2 text-white font-weight-300">
                                 Make a global impact
                             </h1>
-                            <p class="lead text-white">
+                            <h6 class="lead text-white">
                                 Create an online video course and earn money by teaching people around the world.
-                            </p>
-                            <div class="mt-5 col-lg-6">
-                                <router-link :to="{ name: 'register.instructor' }" class="btn btn-danger btn-lg btn-block text-capitalize">
+                            </h6>
+                            <div class="mt-5">
+                                <router-link :to="{ name: 'register.instructor' }" class="btn btn-danger btn-lg text-capitalize">
                                     Become an Instructor
                                 </router-link>
                             </div>

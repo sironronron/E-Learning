@@ -4,9 +4,7 @@
 			<offline-alert/>
 		</client-only>
          <!-- Title Page -->
-        <card class="shadow-sm p-3">
-            <h4 class="mb-0 float-left font-weight-400"><fa icon="book-open" fixed-width /> Add New Course</h4>
-        </card>
+        <h4 class="mb-0 m-t-8 font-weight-400"><img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,h_60/v1576222206/Logos/online-learning_osijg7.svg" style="width: 60px; height: 60px;" alt=""> &nbsp; Add New Course</h4>
 
         <div class="mt-3">
             <div class="row">
@@ -20,10 +18,10 @@
                             </router-link>
                         </h4>
                         <div class="flex-column flex-md-row">
-                            <div class="nav-wrapper">
+                            <div class="nav-wrapper" style="margin-right: -15px; margin-left: -15px;">
                                 <ul role="tablist" class="nav nav-pills nav-fill">
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#basic" class="nav-link active">
+                                        <a data-toggle="tab" role="tab" href="#basic" class="nav-link active shadow-none border-bottom border-top">
                                             <div>
                                                 <fa icon="pen-nib" fixed-width class="mr-1" />
                                                 Basic
@@ -31,7 +29,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#requirements" class="nav-link">
+                                        <a data-toggle="tab" role="tab" href="#requirements" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="clipboard-list" fixed-width class="mr-1" />
                                                 Requirements
@@ -39,7 +37,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#outcomes" class="nav-link">
+                                        <a data-toggle="tab" role="tab" href="#outcomes" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="poll-h" fixed-width class="mr-1" />
                                                 Outcomes
@@ -47,7 +45,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#pricing" class="nav-link">
+                                        <a data-toggle="tab" role="tab" href="#pricing" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="dollar-sign" fixed-width class="mr-1" />
                                                 Pricing
@@ -55,7 +53,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#media" class="nav-link">
+                                        <a data-toggle="tab" role="tab" href="#media" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="photo-video" fixed-width class="mr-1" />
                                                 Media
@@ -63,7 +61,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#seo" class="nav-link">
+                                        <a data-toggle="tab" role="tab" href="#seo" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="tags" fixed-width class="mr-1" />
                                                 SEO
@@ -71,7 +69,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#finish" class="nav-link">
+                                        <a data-toggle="tab" role="tab" href="#finish" class="nav-link shadow-none border-bottom border-top">
                                             <div>
                                                 <fa icon="check-circle" fixed-width class="mr-1" />
                                                 Finish
@@ -343,7 +341,7 @@
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
                                                 
-                                                <div class="text-center">
+                                                <div class="text-center mb-5">
                                                     <h5><fa icon="check-double" fixed-width /></h5>
                                                     <h4>Thank you!</h4>
                                                     <h6 class="text-muted">You're just one click away.</h6>
@@ -372,6 +370,7 @@
 <script>
     import axios from 'axios'
     import Form from 'vform'
+    
     if (process.client) {
         let objectToFormData = document.createElement('script')
         objectToFormData.setAttribute('src', "https://cdn.rawgit.com/cretueusebiu/412715093d6e8980e7b176e9de663d97/raw/aea128d8d15d5f9f2d87892fb7d18b5f6953e952/objectToFormData.js")
@@ -381,6 +380,8 @@
     export default {
 
         middleware: 'auth',
+
+        scrollToTop: false,
 
         head() {
             return { title: 'Create Course' }
@@ -429,7 +430,6 @@
             }),
             percentage: '',
             config: {
-               
             },
         }),
 
@@ -441,7 +441,7 @@
 
             async save() {
                 try {
-                    const { data } = await this.form.submit('post', '/instructor/courses/create', {
+                    const { data } = await this.form.submit('post', '/instructor/courses', {
                         transformRequest: [function (data, headers) {
                             return objectToFormData(data)
                         }]
@@ -530,6 +530,9 @@
         margin-bottom: 0;
         font-size: 13px;
         line-height: 1.5;
+    }
+    .nav-pills .nav-item:not(:last-child) {
+        padding-right: 0 !important;
     }
     
 </style>>

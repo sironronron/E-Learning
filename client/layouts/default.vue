@@ -1,10 +1,10 @@
 <template>
 	<div class="layout">
-		<div class="fixed-top">
+		<div>
 			<navbar />
 		</div>
 
-		<div class="m-t-62">
+		<div>
 			<nuxt />
 		</div>
 

@@ -33,7 +33,7 @@ class CreateCoursesTable extends Migration
             // $table->foreign('category_id')->references('id')->on('course_categories');
 
             // Published
-            $table->enum('status', ['PUBLISHED', 'DRAFT', 'PENDING'])->default('PENDING');
+            $table->enum('status', ['PUBLISHED', 'DRAFT', 'PENDING', 'APPROVED'])->default('PENDING');
 
             // Language
             $table->enum('language', ['ENGLISH'])->default('ENGLISH');
@@ -52,6 +52,9 @@ class CreateCoursesTable extends Migration
 
             // Media
             $table->string('image')->nullable();
+            $table->string('image_public_id')->nullable();
+            
+            // Course Media
             $table->enum('course_overview_provider', ['Youtube', 'Vimeo', 'HTML5'])->default('Youtube');
             $table->string('course_overview_url');
 

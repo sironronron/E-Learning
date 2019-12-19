@@ -17,7 +17,7 @@ class PageController extends Controller
     {
         $courses = Course::where('status', 'PUBLISHED')
             ->with(['category', 'user'])
-            ->get(['image', 'title', 'excerpt', 'price', 'discount', 'has_discount', 'id', 'teacher_id', 'category_id', 'slug']);
+            ->get(['image', 'title', 'excerpt', 'price', 'discount', 'has_discount', 'id', 'teacher_id', 'category_id', 'slug', 'free_course']);
 
         return response()
             ->json([
@@ -37,6 +37,7 @@ class PageController extends Controller
             ->where('status', 'PUBLISHED')
             ->where('category_id', $course->category_id)
             ->inRandomOrder()
+            ->take(5)
             ->get(['id', 'teacher_id', 'title', 'excerpt', 'image', 'slug', 'price', 'discount', 'has_discount', 'free_course', 'category_id']);
 
         return response()

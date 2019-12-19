@@ -4,9 +4,7 @@
 			<offline-alert/>
 		</client-only>
          <!-- Title Page -->
-        <card class="shadow-sm p-3">
-            <h4 class="mb-0 float-left font-weight-400"><fa icon="book-open" fixed-width /> Edit Course</h4>
-        </card>
+        <h4 class="mb-0 m-t-8 font-weight-400"><img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,h_60/v1576222206/Logos/online-learning_osijg7.svg" style="width: 60px; height: 60px;" alt=""> &nbsp; Edit Course</h4>
 
         <div class="mt-3">
             <div class="row">
@@ -20,10 +18,18 @@
                             </router-link>
                         </h4>
                         <div class="flex-column flex-md-row">
-                            <div class="nav-wrapper">
+                            <div class="nav-wrapper" style="margin-right: -15px; margin-left: -15px;">
                                 <ul role="tablist" class="nav nav-pills nav-fill">
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#basic" class="nav-link active">
+                                        <a data-toggle="tab" role="tab" href="#curriculum" class="nav-link active shadow-none border-bottom border-top">
+                                            <div>
+                                                <fa icon="school" fixed-width class="mr-1" />
+                                                Curriciculum
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a data-toggle="tab" role="tab" href="#basic" class="nav-link shadow-none border-bottom border-top">
                                             <div>
                                                 <fa icon="pen-nib" fixed-width class="mr-1" />
                                                 Basic
@@ -31,7 +37,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#requirements" class="nav-link">
+                                        <a data-toggle="tab" role="tab" href="#requirements" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="clipboard-list" fixed-width class="mr-1" />
                                                 Requirements
@@ -39,7 +45,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#outcomes" class="nav-link">
+                                        <a data-toggle="tab" role="tab" href="#outcomes" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="poll-h" fixed-width class="mr-1" />
                                                 Outcomes
@@ -47,7 +53,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#pricing" class="nav-link">
+                                        <a data-toggle="tab" role="tab" href="#pricing" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="dollar-sign" fixed-width class="mr-1" />
                                                 Pricing
@@ -55,7 +61,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#media" class="nav-link">
+                                        <a data-toggle="tab" role="tab" href="#media" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="photo-video" fixed-width class="mr-1" />
                                                 Media
@@ -63,7 +69,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#seo" class="nav-link">
+                                        <a data-toggle="tab" role="tab" href="#seo" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="tags" fixed-width class="mr-1" />
                                                 SEO
@@ -71,7 +77,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#finish" class="nav-link">
+                                        <a data-toggle="tab" role="tab" href="#finish" class="nav-link shadow-none border-bottom border-top">
                                             <div>
                                                 <fa icon="check-circle" fixed-width class="mr-1" />
                                                 Finish
@@ -83,8 +89,46 @@
                             <div class="tab-content mt-4">
                                 <form @submit.prevent="update" @keydown="form.onKeydown($event)">
 
+                                    <!-- // Course curricilum -->
+                                    <div id="curriculum" class="tab-pane fade active show" aria-expanded="true">
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-7">
+
+                                                <div class="text-center">
+                                                    <button v-if="!showAddSectionModal" class="btn btn-outline-primary btn-rounded btn-sm ml-1" @click.prevent="showAddSectionModal = true"><fa icon="plus" /> Add Section</button>
+
+                                                    <button v-if="!showAddLessonModal" class="btn btn-outline-primary btn-rounded btn-sm ml-1" @click.prevent="showAddLessonModal = true"><fa icon="plus" /> Add Lesson</button>
+
+                                                    <a href="javascript::void(0)" class="btn btn-outline-primary btn-rounded btn-sm ml-1" onclick="showAjaxModal('http://demo.academy-lms.com/default/modal/popup/section_add/26', 'Add new section')"><fa icon="plus" /> Add section</a>
+
+                                                    <a href="javascript::void(0)" class="btn btn-outline-primary btn-rounded btn-sm ml-1" onclick="showAjaxModal('http://demo.academy-lms.com/default/modal/popup/section_add/26', 'Add new section')"><fa icon="plus" /> Sort Sections</a>
+                                                </div>
+
+                                                <template v-if="sections.length != 0">                                                        
+                                                    <div class="my-5">
+
+                                                        <section class="p-4 rounded bg-secondary mb-3" v-for="(section, index) in sections" :key="section.id">
+                                                            <h6>Section {{index + 1}}: &nbsp; <b>{{section.title}}</b></h6>
+                                                        </section>
+
+                                                    </div>
+                                                </template>
+
+                                                <template v-else>
+                                                    <div class="my-5">
+                                                        <div class="text-center">
+                                                            <img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,h_130/v1576466809/Online%20Learning%20Icon%20Pack/042-book_iscdda.svg" class="img-fluid" width="130" height="130" alt="">
+                                                            <h6>You don't have any curriculums yet.</h6>
+                                                        </div>
+                                                    </div>
+                                                </template>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- // Basic Course Information -->
-                                    <div id="basic" class="tab-pane fade active show" aria-expanded="true">
+                                    <div id="basic" class="tab-pane fade" aria-expanded="true">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -343,7 +387,7 @@
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
                                                 
-                                                <div class="text-center">
+                                                <div class="text-center mb-5">
                                                     <h5><fa icon="check-double" fixed-width /></h5>
                                                     <h4>Thank you!</h4>
                                                     <h6 class="text-muted">You're just one click away.</h6>
@@ -364,6 +408,14 @@
             </div>
         </div>
 
+        <transition name="fade">
+            <add-section-modal :course_id="course.id" v-if="showAddSectionModal" @close="showAddSectionModal = false"></add-section-modal>
+        </transition>
+
+        <transition name="fade">
+            <add-lesson-modal :course_id="course.id" v-if="showAddLessonModal" @close="showAddLessonModal = false"></add-lesson-modal>
+        </transition>
+
     </div>
 </template>
 
@@ -372,6 +424,10 @@
     import axios from 'axios'
     import Form from 'vform'
 
+    // Modals
+    import AddSectionModal from '../../../components/instructor/courses/add_section'
+    import AddLessonModal from '../../../components/instructor/courses/add_lesson'
+
     if (process.client) {
         let objectToFormData = document.createElement('script')
         objectToFormData.setAttribute('src', "https://cdn.rawgit.com/cretueusebiu/412715093d6e8980e7b176e9de663d97/raw/aea128d8d15d5f9f2d87892fb7d18b5f6953e952/objectToFormData.js")
@@ -379,6 +435,10 @@
     }
 
     export default {
+
+        components: {
+            AddSectionModal, AddLessonModal
+        },
 
         scrollToTop: true,
 
@@ -423,10 +483,11 @@
             }),
             percentage: '',
             config: {
-                
-            }
+                // Add Config for Froala WYSIWYG   
+            },
+            showAddSectionModal: false,
+            showAddLessonModal: false
         }),
-
 
         methods: {
             selectFile(e) {
@@ -434,20 +495,10 @@
                 this.form.image = file
             },
 
-            update() {
+
+            async update() {
                 try {
-                    // const { data } = await this.form.submit('patch', `/instructor/courses/${this.course.id}`, {
-                    //     transformRequest: [function (data, headers) {
-                    //         data['_method'] = 'PUT'
-                    //         return objectToFormData(data)
-                    //     }]
-                    // })
-                    this.form.post(`/instructor/courses/${this.course.id}`, {
-                        transformRequest: [function (data, headers) {
-                            data['_method'] = 'PUT'
-                            return objectToFormData(data)
-                        }]
-                    })
+                    const { data } = await this.form.submit('patch', `/instructor/courses/${this.course.id}`)
                     .then((res) => {
                         this.$router.push({ name: 'instructor.courses' })
                         this.$swal({
@@ -509,17 +560,24 @@
 
         },
 
+        watch: {
+            section: function (newSection, oldSection) {
+                this.debouncedSections()
+            }
+        },
+
         async asyncData({ params, error }) {
             let { data } = await axios.get(`/instructor/courses/${params.slug}/edit`)
             return {
                 categories: data.categories,
-                course: data.course
+                course: data.course,
+                sections: data.sections
             }
         },
 
         created() {
             this.form.keys().forEach((key) => {
-                if(!this.form['imageUpdate']) {
+                if(!this.form['image']) {
                     this.form[key] = this.course[key]
                 }
             })
@@ -531,8 +589,9 @@
             }
         }
 
-    
     }
+
+  
 
 </script>
 
@@ -555,6 +614,8 @@
         height: 200px;
         width: 250px;
         object-fit: cover;
-
+    }
+    .nav-pills .nav-item:not(:last-child) {
+        padding-right: 0 !important;
     }
 </style>>

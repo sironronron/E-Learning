@@ -45,9 +45,9 @@
 					<div class="input-group input-group-alternative">
 						<input aria-describedby="addon-right addon-left" type="text" v-model="search" name="search" placeholder="Search for courses" class="form-inline form-control rounded-left">
 						<div class="input-group-prepend">
-							<span class="input-group-text btn btn-default">
+							<a type="button" class="input-group-text btn btn-danger">
 								<fa icon="search" fixed-width />
-							</span>
+							</a>
 						</div>
 					</div>
 				</form>
@@ -106,16 +106,22 @@
 							<a class="nav-link"
 							href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
 							>
-								<img :src="user.photo_url" class="rounded-circle profile-photo mr-1">
+								<img v-if="user.avatar == 'users/default.png'" :src="user.photo_url" class="rounded-circle profile-photo mr-1">
+								<cld-image v-else :publicId="`${user.avatar_public_id}.png`" class="mr-1 profile-photo">
+                                	<cld-transformation height="30" width="30" crop="fill" radius="100" />
+                                </cld-image>
 							</a>
 							<div class="dropdown-menu dropdown-menu-right">
 								<div >
 									<a href="#" class="dropdown-item mb-2 dropdown-item-2">
 										<div class="row">
 											<div class="col-lg-2">
-												<img :src="user.photo_url" class="profile-photo-2 rounded-circle" :alt="user.name">
+												<img v-if="user.avatar == 'users/default.png'" :src="user.photo_url" class="rounded-circle profile-photo-2 mr-1">
+												<cld-image v-else :publicId="`${user.avatar_public_id}.png`" class="profile-photo-2">
+													<cld-transformation height="46" width="46" crop="fill" radius="100" />
+												</cld-image>
 											</div>
-											<div class="col-lg-10">
+											<div class="col-lg-10"> 
 												<div class="ml-2 mt-1">
 													<h6 class="font-weight-600 mb-0">{{user.name}}</h6>
 													<h6 class="text-muted">{{user.email}}</h6>
@@ -123,7 +129,10 @@
 											</div>
 										</div>
 									</a>
-									<router-link :to="{ name: 'settings.account' }" class="dropdown-item dropdown-item-2">
+									<router-link :to="{ name: 'settings.account' }" class="dropdown-item dropdown-item-2" v-if="user.role_id === 2">
+										Account
+									</router-link>
+									<router-link :to="{ name: 'instructor.settings.account' }" class="dropdown-item dropdown-item-2" v-if="user.role_id === 3">
 										Account
 									</router-link>
 									<div class="dropdown-divider"></div>
@@ -253,7 +262,7 @@
 		width: 45% !important;
 	}
 	.dropdown-menu {
-		width: 330px !important;
+		width: 300px !important;
 	}
 	.dropdown-item-2 {
 		font-size: 0.888rem !important;

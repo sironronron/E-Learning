@@ -1,94 +1,103 @@
 <template>
 	<div>
-		<div >
-			<h4>My Profile</h4>
-			<p class="text-muted text-small">Add information about yourself to share on your profile.</p>
-		</div>
+		<div class="row justify-content-center">
+			<div class="col-lg-5">
 
-		<hr style="border-top: 2px solid rgba(0, 0, 0, 0.1)">
+				<h2>Profile</h2>
+				<h6>Add Information about yourself to share on your profile.</h6>
 
-		<form @submit.prevent="update" @keydown="form.onKeydown($event)">
+				<hr class="full-width-hr mb-4 mt-4">
 
-			<alert-success :form="form" :message="$t('info_updated')" />
+				<form @submit.prevent="update" @keydown="form.onKeydown($event)">
 
-			<div v-if="user.role_id == 3" class="alert alert-danger">
-				<h6 class="mb-0 text-white">Please complete your profile information, it will be displayed on your instructor page.</h6>
-			</div>
+					<alert-success :form="form" message="Your Profile Information is Changed"></alert-success>
 
-
-			<h5 class="mb-4"><b>Basic Information</b></h5>
-
-			<div class="row justify-content-center">
-				<div class="col-lg-7">
-
-					<div class="form-group mb-3">
+					<!-- // Name  -->
+					<div class="form-group">
 						<label for="name" class="col-form-label">Name</label>
-						<div>
-							<input type="text" name="name" v-model="form.name" :class="{ 'is-invalid' : form.errors.has('name') }" class="form-control">
-							<has-error :form="form" field="name"></has-error>
-						</div>
+						<input type="text" name="name" v-model="form.name" :class="{ 'is-invalid' : form.errors.has('name') }" class="form-control rounded">
+						<has-error :form="form" field="name"></has-error>
 					</div>
 
-					<div class="form-group mb-3">
-						<label for="name" class="col-form-label">Email</label>
-						<div>
-							<input type="email" name="email" v-model="form.email" :class="{ 'is-invalid' : form.errors.has('email') }" class="form-control" disabled>
-							<has-error :form="form" field="email"></has-error>
+					<!-- // Email -->
+					<template v-if="!editEmail">
+						<div class="form-group">
+							<label for="email" class="col-form-label">Email</label>
+							<input type="email" name="email" v-model="form.email" disabled class="form-control rounded">
+							<a href="#" @click.prevent="editEmail = true" class="small"><fa :icon="['far', 'edit']" fixed-width /> Edit</a>
 						</div>
+					</template>
+
+					<template v-else>
+						
+						<div class="p-lg-3 border">
+							
+							<form @submit.prevent="updateEmai" @keydown="form.onKeydown($event)">
+								<!-- // Change Email -->
+								<div class="form-group">
+									<label for="email" class="col-form-label">Email</label>
+									<input type="email" name="email" v-model="form.email" :class="{ 'is-invalid' : form.errors.has('email') }" class="form-control rounded">
+									<has-error :form="form" field="email"></has-error>
+								</div>
+
+								<!-- // Confirm Password -->
+								<div class="form-group">
+									<label for="current_password" class="col-form-label">Current Password</label>
+									<input type="password" name="current_password" v-model="form.current_password" :class="{ 'is-invalid' : form.errors.has('current_password') }" class="form-control rounded">
+									<has-error :form="form" field="current_password"></has-error>
+								</div>
+
+								<a href="#" @click.prevent="editEmail = false" class="small"><fa :icon="['far', 'edit']" fixed-width /> Cancel</a>
+								
+								<v-button :loading="form.busy" class="btn-sm float-right">
+									Submit
+								</v-button>
+
+							</form>
+							
+						</div>
+
+					</template>
+
+
+					<!-- // Biography -->
+					<div class="form-group">
+						<label for="biography" class="col-form-label">Biography</label>
+						<div>
+                            <client-only>
+                                <froala id="edit" name="biography" :tag="'textarea'" :class="{ 'is-invalid' : form.errors.has('biography') }" v-model="form.biography"></froala>
+                                <has-error :form="form" field="biography"></has-error>
+                            </client-only>
+                        </div>
 					</div>
 
-					<div class="form-group mb-5">
-						<label for="name" class="col-form-label">Biography</label>
-						<div>
-							<textarea name="biography" id="" cols="30" rows="5" v-model="form.biography" :class="{ 'is-invalid' : form.errors.has('biography') }" class="form-control"></textarea>
-							<has-error :form="form" field="biography"></has-error>
-						</div>
+					<!-- // Social Media Links -->
+					<div class="form-group">
+						<label for="facebook_link" class="col-form-label">Facebook Link</label>
+						<input type="text" name="facebook_link" v-model="form.facebook_link" :class="{ 'is-invalid' : form.errors.has('facebook_link') }" class="form-control rounded">
+						<has-error :form="form" field="facebook_link"></has-error>
 					</div>
 
-				</div>
-			</div>
-
-			<h5 class="mb-4"><b>Social Media Links</b></h5>
-
-			<div class="row justify-content-center">
-				<div class="col-lg-7">
-					<div class="form-group mb-3">
-						<label for="facebook" class="col-form-label">Facebook Link</label>
-						<div>
-							<input type="text" v-model="form.facebook_link" :class="{ 'is-invalid' : form.errors.has('facebook_link') }" class="form-control">
-							<has-error :form="form" field="facebook_link"></has-error>
-						</div>
+					<div class="form-group">
+						<label for="twitter_link" class="col-form-label">Twitter Link</label>
+						<input type="text" name="twitter_link" v-model="form.twitter_link" :class="{ 'is-invalid' : form.errors.has('twitter_link') }" class="form-control rounded">
+						<has-error :form="form" field="twitter_link"></has-error>
 					</div>
 
-					<div class="form-group mb-3">
-						<label for="facebook" class="col-form-label">Twitter Link</label>
-						<div>
-							<input type="text" v-model="form.twitter_link" :class="{ 'is-invalid' : form.errors.has('twitter_link') }" class="form-control">
-							<has-error :form="form" field="twitter_link"></has-error>
-						</div>
+					<div class="form-group">
+						<label for="youtube_link" class="col-form-label">Youtube Link</label>
+						<input type="text" name="youtube_link" v-model="form.youtube_link" :class="{ 'is-invalid' : form.errors.has('youtube_link') }" class="form-control rounded">
+						<has-error :form="form" field="youtube_link"></has-error>
 					</div>
 
-					<div class="form-group mb-3">
-						<label for="facebook" class="col-form-label">Youtube Link</label>
-						<div>
-							<input type="text" v-model="form.youtube_link" :class="{ 'is-invalid' : form.errors.has('youtube_link') }" class="form-control">
-							<has-error :form="form" field="youtube_link"></has-error>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<hr style="border-top: 2px solid rgba(0, 0, 0, 0.1)">
-
-			<div class="form-group row justify-content-center">
-				<div class="col-lg-7">
-					<v-button :loading="form.busy" class="btn-block">
-						Update Profile
+					<v-button :loading="form.busy" class="btn-lg btn-block">
+						Update Profile Info
 					</v-button>
-				</div>
-			</div>
+	
+				</form>
 
-		</form>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -97,9 +106,12 @@
 	import { mapGetters } from 'vuex'
 
 	export default {
+
+		middleware: 'auth',
+
 		scrollToTop: false,
 
-		head () {
+		head() {
 			return { title: this.$t('settings') }
 		},
 
@@ -107,29 +119,36 @@
 			form: new Form({
 				name: '',
 				email: '',
+				current_password: '',
 				biography: '',
+				phone: '',
+				birthday: '',
 				facebook_link: '',
 				twitter_link: '',
-				youtube_link: ''
-			})
+				youtube_link: '',
+				introduction: ''
+			}),
+			editEmail: false
 		}),
 
 		computed: mapGetters({
 			user: 'auth/user'
 		}),
 
-		created () {
-			// Fill the form with user data.
+		created() {
 			this.form.keys().forEach((key) => {
 				this.form[key] = this.user[key]
 			})
 		},
 
 		methods: {
-			async update () {
-				try {
+			async update() {
+				try { 
 					const { data } = await this.form.patch('/settings/profile')
-					this.$store.dispatch('auth/updateUser', { user: data })
+					this.$store.dispatch('auth/updateUser', {
+						user: data
+					})
+
 					this.$swal({
 						toast: true,
 						position: 'bottom-end',
@@ -141,7 +160,32 @@
 				} catch (e) {
 					return
 				}
+			},
+
+			async updateEmai() {
+				try {
+					const { data } = await this.form.patch('/instructor/settings/email')
+					this.$store.dispatch('auth/updateUser', {
+						user: data
+					})
+					this.editEmail = false
+					this.$swal({
+						toast: true,
+						position: 'bottom-end',
+						timer: 5000,
+						showConfirmButton: false,
+						type: 'success',
+						text: 'Email Updated'
+					})
+				} catch (e) {
+					return
+				}
 			}
 		}
+
 	}
 </script>
+
+<style>
+
+</style>

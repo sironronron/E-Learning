@@ -121,6 +121,8 @@
 
     export default {
 
+		middleware: 'guest',
+
         components: {
             PasswordStrength
         },

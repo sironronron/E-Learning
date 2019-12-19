@@ -1,6 +1,6 @@
 <template>
     
-    <button v-if="facebookAuth" type="button" class="btn btn-facebook btn-icon" @click="login">
+    <button v-if="facebookAuth" type="button" class="btn btn-facebook btn-icon rounded" @click="login">
         <span class="btn-inner--icon">
             <fa :icon="['fab', 'facebook-square']" fixed-width />
         </span>

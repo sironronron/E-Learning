@@ -6,16 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 // Loggedin User
 use Auth;
+
 // Course Model
 use App\Models\Course\Course;
-// Course Category
 use App\Models\Course\CourseCategory;
-// Course Requirement
 use App\Models\Course\CourseRequirement;
-// Course Outcome
 use App\Models\Course\CourseOutcome;
-// Course For who this is for
 use App\Models\Course\CourseWho;
+use App\Models\Course\CourseSection;
 
 // Cloud Storage
 use JD\Cloudder\Facades\Cloudder;
@@ -61,7 +59,7 @@ class CourseController extends Controller
         $allCourses = Course::where('teacher_id', Auth::user()->id)
             ->with(['category', 'user'])
             ->orderBy('created_at', 'desc')
-            ->paginate(4, ['id', 'title', 'slug', 'teacher_id', 'category_id', 'status']);
+            ->paginate(7, ['id', 'title', 'slug', 'teacher_id', 'category_id', 'status']);
 
         $courses = Course::where('teacher_id', Auth::user()->id)
             ->count();
@@ -238,10 +236,14 @@ class CourseController extends Controller
             ->where('teacher_id', Auth::user()->id)
             ->firstOrFail();
 
+        $sections = CourseSection::where('course_id', $course->id)
+            ->get(['title', 'slug']);
+
         return response()
             ->json([
                 'course' => $course,
-                'categories' => $categories
+                'categories' => $categories,
+                'sections' => $sections
             ]);
     }
 
@@ -262,20 +264,20 @@ class CourseController extends Controller
             'level' => 'required',
             'price' => 'present',
             'discount' => 'present',
-            'image' => 'required|mimes:jpg,png,jpeg,webp|between:1,6000',
+            // 'image' => 'required|mimes:jpg,png,jpeg,webp|between:1,6000',
             'course_overview_provider' => 'required',
             'course_overview_url' => 'required',
             'meta_keywords' => 'required|max:255',
             'meta_description' => 'required|max:120', 
             'requirements' => 'required|array|min:1',
             'requirements.*.id' => 'integer|exists:course_requirements',
-            'requirements.*.description' => 'required|max:255',
+            'requirements.*.description' => 'required',
             'outcomes' => 'required|array|min:1',
             'outcomes.*.id' => 'integer|exists:course_outcomes',
-            'outcomes.*.description' => 'required|max:400',
+            'outcomes.*.description' => 'required',
             'whos' => 'required|array|min:1',
             'whos.*.id' => 'integer|exists:course_whos',
-            'whos.*.description' => 'required|max:400'
+            'whos.*.description' => 'required'
         ]);
 
         $course = Course::where('id', $id)
@@ -387,24 +389,4 @@ class CourseController extends Controller
         //
     }
 
-    /**
-     * Return All Active Courses
-     */
-    public function activeCourses()
-    {
-        $countCourses = Course::where('teacher_id', Auth::user()->id)
-            ->where('status', 'PUBLISHED')
-            ->count();
-
-        $activeCourses = Course::where('teacher_id', Auth::user()->id)
-            ->where('status', 'PUBLISHED')
-            ->with(['user', 'category'])
-            ->paginate(5, ['id', 'teacher_id', 'category_id', 'title', 'slug', 'status']);
-
-        return response()
-            ->json([
-                'activeCourses' => $activeCourses,
-                'countCourses' => $countCourses
-            ]);
-    }
 }

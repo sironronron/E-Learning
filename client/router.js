@@ -27,11 +27,11 @@ const routes = [
 
   // User Settings
   { path: '/home', name: 'home', component: page('home.vue') },
-  { path: '/settings',
+  { path: '/student/account',
     component: page('settings/index.vue'),
     children: [
       { path: '', redirect: { name: 'settings.account' } },
-      { path: 'account', name: 'settings.account', component: page('settings/account.vue') },
+      { path: 'edit-profile', name: 'settings.account', component: page('settings/account.vue') },
       { path: 'password', name: 'settings.password', component: page('settings/password.vue') },
       { path: 'change-avatar', name: 'settings.avatar', component: page('settings/avatar.vue') }
     ]
@@ -62,7 +62,19 @@ const routes = [
       // Course Edit
       { path: 'courses/:slug/edit', name: 'instructor.courses.edit', component: page('instructor/courses/edit.vue') },
       // Course Statuses
-      { path: 'courses/active-courses', name: 'instructor.courses.active', component: page('instructor/courses/active_courses.vue') }
+
+      // Instructor Settings
+      { path: 'settings',
+        component: page('instructor/settings.vue'),
+        children: [
+          { path: '', redirect: { name: 'instructor.settings.account' } },
+          { path: 'account-settings', name: 'instructor.settings.account', component: page('instructor/account_settings.vue') },
+          { path: 'account-password', name: 'instructor.settings.password', component: page('instructor/account_password.vue') },
+          { path: 'account-profile', name: 'instructor.settings.profile', component: page('instructor/account_profile.vue') },
+          { path: 'account-avatar', name: 'instructor.settings.avatar', component: page('instructor/account_avatar.vue') }
+        ]
+      }
+
     ]
   }
 

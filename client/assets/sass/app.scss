@@ -104,11 +104,7 @@ h1 {
 body {
     margin: 0;
     font-family: open sans,helvetica neue,Helvetica,Arial,sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
     color: #212529;
-    text-align: left;
     background-color: $body-bg;
 }
 
@@ -147,10 +143,6 @@ body {
     margin-right: -15px;
 }
 
-.Password {
-    max-width: 410px !important;
-}
-
 .suggestions-warns {
     margin-top: -10px !important;
 }
@@ -160,9 +152,6 @@ body {
     margin-right: 1rem;
 }
 
-.fr-toolbar .fr-command.fr-btn {
-    margin: 4px -3px !important;
-}
 
 .grid-course-name {
     height: 43px;
@@ -226,4 +215,21 @@ body {
 
 .custom-select {
     color: #000000 !important;
+}
+
+.course {
+    &__user-img {
+        height: 100px;
+        width: 100px;
+    }
+}
+
+#readmore {
+    text-transform: capitalize;
+}
+
+
+p {
+    font-size: 14px !important;
+    font-weight: normal !important;
 }

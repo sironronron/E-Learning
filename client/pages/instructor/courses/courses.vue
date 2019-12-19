@@ -4,58 +4,48 @@
 			<offline-alert/>
 		</client-only>
         <!-- Add New Course -->
-        <card class="shadow-sm p-3">
-            <h4 class="mb-0 float-left m-t-8 font-weight-400"><fa icon="book-open" fixed-width /> Courses</h4>
-            <router-link :to="{ name: 'instructor.courses.create' }" class="btn btn-outline-default rounded float-right">
-                <fa icon="plus" fixed-width />
-                Add New Course
-            </router-link>
-        </card>
-                
+        <h2 class="mb-0 m-t-8 font-weight-400"><img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,h_60/v1576222206/Logos/online-learning_osijg7.svg" style="width: 60px; height: 60px;" alt=""> &nbsp; Courses</h2>
+
         <!-- // Table of Courses -->
         <div class="mt-4">
             <div class="row">
                 <div class="col-lg-12 h-100">
-                    <card class="shadow-sm" style="height: 777px;">
-                        <h4 class="mb-3 header-title">Course list</h4>
 
-                        <!-- // Filter -->
-                        <form class="row justify-content-center" method="get">
-                            <!-- Course Filter -->
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label for="Category" class="col-form-label text-muted"><small>Category</small></label>
-                                    <div>
-                                        <select name="category" id="category" class="custom-select custom-select-sm rounded">
-                                            <option value="">Select Category</option>
-                                        </select>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <form class="my-auto">
+                                <div class="input-group input-group-alternative">
+                                    <input aria-describedby="addon-right addon-left" type="text" name="search" placeholder="Search for courses" class="form-inline form-control rounded-left search-welcome">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text btn btn-default rounded-right p-lg-3">
+                                            <fa icon="search" fixed-width />
+                                        </span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label for="Category" class="col-form-label text-muted"><small>Status</small></label>
-                                    <div>
-                                        <select name="category" id="category" class="custom-select custom-select-sm rounded">
-                                            <option value="">Select Category</option>
-                                        </select>
-                                    </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Filter
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <a class="dropdown-item" href="#">Something else here</a>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label for="Category" class="col-form-label text-muted"><small>Price</small></label>
-                                    <div>
-                                        <select name="category" id="category" class="custom-select custom-select-sm rounded">
-                                            <option value="">Select Category</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <button class="btn btn-default btn-sm btn-block m-t-46"><fa icon="filter" fixed-width class="mr-2" /> Filter</button>
-                            </div>
-                        </form>
+                        </div>
+                        <div class="col-lg-6">
+                            <router-link :to="{ name: 'instructor.courses.create' }" class="btn btn-outline-default rounded float-right">
+                                <fa icon="plus" fixed-width />
+                                Add New Course
+                            </router-link>
+                        </div>
+                    </div>
+
+                    <card class="shadow-sm mt-3">
+                        <h4 class="mb-3 header-title"><b>Course list</b></h4>
 
                         <div v-if="isLoading">
                             <section class="section">
@@ -81,30 +71,6 @@
 
                             <div v-else>
                                 <!-- // Entries and Search -->
-                                <div class="row">
-                                    <div class="col-lg-2">
-                                        <!-- // Course Table -->
-                                        <div class="form-group">
-                                            <label for="Category" class="col-form-label text-muted"><small>Show Entries</small></label>
-                                            <div>
-                                                <select name="category" id="category" class="custom-select custom-select-sm rounded">
-                                                    <option value="">10</option>
-                                                    <option value="">25</option>
-                                                    <option value="">50</option>
-                                                    <option value="">100</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-10">
-                                        <div class="form-group float-right">
-                                            <label for="search" class="col-form-label text-muted"><small class="">Search</small></label>
-                                            <div>
-                                                <input type="text" class="form-control form-control-sm rounded" >
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <table class="table table-striped dt-responsive nowrap dataTable no-footer dtr-inline collapsed" width="100%" data-page-length="25" role="grid" aria-describedby="course-datatable-server-side_info" style="width: 100%;">
                                     <thead>
@@ -117,11 +83,9 @@
                                     <tbody>
                                         <tr role="row" class="odd" v-for="course in allCourses.data" :key="course.id">
                                             <td>
-                                                <strong>
-                                                    <router-link :to="{ name: 'instructor.courses.edit', params: { slug: course.slug } }" class="small">
-                                                        {{course.title}}
-                                                    </router-link>
-                                                </strong>
+                                                <router-link :to="{ name: 'instructor.courses.edit', params: { slug: course.slug } }">
+                                                    {{course.title}}
+                                                </router-link>
                                                 <br>
                                                 <small class="text-muted">
                                                     <span style="font-size: 11px;">Instructor: &nbsp; <b>{{course.user.name}}</b></span>
@@ -194,7 +158,12 @@
         data: () => ({
             allCourses: [],
             courses: '',
-            isLoading: false
+            isLoading: false,
+            activeCourses: '',
+            pendingCourses: '',
+            draftCourses: '',
+            freeCourses: '',
+            paidCourses: '0'
         }),
 
         created() {
@@ -207,6 +176,11 @@
                 .then((res) => {
                     this.allCourses = res.data.allCourses
                     this.courses = res.data.courses
+                    this.activeCourses =  res.data.activeCourses
+                    this.pendingCourses =  res.data.pendingCourses
+                    this.draftCourses =  res.data.draftCourses
+                    this.freeCourses =  res.data.freeCourses
+                    this.paidCourses =  res.data.paidCourses
                 })
                 .catch((err) => {
                     console.log(err)
@@ -220,19 +194,10 @@
 
 <style scoped>
     .card .header-title {
-        margin-bottom: .5rem;
+        margin-bottom: .5accrem;
         text-transform: uppercase;
         letter-spacing: .02em;
         font-size: .875rem;
         margin-top: 0;
-    }
-    div.dataTables_wrapper div.dataTables_length label {
-        font-weight: normal;
-        text-align: left;
-        white-space: nowrap;
-    }
-    table thead th {
-        font-size: .680rem !important;
-        font-weight: bold;
     }
 </style>
