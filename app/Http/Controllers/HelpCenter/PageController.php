@@ -55,11 +55,17 @@ class PageController extends Controller
         $categories = Category::where('parent_id', 3)
             ->get(['name', 'slug', 'icon']);
 
+        $related = Post::where('category_id', $post->category_id)
+            ->where('id', '!=', $post->id)
+            ->take(5)
+            ->get(['title', 'slug', 'id', 'category_id']);
+
         return response()
             ->json([
                 'category' => $category,
                 'post' => $post,
-                'categories' => $categories
+                'categories' => $categories,
+                'related' => $related
             ]);
     }
 }

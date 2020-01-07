@@ -21,7 +21,7 @@
                             <div class="nav-wrapper" style="margin-right: -15px; margin-left: -15px;">
                                 <ul role="tablist" class="nav nav-pills nav-fill">
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#basic" class="nav-link active shadow-none border-bottom border-top">
+                                        <a @click.prevent="step = 1" data-toggle="tab" role="tab" href="#basic" :class="{ 'active' : step == 1 }" class="nav-link shadow-none border-bottom border-top">
                                             <div>
                                                 <fa icon="pen-nib" fixed-width class="mr-1" />
                                                 Basic
@@ -29,7 +29,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#requirements" class="nav-link shadow-none border">
+                                        <a @click.prevent="step = 2" data-toggle="tab" role="tab" href="#requirements" :class="{ 'active' : step == 2 }" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="clipboard-list" fixed-width class="mr-1" />
                                                 Requirements
@@ -37,7 +37,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#outcomes" class="nav-link shadow-none border">
+                                        <a @click.prevent="step = 3" data-toggle="tab" role="tab" href="#outcomes" :class="{ 'active' : step == 3}" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="poll-h" fixed-width class="mr-1" />
                                                 Outcomes
@@ -45,7 +45,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#pricing" class="nav-link shadow-none border">
+                                        <a @click.prevent="step = 4" data-toggle="tab" role="tab" href="#pricing" :class="{ 'active' : step == 4 }" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="dollar-sign" fixed-width class="mr-1" />
                                                 Pricing
@@ -53,7 +53,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#media" class="nav-link shadow-none border">
+                                        <a @click.prevent="step = 5" data-toggle="tab" role="tab" href="#media" :class="{ 'active' : step == 5 }" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="photo-video" fixed-width class="mr-1" />
                                                 Media
@@ -61,7 +61,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#seo" class="nav-link shadow-none border">
+                                        <a @click.prevent="step = 6" data-toggle="tab" role="tab" href="#seo" :class="{ 'active' : step == 6 }" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="tags" fixed-width class="mr-1" />
                                                 SEO
@@ -69,7 +69,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#finish" class="nav-link shadow-none border-bottom border-top">
+                                        <a @click.prevent="step = 7" data-toggle="tab" role="tab" href="#finish" :class="{ 'active' : step == 7 }" class="nav-link shadow-none border-bottom border-top">
                                             <div>
                                                 <fa icon="check-circle" fixed-width class="mr-1" />
                                                 Finish
@@ -82,7 +82,7 @@
                                 <form @submit.prevent="save" @keydown="form.onKeydown($event)">
 
                                     <!-- // Basic Course Information -->
-                                    <div id="basic" class="tab-pane fade active show" aria-expanded="true">
+                                    <div v-if="step == 1" id="basic" aria-expanded="true">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -150,7 +150,7 @@
                                     </div>
 
                                     <!-- // Course Requirements -->
-                                    <div id="requirements" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 2" id="requirements" aria-expanded="true">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -200,7 +200,7 @@
                                     </div>
 
                                     <!-- // Course Outcomes -->
-                                    <div id="outcomes" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 3" id="outcomes" aria-expanded="true">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -228,7 +228,7 @@
                                     </div>
 
                                     <!-- // Course Pricing -->
-                                    <div id="pricing" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 4" id="pricing" aria-expanded="true">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -275,7 +275,7 @@
                                     </div>
 
                                     <!-- // Course Media -->
-                                    <div id="media" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 5" id="media" aria-expanded="true">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -312,7 +312,7 @@
                                     </div>
 
                                     <!-- // Course SEO -->
-                                    <div id="seo" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 6" id="seo" aria-expanded="true">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -337,7 +337,7 @@
                                     </div>
 
                                     <!-- // Course Finished -->
-                                    <div id="finish" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 7" id="finish" aria-expanded="true">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
                                                 
@@ -351,6 +351,30 @@
                                                 </div>
 
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- // Prev and Next Button -->
+                                    <div class="row justify-content-center mt-3">
+                                        <div class="col-lg-auto">
+                                            <!-- // Previous button -->
+                                            <button v-if="step <= 1" class="btn btn-sm btn-default" disabled>
+                                                <fa icon="arrow-left" fixed-width /> 
+                                            </button>
+                                            
+                                            <button v-else class="btn btn-sm btn-default" @click.prevent="prev()">
+                                                <fa icon="arrow-left" fixed-width /> 
+                                            </button>
+                                        </div>
+                                        <div class="col-lg-auto">
+                                            <!-- // Next Button -->
+                                            <button v-if="step >= 7" disabled class="btn btn-sm btn-default" @click.prevent="next()">
+                                                <fa icon="arrow-right" fixed-width /> 
+                                            </button>
+
+                                            <button v-else class="btn btn-sm btn-default" @click.prevent="next()">
+                                                <fa icon="arrow-right" fixed-width /> 
+                                            </button>
                                         </div>
                                     </div>
 

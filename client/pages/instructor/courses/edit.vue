@@ -21,7 +21,7 @@
                             <div class="nav-wrapper" style="margin-right: -15px; margin-left: -15px;">
                                 <ul role="tablist" class="nav nav-pills nav-fill">
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#curriculum" class="nav-link active shadow-none border-bottom border-top">
+                                        <a @click.prevent="step = 1" data-toggle="tab" role="tab" href="#curriculum" :class="{ 'active' : step == 1 }" class="nav-link shadow-none border-bottom border-top border-right">
                                             <div>
                                                 <fa icon="school" fixed-width class="mr-1" />
                                                 Curriciculum
@@ -29,7 +29,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#basic" class="nav-link shadow-none border-bottom border-top">
+                                        <a @click.prevent="step = 2" data-toggle="tab" role="tab" href="#basic" :class="{ 'active' : step == 2 }" class="nav-link shadow-none border-bottom border-top border-right">
                                             <div>
                                                 <fa icon="pen-nib" fixed-width class="mr-1" />
                                                 Basic
@@ -37,7 +37,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#requirements" class="nav-link shadow-none border">
+                                        <a @click.prevent="step = 3" data-toggle="tab" role="tab" href="#requirements" :class="{ 'active' : step == 3 }" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="clipboard-list" fixed-width class="mr-1" />
                                                 Requirements
@@ -45,7 +45,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#outcomes" class="nav-link shadow-none border">
+                                        <a @click.prevent="step = 4" data-toggle="tab" role="tab" href="#outcomes" :class="{ 'active' : step == 4 }" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="poll-h" fixed-width class="mr-1" />
                                                 Outcomes
@@ -53,7 +53,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#pricing" class="nav-link shadow-none border">
+                                        <a @click.prevent="step = 5" data-toggle="tab" role="tab" href="#pricing" :class="{ 'active' : step ==5 }" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="dollar-sign" fixed-width class="mr-1" />
                                                 Pricing
@@ -61,7 +61,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#media" class="nav-link shadow-none border">
+                                        <a @click.prevent="step = 6" data-toggle="tab" role="tab" href="#media" :class="{ 'active' : step == 6 }" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="photo-video" fixed-width class="mr-1" />
                                                 Media
@@ -69,7 +69,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#seo" class="nav-link shadow-none border">
+                                        <a @click.prevent="step = 7"  data-toggle="tab" role="tab" href="#seo" :class="{ 'active' : step == 7 }" class="nav-link shadow-none border">
                                             <div>
                                                 <fa icon="tags" fixed-width class="mr-1" />
                                                 SEO
@@ -77,7 +77,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a data-toggle="tab" role="tab" href="#finish" class="nav-link shadow-none border-bottom border-top">
+                                        <a @click.prevent="step = 8" data-toggle="tab" role="tab" href="#finish" :class="{ 'active' : step == 8 }" class="nav-link shadow-none border-bottom border-top">
                                             <div>
                                                 <fa icon="check-circle" fixed-width class="mr-1" />
                                                 Finish
@@ -90,26 +90,34 @@
                                 <form @submit.prevent="update" @keydown="form.onKeydown($event)">
 
                                     <!-- // Course curricilum -->
-                                    <div id="curriculum" class="tab-pane fade active show" aria-expanded="true">
+                                    <div v-if="step == 1" id="curriculum">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-7">
 
                                                 <div class="text-center">
-                                                    <button v-if="!showAddSectionModal" class="btn btn-outline-primary btn-rounded btn-sm ml-1" @click.prevent="showAddSectionModal = true"><fa icon="plus" /> Add Section</button>
+                                                    <button v-if="!showAddSectionModal" class="btn btn-outline-primary rounded btn-sm ml-1" @click.prevent="openSectionModal"><fa icon="plus" /> Add Section</button>
 
-                                                    <button v-if="!showAddLessonModal" class="btn btn-outline-primary btn-rounded btn-sm ml-1" @click.prevent="showAddLessonModal = true"><fa icon="plus" /> Add Lesson</button>
+                                                    <button v-if="!showAddLessonModal" class="btn btn-outline-primary rounded btn-sm ml-1" @click.prevent="openLessonModal"><fa icon="plus" /> Add Lesson</button>
 
-                                                    <a href="javascript::void(0)" class="btn btn-outline-primary btn-rounded btn-sm ml-1" onclick="showAjaxModal('http://demo.academy-lms.com/default/modal/popup/section_add/26', 'Add new section')"><fa icon="plus" /> Add section</a>
+                                                    <button v-if="!showAddQuizModal" class="btn btn-outline-primary rounded btn-sm ml-1" @click.prevent="openQuizModal"><fa icon="plus" /> Add Quiz</button>
 
-                                                    <a href="javascript::void(0)" class="btn btn-outline-primary btn-rounded btn-sm ml-1" onclick="showAjaxModal('http://demo.academy-lms.com/default/modal/popup/section_add/26', 'Add new section')"><fa icon="plus" /> Sort Sections</a>
+                                                    <a href="javascript::void(0)" class="btn btn-outline-primary rounded btn-sm ml-1" onclick="showAjaxModal('http://demo.academy-lms.com/default/modal/popup/section_add/26', 'Add new section')"><fa icon="plus" /> Sort Sections</a>
                                                 </div>
 
                                                 <template v-if="sections.length != 0">                                                        
                                                     <div class="my-5">
 
-                                                        <section class="p-4 rounded bg-secondary mb-3" v-for="(section, index) in sections" :key="section.id">
-                                                            <h6>Section {{index + 1}}: &nbsp; <b>{{section.title}}</b></h6>
-                                                        </section>
+                                                        <div>
+                                                            <section class="p-4 rounded bg-secondary mb-3" v-for="(section, index) in sections" :key="`${section.id}-section`">
+                                                                <h6 class="mb-4">Section {{index + 1}}: &nbsp; <b>{{section.title}}</b></h6>
+                                                                <div v-for="(lesson, index) in section.lessons" :key="`${index}-lesson`" class="p-3 bg-white border rounded mb-2">
+                                                                    <h6 class="mb-0"><fa icon="play-circle" v-if="lesson.lesson_type === 'VIDEO'" /> <span class="text-muted">Lesson {{index + 1}}</span><span class="font-weight-bold">: {{lesson.title}}</span> </h6>
+                                                                </div>
+                                                                <div v-for="(quiz, index) in section.quizzes" :key="`${index}-quiz`" class="p-3 bg-white border rounded mb-2">
+                                                                    <h6 class="mb-0"><fa icon="question-circle" /> <span class="text-muted">Quiz {{index + 1}}</span><span class="font-weight-bold">: {{quiz.title}}</span> </h6>
+                                                                </div>
+                                                            </section>
+                                                        </div>
 
                                                     </div>
                                                 </template>
@@ -128,7 +136,7 @@
                                     </div>
 
                                     <!-- // Basic Course Information -->
-                                    <div id="basic" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 2"  id="basic">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -196,7 +204,7 @@
                                     </div>
 
                                     <!-- // Course Requirements -->
-                                    <div id="requirements" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 3"  id="requirements">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -246,7 +254,7 @@
                                     </div>
 
                                     <!-- // Course Outcomes -->
-                                    <div id="outcomes" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 4"  id="outcomes">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -274,7 +282,7 @@
                                     </div>
 
                                     <!-- // Course Pricing -->
-                                    <div id="pricing" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 5"  id="pricing">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -321,7 +329,7 @@
                                     </div>
 
                                     <!-- // Course Media -->
-                                    <div id="media" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 6"  id="media">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -358,7 +366,7 @@
                                     </div>
 
                                     <!-- // Course SEO -->
-                                    <div id="seo" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 7"  id="seo">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
 
@@ -383,7 +391,7 @@
                                     </div>
 
                                     <!-- // Course Finished -->
-                                    <div id="finish" class="tab-pane fade" aria-expanded="true">
+                                    <div v-if="step == 8"  id="finish">
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
                                                 
@@ -400,6 +408,33 @@
                                         </div>
                                     </div>
 
+                                    <!-- // Prev and Next Button -->
+                                    <div class="row justify-content-center mt-3">
+                                        <div class="col-lg-auto">
+                                            <!-- // Previous button -->
+                                            <button v-if="step <= 1" class="btn btn-sm btn-default" disabled>
+                                                <fa icon="arrow-left" fixed-width /> 
+                                            </button>
+                                            
+                                            <button v-else class="btn btn-sm btn-default" @click.prevent="prev()">
+                                                <fa icon="arrow-left" fixed-width /> 
+                                            </button>
+
+                                        </div>
+                                        <div class="col-lg-auto">
+                                            <!-- // Next Button -->
+                                            <button v-if="step >= 8" disabled class="btn btn-sm btn-default" @click.prevent="next()">
+                                                <fa icon="arrow-right" fixed-width /> 
+                                            </button>
+
+                                            <button v-else class="btn btn-sm btn-default" @click.prevent="next()">
+                                                <fa icon="arrow-right" fixed-width /> 
+                                            </button>
+                                            
+
+                                        </div>
+                                    </div>
+
                                 </form>
                             </div>
                         </div>
@@ -409,17 +444,22 @@
         </div>
 
         <transition name="fade">
-            <add-section-modal :course_id="course.id" v-if="showAddSectionModal" @close="showAddSectionModal = false"></add-section-modal>
+            <add-section-modal :course_id="course.id" v-if="showAddSectionModal" @close="closeSectionModal" @clicked="saveNewSection"></add-section-modal>
         </transition>
 
         <transition name="fade">
-            <add-lesson-modal :course_id="course.id" v-if="showAddLessonModal" @close="showAddLessonModal = false"></add-lesson-modal>
+            <add-lesson-modal :course_id="course.id" v-if="showAddLessonModal" @close="closeLessonModal" @clicked="saveNewLesson"></add-lesson-modal>
+        </transition>
+
+        <transition name="fade">
+            <add-quiz-modal :course_id="course.id" v-if="showAddQuizModal" @close="closeQuizModal"></add-quiz-modal>
         </transition>
 
     </div>
 </template>
 
 <script>
+    let myBody = null
    
     import axios from 'axios'
     import Form from 'vform'
@@ -427,6 +467,7 @@
     // Modals
     import AddSectionModal from '../../../components/instructor/courses/add_section'
     import AddLessonModal from '../../../components/instructor/courses/add_lesson'
+    import AddQuizModal from '../../../components/instructor/courses/add_quiz'
 
     if (process.client) {
         let objectToFormData = document.createElement('script')
@@ -437,7 +478,8 @@
     export default {
 
         components: {
-            AddSectionModal, AddLessonModal
+            AddSectionModal, AddLessonModal,
+            AddQuizModal
         },
 
         scrollToTop: true,
@@ -485,8 +527,10 @@
             config: {
                 // Add Config for Froala WYSIWYG   
             },
+            step: 1,
             showAddSectionModal: false,
-            showAddLessonModal: false
+            showAddLessonModal: false,
+            showAddQuizModal: false
         }),
 
         methods: {
@@ -494,7 +538,6 @@
                 const file = e.target.files[0]
                 this.form.image = file
             },
-
 
             async update() {
                 try {
@@ -556,14 +599,70 @@
 
             prev: function () {
                 this.step--
+            },
+
+            openSectionModal: function () {
+                this.showAddSectionModal = true
+
+                // Add Class to bdy
+                myBody.classList.toggle('modal-open')
+            },
+
+            closeSectionModal: function () {
+                this.showAddSectionModal = false
+                myBody.classList.remove('modal-open')
+            },
+
+            openLessonModal: function () {
+                this.showAddLessonModal = true
+
+                // Add Class to Body
+                myBody.classList.toggle('modal-open')
+            },
+
+            closeLessonModal: function () {
+                this.showAddLessonModal = false
+                myBody.classList.remove('modal-open')
+            },
+
+            openQuizModal: function () {
+                this.showAddQuizModal = true
+
+                // Add Class to Body
+                myBody.classList.toggle('modal-open')
+            },
+            
+            closeQuizModal: function () {
+                this.showAddQuizModal = false
+                myBody.classList.remove('modal-open')
+            },
+
+            // Emit Data
+            saveNewSection(value) {
+                this.sections.push({
+                    id: value.id,
+                    title: value.title,
+                    slug: value.slug
+                })
+            },
+
+            // Save New Lesson
+            saveNewLesson(value) {
+                this.sections[0].lessons.push({
+                    course_section_id: value.course_section_id,
+                    lesson_image: value.lesson_image,
+                    title: value.title,
+                    lesson_type: value.lesson_type,
+                    lesson_provider: value.lesson_provider,
+                    thumbnail: value.thumbnail,
+                    video_url: value.video_url,
+                    duration: value.duration,
+                    lesson_attachment: value.lesson_attachment,
+                    summary: value.summary,
+                    id: value.id
+                })
             }
 
-        },
-
-        watch: {
-            section: function (newSection, oldSection) {
-                this.debouncedSections()
-            }
         },
 
         async asyncData({ params, error }) {
@@ -577,9 +676,7 @@
 
         created() {
             this.form.keys().forEach((key) => {
-                if(!this.form['image']) {
-                    this.form[key] = this.course[key]
-                }
+                this.form[key] = this.course[key]
             })
         },
 
@@ -587,6 +684,10 @@
             discountPercentage() {
                 return this.percentage = ((1 - (this.form.discount / this.form.price)) * 100).toFixed(0)
             }
+        },
+
+        mounted: function () {
+            myBody = document.getElementsByTagName('body')[0]
         }
 
     }

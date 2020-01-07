@@ -4,9 +4,10 @@
             <client-only>
                 <offline-alert/>
             </client-only>
+
             <!-- // jumbotron -->
-            <div class="jumbotron mb-0 bg-gradient-default">
-                <section class="section-sm">
+            <div class="jumbotron mb-0 bg-dark">
+                <section class="">
                     <div class="container">
                         <div class="row">
                             <!-- Course Overview -->
@@ -55,115 +56,175 @@
                         <div class="col-lg-8">  
 
                             <!-- // What Will I learn? -->
-                            <div class="border rounded bg-secondary p-3">
-                                <h4>What will I learn?</h4>
-                                <ul class="list-unstyled p-0 m-0 mt-4 align-items justify-content flex-wrap what-you-get-box">
-                                    <template v-if="!isExpandedOutcome">                                        
-                                        <li v-for="(outcome, index) in course.outcomes.slice(0, 5)" :key="outcome.id" class="mb-1">
-                                            <div class="d-flex">
-                                                <div>
-                                                    <fa icon="check" class="text-success mr-2" />
-                                                </div>
-                                                <div>
-                                                    {{outcome.description}}
-                                                </div>
-                                            </div>
+                            <div class="course__outcome">
+                                <div class="course__outcome--title">
+                                    What will I learn?
+                                </div>
+                                <template v-if="!isExpandedOutcome">
+                                    <ul class="course__outcome--items mt-4">
+                                        <li v-for="(item, key) in course.outcomes.slice(0, 6)" :key="key">
+                                            {{item.description}}
                                         </li>
-                                        <li class="mt-2" v-if="course.outcomes.length > 5">
-                                            <a href="#" @click.prevent="showOutcome"> <fa icon="plus" fixed-width /> &nbsp; Show More </a>
+                                    </ul>
+                                    <div class="mt-2" v-if="course.outcomes.length > 6">
+                                        <a href="#" @click.prevent="showOutcome"> <fa icon="plus" fixed-width /> &nbsp; Show More </a>
+                                    </div>
+                                </template>
+
+                                <template v-else>
+                                    <ul class="course__outcome--items mt-4">
+                                        <li v-for="(outcome, key) in course.outcomes" :key="key">
+                                            {{outcome.description}}
                                         </li>
-                                    </template>
-                                    <template v-else>
-                                        <li v-for="outcome in course.outcomes" :key="outcome.id" class="mb-1">
-                                            <div class="d-flex">
-                                                <div>
-                                                    <fa icon="check" class="text-success mr-2" />
-                                                </div>
-                                                <div>
-                                                    {{outcome.description}}
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="mt-2">
-                                            <a href="#" @click.prevent="lessOutcome"><fa icon="minus" fixed-width /> &nbsp; Show Less</a>
-                                        </li>                    
-                                    </template>
-                                </ul>
+                                    </ul>
+                                    <div class="mt-2">
+                                        <a href="#" @click.prevent="lessOutcome"><fa icon="minus" fixed-width /> &nbsp; Show Less</a>
+                                    </div>                    
+                                </template>
+                            </div>
+
+                            <!-- // Course Requirements and For who -->
+                            <div class="mt-5">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <h4>Who this course is for?</h4>
+                                        <div class="mt-4">
+                                            <ul class="pl-3 text-justify">
+                                                <li v-for="who in course.whos" :key="who.id">
+                                                    {{who.description}}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <h4>Requirements</h4>
+                                        <div class="mt-4">
+                                            <ul class="pl-3 text-justify">
+                                                <li v-for="(item, key) in course.requirements" :key="key">
+                                                    {{item.description}}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>             
                             </div>
 
                             <!-- // Course Description -->
                             <div class="mt-5">
                                 <h4>Description</h4>
                                 <div class="mt-4">
-                                    <read-more more-str="read more" less-str="read less" :max-chars="1000" :text="course.description"></read-more>
-                                </div>
-                                <h5 class="mt-5"><b>Who this course is for?</b></h5>
-                                <ul>
-                                    <li v-for="who in course.whos" :key="who.id">
-                                        {{who.description}}
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="mt-5">
-                                <h4>Course Content <span class="float-right text-muted"><small>220 Lectures</small></span></h4>
-                                <!-- // Course Sections  -->
-                                <div class="accordion mt-3" id="accordionExample">
-                                    <div class="card">
-                                        <div class="card-header" id="headingOne">
-                                            <h2 class="mb-0">
-                                                <button class="btn btn-link text-muted text-capitalize" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                    <fa icon="plus" fixed-width class="mr-2" />Collapsible Group Item #1
-                                                </button>
-                                            </h2>
-                                        </div>
-
-                                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                            <div class="card-body">
-                                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card">
-                                        <div class="card-header" id="headingTwo">
-                                            <h2 class="mb-0">
-                                                <button class="btn btn-link collapsed text-muted text-capitalize" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                    <fa icon="plus" fixed-width class="mr-2" />Collapsible Group Item #2
-                                                </button>
-                                            </h2>
-                                        </div>
-                                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                                            <div class="card-body">
-                                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card">
-                                        <div class="card-header" id="headingThree">
-                                            <h2 class="mb-0">
-                                                <button class="btn btn-link collapsed text-muted text-capitalize" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                    <fa icon="plus" fixed-width class="mr-2" />Collapsible Group Item #3
-                                                </button>
-                                            </h2>
-                                        </div>
-                                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                                            <div class="card-body">
-                                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <client-only>
+                                        <read-more more-str="read more" less-str="read less" :max-chars="1000" :text="course.description"></read-more>
+                                    </client-only>
                                 </div>
                             </div>
 
+                            <!-- // Might Like Courses -->
+                            <div class="mt-5" v-if="mightLikes.length != 0">
+                                <h4>You might like</h4>
+                                <hr class="mb-0 mt-3" style="border-top: 0.25rem solid rgba(0, 0, 0, 0.1);">
+                                <div v-for="(item, key) in mightLikes" :key="key" class="search_body py-2 pl-2 pr-3 border-bottom">
+                                    <router-link :to="{ name: 'course.show', params: { slug: item.slug } }">
+                                        <div class="row">
+                                            <div class="col-lg-auto">
+                                                <client-only>
+                                                    <cld-image :publicId="`${item.image_public_id}.png`" alt="" >
+                                                        <cld-transformation height="70" width="125" crop="fill" />
+                                                    </cld-image>
+                                                </client-only>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <h6 class="mb-0 font-weight-600">{{item.title}}</h6>
+                                                <h6 class="text-muted mt-1"><small>Updated {{item.updated_at | moment(' L')}}</small></h6>
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <h6 class="mb-0"><fa icon="star" fixed-width style="color: #f4c150" /> 4.4</h6>
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <h6 class="mb-0"><fa icon="user" fixed-width class="text-muted" /> 350</h6>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="float-right">
+                                                    <div v-if="item.has_discount == 0">
+                                                        <h6 class="font-weight-bold text-right">₱{{item.price | numeral('0,0.00')}}</h6>
+                                                    </div>
+                                                    <div v-if="item.has_discount == 1">
+                                                        <h6 class="font-weight-bold text-right">₱{{item.discount | numeral('0,0.00')}}</h6>
+                                                        <h6 class="text-muted float-right"><strike>₱{{item.price | numeral('0,0.00')}}</strike></h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </router-link>
+                                </div>
+                            </div>
+
+                            <!-- // Course content -->
+                            <div class="mt-5 course-curriculum-box">
+                                <div class="course-curriculum-title clearfix">
+                                    <div class="title float-left">Curriculum for this course</div>
+                                    <div class="float-right m-t-5">
+                                        <span @click="toggle" class="collapse-all" style="cursor: pointer;" v-if="!show">
+                                            Expand All
+                                        </span>
+                                        <span @click="toggle" class="collapse-all" style="cursor: pointer;" v-else>
+                                            Collapse All
+                                        </span>
+                                        <span class="total-lectures">
+                                            {{countLessons}} Lessons              
+                                        </span>
+                                        <span class="total-time">
+                                            {{duration}} Hours              
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- // Course Curriculum Accordion -->
+                                <div class="course__curriculum-accordion">
+                                    <div class="lecture__group-wrapper">
+                                        <div v-for="(item, index) in sections" :key="`${index}-section`" >
+                                            <!-- // Lecture -->
+                                            <div class="lecture__group-title clearfix" :aria-expanded="show ? 'true' : 'false'">
+                                                <!-- // Lesson Title -->
+                                                <div class="title float-left">
+                                                    <!-- <fa icon="plus" fixed-width class="text-primary font-weight-300" /> -->
+                                                    {{ item.title }}
+                                                </div>
+                                                <!-- // Lesson Data -->
+                                                <div class="float-right">
+                                                    <span class="total-lectures">
+                                                        {{ item.lessons.length }} Lessons
+                                                    </span>
+                                                    <span class="total-time">
+                                                        00:15:00 Hours
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <!-- // Lectures -->
+                                            <div class="lecture-list">
+                                                <ul class="list-unstyled mb-0">
+                                                    <li v-for="(lesson, index) in item.lessons" :key="`${index}-lesson`" class="lecture has-preview" v-show="show">
+                                                        <span class="lecture-title">{{ lesson.title }}</span>
+                                                        <span class="lecture-time float-right">{{ lesson.duration }}</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <!-- // Course Tutor  -->
-
                             <div class="mt-5" id="course-instructor">
                                 <div class="row">
                                     <div class="col-lg-3">
-                                        <cld-image v-if="course.user.photo_url != 'users/default.png'" :publicId="`${course.user.avatar_public_id}.png`">
-                                            <cld-transformation height="130" width="130" crop="fill" radius="100" />
-                                        </cld-image>
+                                        <template v-if="course.user.photo_url != 'users/default.png'" >
+                                            <client-only>
+                                                <cld-image :publicId="`${course.user.avatar_public_id}.png`" alt="" >
+                                                    <cld-transformation height="130" width="130" crop="fill" radius="100" />
+                                                </cld-image>
+                                            </client-only>
+                                        </template>
+                                        
                                         <img v-if="course.user.photo_url == 'users/default.png'" :src="course.user.photo_url" class="rounded-circle img-fluid course__user-img" alt="">
 
                                         <ul class="list-unstyled mt-3">
@@ -177,7 +238,9 @@
                                         <h5 class="mt-2 mb-1"><b>{{course.user.name}}</b></h5>
                                         <h6 class="text-dark">{{course.user.introduction}}</h6>
                                         <div class="mt-3">
-                                            <read-more more-str="read more" less-str="read less" :max-chars="500" :text="course.user.biography"></read-more>
+                                            <client-only>
+                                                <read-more v-if="course.user.biography" more-str="read more" less-str="read less" :max-chars="500" :text="course.user.biography"></read-more>
+                                            </client-only>
                                         </div>
                                     </div>
                                 </div>
@@ -188,39 +251,30 @@
                         <!-- // Card Course Video Overview -->
                         <div class="col-lg-4 hidden-xs-down">
                             <div class="sticky-top">
-                                <div class="card shadow-sm mt---1">
+                                <div class="card shadow-sm" style="margin-top: -335px;">
                                     <div class="card-body p-0">
                                         <div class="preview-video-box">
-                                            <vue-plyr>
-                                                <div class="plyr__video-embed">
-                                                    <!-- youtube div element -->
-                                                    <client-only>
-                                                        <vue-plyr v-if="course.course_overview_provider == 'Youtube'">
-                                                            <div data-plyr-provider="youtube" autopause="true" :data-plyr-embed-id="course.course_overview_url"></div>
-                                                        </vue-plyr>
-                                                        <vue-plyr v-if="course.course_overview_provider == 'Vimeo'">
-                                                            <div data-plyr-provider="vimeo" :data-plyr-embed-id="course.course_overview_url"></div>
-                                                        </vue-plyr>
-                                                        
-                                                    </client-only>
-                                                </div>
-                                            </vue-plyr>
+                                            <a href="#" @click="openPlayerModal">
+                                                <img :src="course.image" class="img-fluid" style="width: 100%; height: 215px;" alt="">
+                                            </a>
                                         </div>
                                         <div class="p-4">
                                             <div class="pricing">
                                                 <h2 class="font-weight-500">
-                                                    <client-only>
-                                                        <div class="d-flex">
-                                                            <div>
-                                                                <span v-if="!course.has_discount">₱{{course.price | numeral('₱0,0.00')}}</span>
-                                                                <span v-else>₱{{course.discount | numeral('₱0,0.00')}}</span>
-                                                            </div>
-                                                            <div v-if="course.has_discount" class="ml-2">
-                                                                <strike class="text-muted small"><small>₱{{course.price | numeral('₱0,0.00')}}</small></strike>
-                                                                <span class="text-danger small"><small>{{percentage}}% off</small></span>
-                                                            </div>
-                                                        </div>
-                                                    </client-only>
+                                                <div class="d-flex">
+                                                    <div>
+                                                        <client-only>
+                                                            <span v-if="!course.has_discount">₱{{course.price | numeral}}</span>
+                                                            <span v-else>₱{{course.discount | numeral}}</span>
+                                                        </client-only>
+                                                    </div>
+                                                    <div v-if="course.has_discount" class="ml-2">
+                                                        <client-only>
+                                                            <strike class="text-muted small"><small>₱{{course.price | separator }}</small></strike>
+                                                            <span class="text-danger small"><small>{{percentage}}% off</small></span>
+                                                        </client-only>
+                                                    </div>
+                                                </div>
                                                 </h2>
                                             </div>
                                             <div class="mt-4">
@@ -234,22 +288,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                 <!-- // What Will I learn? -->
-                                <div class="border rounded bg-secondary p-3 mt-4">
-                                    <h4>Requirements</h4>
-                                    <ul class="list-unstyled p-0 m-0 mt-4 align-items justify-content flex-wrap what-you-get-box">
-                                        <li v-for="requirement in course.requirements" :key="requirement.id" class="">
-                                            <div class="d-flex">
-                                                <div>
-                                                    <fa icon="check-circle" class="text-muted mr-2" />
-                                                </div>
-                                                <div>
-                                                    {{requirement.description}}
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
                             </div>
                            
                         </div>
@@ -257,14 +295,9 @@
                 </div>
             </section>
 
-            <!-- // Might Like Courses -->
-            <section class="section-sm bg-secondary">
-                <div class="container">
-
-                    <might-likes></might-likes>
-
-                </div>
-            </section>
+            <transition name="fade" mode="out-in">
+                <video-plyr v-if="isModalVisible" @close="closePlayerModal"></video-plyr>
+            </transition>
 
         </div>
 
@@ -272,13 +305,21 @@
 </template>
 
 <script>
+    let myBody = null
+
     import axios from 'axios'
     import MightLikes from '../../components/global/MightLike'
+    import VideoPlyr from '../../components/courses/show/video-plyr'
+
+    if (process.client) {
+        let Youtube = document.createElement('script')
+        Youtube.setAttribute('src', "https://www.youtube.com/iframe_api")
+    }
 
     export default {
         
         components: {
-            MightLikes
+            MightLikes, VideoPlyr
         },
     
         layout: 'default',
@@ -289,7 +330,9 @@
 
         data: () => ({
             isModalVisible: false,
-            isExpandedOutcome: false
+            isExpandedOutcome: false,
+            MightLikes: [],
+            show: false
         }),      
 
         async asyncData({ params, error }) {
@@ -297,7 +340,11 @@
                 let { data } = await axios.get(`/course/${params.slug}`)
                 return {
                     course: data.course,
-                    percentage: ((1 - (data.course.discount / data.course.price)) * 100).toFixed(0)
+                    percentage: ((1 - (data.course.discount / data.course.price)) * 100).toFixed(0),
+                    mightLikes: data.mightLikes,
+                    sections: data.sections,
+                    countLessons: data.countLessons,
+                    duration: data.totalDuration
                 }
             } catch (e) {
                 error({ statusCode: 500, message: 'Something went wrong!' })
@@ -305,19 +352,33 @@
         },
 
         methods: {
-            showModal() {
-                this.isModalVisible = true
-            },
-            closeModal() {
-                this.isModalVisible = false
-            },
             showOutcome() {
                 this.isExpandedOutcome = true
             },
             lessOutcome() {
                 this.isExpandedOutcome = false
             },
+
+            // Open Video Player Modal
+            openPlayerModal() {
+                this.isModalVisible = true
+
+                // Add class to body
+                myBody.classList.toggle('modal-open')
+            },
+            closePlayerModal() {
+                this.isModalVisible = false
+                myBody.classList.remove('modal-open')
+            },
+
+            toggle() {
+                this.show = !this.show
+            }
         },
+
+        mounted () {
+            myBody = document.getElementsByTagName('body')[0]
+        }
 
     }
 
@@ -377,36 +438,23 @@
         margin-top: -250px;
         z-index: 10;
     }
-    .what-you-get-box ul li:before {
-        font-family: Font Awesome\ 5 Free;
-        font-weight: 900;
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-font-smoothing: antialiased;
-        display: inline-block;
-        font-style: normal;
-        font-variant: normal;
-        text-rendering: auto;
-        line-height: 1;
-        content: "\f00c";
-        color: #a1a7b3;
-        font-size: 14px;
-        position: absolute;
-        left: 0;
-        top: 4px;
-    }
-    .what-you-get-box ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        flex-wrap: wrap;
-    }
     .mt---1 {
         margin-top: -95%;
     }
     .sticky-top {
         z-index: 0 !important;
+    }
+    .search {
+        &_image {
+            width: 125px;
+            height: 70px;
+            object-fit: cover;
+        }
+        &_body {
+            cursor: pointer;
+        }
+        &_body:hover {
+            background: whitesmoke;
+        }
     }
 </style>

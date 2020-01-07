@@ -14,6 +14,7 @@ use App\Models\Course\CourseRequirement;
 use App\Models\Course\CourseOutcome;
 use App\Models\Course\CourseWho;
 use App\Models\Course\CourseSection;
+use App\Models\Course\CourseSectionLesson;
 
 // Cloud Storage
 use JD\Cloudder\Facades\Cloudder;
@@ -156,29 +157,32 @@ class CourseController extends Controller
         $course = new Course($request->all());
 
         // Check if booleans are true or false
-        if ($request->has_discount == true) {
+        if (isset($request->discount)) {
             $course->has_discount = 1;
+        } else {
+            $course->has_discount = 0;
         }
 
-        if ($request->free_course == true) {
+        if (isset($request->price)) {
+            $course->free_course = 0;
+        } else {
             $course->free_course = 1;
-        }
-
-        if ($request->top_course == true) {
-            $course->top_course = 1;
         }
 
         // Slug
         $course->slug = str_slug($request->title, '-');
 
         // Cloud Upload using Cloudinary API
-        $image = $request->file('image');
-        $name = $request->file('image')->getClientOriginalName();
-        $image_name = $request->file('image')->getRealPath();
-        Cloudder::upload($image_name, null);
-        list($width, $height) = getImageSize($image_name);
-        $image_url = Cloudder::show(Cloudder::getPublicId(), ['width' => $width, 'height' => $height]);
-        $course->image = $image_url;
+        if (isset($request->image)) {
+            $image = $request->file('image');
+            $name = $request->file('image')->getClientOriginalName();
+            $image_name = $request->file('image')->getRealPath();
+            Cloudder::upload($image_name, null);
+            list($width, $height) = getImageSize($image_name);
+            $image_url = Cloudder::show(Cloudder::getPublicId(), ['width' => $width, 'height' => $height]);
+            $course->image = $image_url;
+            $course->image_public_id = Cloudder::getPublicId();
+        }
         // End
 
         $request->user()
@@ -237,7 +241,8 @@ class CourseController extends Controller
             ->firstOrFail();
 
         $sections = CourseSection::where('course_id', $course->id)
-            ->get(['title', 'slug']);
+            ->with(['lessons', 'quizzes'])
+            ->get(['id', 'title', 'slug']);
 
         return response()
             ->json([
@@ -280,9 +285,23 @@ class CourseController extends Controller
             'whos.*.description' => 'required'
         ]);
 
+
         $course = Course::where('id', $id)
             ->where('teacher_id', Auth::user()->id)
             ->findOrFail($id);
+
+        // Check if booleans are true or false
+        if (isset($request->discount)) {
+            $course->has_discount = 1;
+        } else {
+            $course->has_discount = 0;
+        }
+
+        if (isset($request->price)) {
+            $course->free_course = 0;
+        } else {
+            $course->free_course = 1;
+        }
 
         $requirements = [];
         $requirementsUpdated = [];

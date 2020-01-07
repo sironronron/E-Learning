@@ -15,7 +15,7 @@ const routes = [
   // Course Instructor
   { path: '/course/instructor/:username', name: 'course.instructor.show', component: page('course/instructor.vue') },
   { path: '/search_query', name: 'course.search', component: page('course/search.vue') },
-  { path: '/course/categpry/:slug', name: 'course.category', component: page('course/category.vue') },
+  { path: '/course/category/:slug', name: 'course.category', component: page('course/category/index.vue') },
   // User Authentication
   { path: '/login', name: 'login', component: page('auth/login.vue') },
   { path: '/register', name: 'register', component: page('auth/register.vue') },
@@ -38,15 +38,26 @@ const routes = [
   },
 
   // Help Center
-  { path: '/help-center', name: 'help-center.index', component: page('help-center/index.vue') },
-  { path: '/help-center/category/:slug', name: 'help-center.category', component: page('help-center/category.vue') },
-  { path: '/help-center/category/:categorySlug/:postSlug', name: 'help-center.post', component: page('help-center/post.vue') },
-  { path: '/help-center/search', name: 'help-center.search', component: page('help-center/search.vue') },
+  {
+    path: '/help-center',
+    component: page('help-center/index.vue'),
+    children: [
+      { path: '', redirect: { name: 'help-center.student'} },
+      { path: 'student', name: 'help-center.student', component: page('help-center/student.vue') },
+      { path: 'student/category/:slug', name: 'help-center.student.category', component: page('help-center/category.vue') },
+      { path: 'student/category/:categorySlug/:postSlug', name: 'help-center.student.category.post', component: page('help-center/post.vue') },
+      { path: 'student/search', name: 'help-center.student.search', component: page('help-center/search.vue') },
+      { path: 'contact-us', name: 'help-center.contact', component: page('help-center/contact-us.vue') }
+    ]
+  },
 
   // Teach in E-Learning
   { path: '/teach-with-us', name: 'teach', component: page('teach.vue') },
   // Register as Instructor
   { path: '/register/instructor', name: 'register.instructor', component: page('auth/instructor-register.vue') },
+  // Register as an Instructor if Already Registered
+  { path: '/register/instrutor/v2', name: 'register.instructor.v2', component: page('auth/instructor-register-v2.vue') },
+
 
   // Instructor Pages
   {

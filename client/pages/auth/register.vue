@@ -17,7 +17,7 @@
 							here
 						</router-link> 
 						to resend e-mail verification link or visit the 
-						<router-link :to="{ name: 'company.dashboard' }">
+						<router-link :to="{ name: 'help-center.students' }">
 							Help Center <fa icon="info-circle" fixed-width />
 						</router-link>
 					</h6>

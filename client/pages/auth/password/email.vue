@@ -55,11 +55,14 @@
 		data: () => ({
 			status: '',
 			form: new Form({
-				email: ''
+				email: '',
 			})
 		}),
 
 		methods: {
+			onVerify(response) {
+				this.form.recaptcha = response
+			},
 			async send () {
 				try {
 					const { data } = await this.form.post('/password/email')

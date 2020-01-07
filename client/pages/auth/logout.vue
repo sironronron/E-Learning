@@ -9,7 +9,7 @@
                     </h6>     
                 </div>
 
-                <div class="jumbotron bg-image mb-0 rounded-0">
+                <div class="jumbotron bg-image mb-0 rounded">
                     <section class="section-sm">
                         <div class="container">
                             <!-- // Slogan -->

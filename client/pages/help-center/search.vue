@@ -8,7 +8,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb bg-transparent small p-0">
                                 <li class="breadcrumb-item" aria-current="page">
-                                    <router-link :to="{ name: 'help-center.index' }" class="text-white">Home</router-link>
+                                    <router-link :to="{ name: 'help-center.student' }" class="text-white">Home</router-link>
                                 </li>
                                 <li class="breadcrumb-item active text-white" aria-current="page">Searched for - '{{searchQuery}}'</li>
                             </ol>
@@ -36,15 +36,17 @@
             </div>
         </div>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-2 mt-4">
-                    <div class="">
+        <section class="section-sm">
+            <div class="container">
+
+                <div class="row">
+                    <!-- // Sidebar -->
+                    <div class="col-12 col-xl-2">
                         <h6><b>Student Topics</b></h6>
                         <div class="pt-3">
                             <ul class="list-unstyled small">
                                 <li class="mb-3" v-for="cat in categories" :key="cat.id">
-                                    <router-link :to="{ name: 'help-center.category', params: { slug: cat.slug } }" class="text-dark">
+                                    <router-link :to="{ name: 'help-center.student.category', params: { slug: cat.slug } }" class="text-dark">
                                         <svg width="15" height="15"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <image :xlink:href="cat.icon" height="15" width="15"/>
@@ -55,47 +57,27 @@
                             </ul>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-10 h-100">
-                    <div class="border-left border-right border-bottom bg-white h-100">
-                        <section class="section-sm" style="min-height: 400px;">
-                            <div class="container">
-                                <div class="ml-2" v-if="searchResults.length != 0">
-                                    <div v-for="(group) in groups" :key="group.id">
-                                        <div v-for="item in group" :key="item.id">
-                                            <div class="article">
-                                                <h5>{{item.searchable.title}}</h5>
-                                                <h6 class="text-muted mt-2"><small><fa icon="clock" /> {{ item.searchable.created_at | moment('MMMM D, YYYY') }}</small></h6>
-                                                <h6 class="mt-4 mb-5">
-                                                    {{item.searchable.excerpt}}
-                                                </h6>
-                                                <h6>
-                                                    <router-link :to="{ name: 'help-center.post', params: { categoryId: item.searchable.category_id, postSlug: item.searchable.slug } }" class="btn btn-outline-default text-capitalize btn-sm">
-                                                        Read More
-                                                    </router-link>
-                                                </h6>
-                                                <hr style="margin-left: -15px;">
-                                            </div>
-                                        </div>
-                                    </div>
+                    <!-- // Main Content -->
+                    <div class="col-12 col-xl-10">
+                        <card class="p-3 main-content border h-100 h-100vh">
+                            <h4 class="font-weight-300">You searched for - "{{searchQuery}}"</h4>
+                            <template v-if="searchResults.length != 0">
+                                <div v-for="(group) in groups" :key="group.id">
+                                    <ul class="list-unstyled mt-3">
+                                        <li v-for="item in group" :key="item.id">
+                                            <router-link :to="{ name: 'help-center.student.category.post', params: { categorySlug: item.searchable.category_id, postSlug: item.searchable.slug } }" class="btn btn-link p-0 font-weight-400 text-capitalize">{{item.title}}</router-link>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div v-else class="row justify-content-center align-items-center">
-                                    <div class="col-lg-6">
-                                        <div class="text-center">
-                                            <svg width="100" height="100"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <image xlink:href="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,h_100/v1574303740/Logos/search_fi9mlk.svg" width="100" height="100"/>
-                                            </svg>
-                                            <h4 class="mt-3">No Results found for "{{searchQuery}}"</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
+                            </template>
+                        </card>
                     </div>
+
                 </div>
+
             </div>
-        </div>
+        </section>
+
     </div>
 </template>
 
@@ -103,8 +85,6 @@
     import axios from 'axios'
 
     export default {
-
-        layout: 'help-center',
 
         scrollToTop: false,
         
@@ -134,7 +114,7 @@
 
         methods: {
             submit() {
-                this.$router.push('/help-center/search?q=' + this.search)
+                this.$router.push('/help-center/student/search?q=' + this.search)
             }
         },
 
@@ -172,5 +152,10 @@
     }
     .breadcrumb-item + .breadcrumb-item::before {
         color: #ffffff;
+    }
+    .main-content {
+        margin-top: -33px;
+        margin-bottom: -33px; 
+        height: 100%;
     }
 </style>

@@ -19,14 +19,18 @@ module.exports = {
   head: {
     title: process.env.APP_NAME,
     titleTemplate: '%s - ' + process.env.APP_NAME,
+    htmlAttrs: {
+      lang: 'en',
+    },
     meta: [
       { charset: 'utf-8' },
-      // { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: 'Nuxt.js project' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Open+Sans&display=swap' }
+      { rel: 'icon', type: 'image/x-icon', href: '/icon.png' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Open+Sans&display=swap' },
+      { rel: 'stylesheet', href: 'https://use.fontawesome.com/releases/v5.0.1/css/all.css' }
     ]
   },
 
@@ -54,6 +58,7 @@ module.exports = {
     '~plugins/vue-plyr',
     // '~plugins/nuxt-client-init', // Comment this for SSR
     '~plugins/cloudinary',
+    { src: '~plugins/carousel', mode: 'client' },
     { src: '~plugins/readmore', mode: 'client' },
     { src: '~plugins/offline-alert', mode: 'client' },
     { src: '~plugins/numerals', mode: 'client' },
@@ -64,13 +69,25 @@ module.exports = {
   ],
 
   modules: [
-    '@nuxtjs/router'
+    '@nuxtjs/router',
+    '@nuxtjs/pwa'
   ],
 
-  server: {
-    port: 3000, // default: 3000
-    host: '0.0.0.0' // default: localhost
+  icon: {
+    iconSrc: './static/icon.png'
   },
+
+  manifest: {
+    short_name: 'EL',
+    name: 'E-Learning',
+    start_url: '/',
+    theme_color: '#bc4e9c'
+  },
+
+  // server: {
+  //   port: 3000, // default: 3000
+  //   host: '0.0.0.0' // default: localhost
+  // },
 
   build: {
     extractCSS: true

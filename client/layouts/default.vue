@@ -8,7 +8,7 @@
 			<nuxt />
 		</div>
 
-		<div>
+		<div class="mt-5"> 
 			<footer class="bg-white border-top" style="border-bottom: solid 5px #bc4e9c">
 				<section class="section-sm">
 					<div class="container">
@@ -28,7 +28,7 @@
 										<a class="nav-link" href="http://demo.academy-lms.com/default/home/terms_and_condition">Terms &amp; condition</a>
 									</li>
 									<li class="nav-item">
-										<router-link :to="{ name: 'help-center.index' }" class="nav-link">
+										<router-link :to="{ name: 'help-center.student' }" class="nav-link">
 										    Help Center
 										</router-link>
 									</li>

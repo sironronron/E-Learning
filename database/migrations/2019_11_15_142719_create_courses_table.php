@@ -58,6 +58,9 @@ class CreateCoursesTable extends Migration
             $table->enum('course_overview_provider', ['Youtube', 'Vimeo', 'HTML5'])->default('Youtube');
             $table->string('course_overview_url');
 
+            // Featured
+            $table->boolean(('featured'))->default(0);
+
             // SEO
             $table->string('meta_keywords')->nullable();
             $table->string('meta_description')->nullable();

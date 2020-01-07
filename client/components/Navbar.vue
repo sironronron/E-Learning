@@ -18,9 +18,9 @@
 						</a>
 						<div class="dropdown-menu">
 							<template v-if="!isLoading">
-								<a href="#" class="dropdown-item" v-for="tab in categories" :key="tab.id">
+								<router-link :to="{ name: 'course.category', params: { slug: tab.slug } }" class="dropdown-item" v-for="tab in categories" :key="tab.id">
 									{{tab.name}}
-								</a>
+								</router-link>
 							</template>
 							<template v-else>
 								<div class="mx-lg-4">
@@ -45,7 +45,7 @@
 					<div class="input-group input-group-alternative">
 						<input aria-describedby="addon-right addon-left" type="text" v-model="search" name="search" placeholder="Search for courses" class="form-inline form-control rounded-left">
 						<div class="input-group-prepend">
-							<a type="button" class="input-group-text btn btn-danger">
+							<a type="button" class="input-group-text">
 								<fa icon="search" fixed-width />
 							</a>
 						</div>
@@ -77,13 +77,13 @@
 							<div class="dropdown-menu dropdown-menu-right">
 								<div class="p-3 text-center">
 									<h6>Start learning from over 100,000 courses today.</h6>
-									<h6 class="mt-2 text-small mb-0"><a href="#">Browse now</a></h6>
+									<h6 class="mt-2 text-small mb-0"><router-link :to="{ name: 'home' }">Browse now</router-link></h6>
 								</div>
 							</div>
 						</li>
 						<li class="nav-item dropdown">
 							<a href="#" class="nav-link" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<fa icon="cart-plus" class="h5 mb-0" fixed-width />
+								<fa icon="shopping-cart" class="h5 mb-0" fixed-width />
 							</a>
 							<div class="dropdown-menu dropdown-menu-right">
 								<div class="p-3 text-center">
@@ -106,20 +106,24 @@
 							<a class="nav-link"
 							href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
 							>
-								<img v-if="user.avatar == 'users/default.png'" :src="user.photo_url" class="rounded-circle profile-photo mr-1">
-								<cld-image v-else :publicId="`${user.avatar_public_id}.png`" class="mr-1 profile-photo">
-                                	<cld-transformation height="30" width="30" crop="fill" radius="100" />
-                                </cld-image>
+								<img v-if="user.avatar == 'users/default.png'" :src="user.photo_url" class="rounded-circle profile-photo mr-1" alt="">
+								<client-only v-else>
+									<cld-image :publicId="`${user.avatar_public_id}.png`" class="mr-1 profile-photo" alt="">
+										<cld-transformation height="30" width="30" crop="fill" radius="100" />
+									</cld-image>
+								</client-only>
 							</a>
 							<div class="dropdown-menu dropdown-menu-right">
 								<div >
 									<a href="#" class="dropdown-item mb-2 dropdown-item-2">
 										<div class="row">
 											<div class="col-lg-2">
-												<img v-if="user.avatar == 'users/default.png'" :src="user.photo_url" class="rounded-circle profile-photo-2 mr-1">
-												<cld-image v-else :publicId="`${user.avatar_public_id}.png`" class="profile-photo-2">
-													<cld-transformation height="46" width="46" crop="fill" radius="100" />
-												</cld-image>
+												<img v-if="user.avatar == 'users/default.png'" :src="user.photo_url" class="rounded-circle profile-photo-2 mr-1" alt="">
+												<client-only v-else>
+													<cld-image :publicId="`${user.avatar_public_id}.png`" class="profile-photo-2" alt="">
+														<cld-transformation height="46" width="46" crop="fill" radius="100" />
+													</cld-image>
+												</client-only>
 											</div>
 											<div class="col-lg-10"> 
 												<div class="ml-2 mt-1">
@@ -241,10 +245,11 @@
 		background: whitesmoke;
 	}
 	.form-control:active {
+		border: 1px solid #8a92a3;
 		background: #fff;
 	}
 	.form-control:focus {
-		border: solid 1px;
+		border: 1px solid #8a92a3;
 		background: #fff;
 	}
 	.navbar-collapse.collapsing, .navbar-collapse.show {

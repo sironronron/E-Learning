@@ -40,6 +40,8 @@ class CourseSectionController extends Controller
             ->json([
                 'saved' => true,
                 'id' => $section->id,
+                'title' => $section->title,
+                'slug' => $section->slug,
                 'message' => "Section succesfully saved!"
             ]);
     }

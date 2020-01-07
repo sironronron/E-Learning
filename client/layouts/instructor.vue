@@ -24,7 +24,7 @@
         </div>
 
         <!-- // Footer -->
-        <div>
+        <div class="mt-5">
 			<footer class="bg-secondary border-top">
 				<section class="section-sm">
 					<div class="container text-center">

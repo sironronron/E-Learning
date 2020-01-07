@@ -17,11 +17,11 @@
 								Study any topic, anytime. Explore thousands of courses for the lowest price ever!
 							</h6>
 							<div class="form-group mt-4">
-								<form class="my-auto">
+								<form class="mx-2 my-auto d-inline w-47" @submit.prevent="submit">
 									<div class="input-group input-group-alternative">
-										<input aria-describedby="addon-right addon-left" type="text" name="search" placeholder="Search for courses" class="form-inline form-control form-control-lg rounded-left search-welcome">
+										<input aria-describedby="addon-right addon-left" type="text" name="search" v-model="search" placeholder="Search for courses" class="form-inline form-control form-control-lg rounded-left search-welcome">
 										<div class="input-group-prepend">
-											<span class="input-group-text btn btn-lg btn-default rounded-right p-lg-3">
+											<span class="input-group-text btn btn-lg btn-danger rounded-right p-lg-3">
 												<fa icon="search" fixed-width />
 											</span>
 										</div>
@@ -37,10 +37,10 @@
 		<!-- // Contents -->
 		<div class="jumbotron p-0 mb-0 rounded-0">
 			<section class="home-fact-area bg-gradient-danger">
-				<div class="container-facts">
-					<div class="row justify-content-center">
+				<div class="container">
+					<div class="row justify-content-between">
 						<div class="col-md-4 d-flex">
-							<div class="home-fact-box mr-md-auto ml-auto mr-auto">
+							<div class="home-fact-box ">
 								<fa icon="bullseye" class="float-left mt-3" />
 								<div class="text-box">
 									<h4 class="text-white font-weight-600 mb-0">{{courses.length}} Online courses</h4>
@@ -60,7 +60,7 @@
 						</div>
 
 						<div class="col-md-4 d-flex">
-							<div class="home-fact-box mr-md-auto ml-auto mr-auto">
+							<div class="home-fact-box ml-auto">
 								<fa icon="clock" class="float-left mt-3" />
 								<div class="text-box">
 									<h4 class="text-white font-weight-600 mb-0">Lifetime access</h4>
@@ -143,8 +143,15 @@
 		},
 
 		data: () => ({
-			title: process.env.appName
+			title: process.env.appName,
+			search: ''
 		}),
+
+		methods: {
+			submit() {
+                this.$router.push('/search_query?q=' + this.search)
+            },
+		},
 
 		computed: mapGetters({
 			authenticated: 'auth/check'
@@ -156,7 +163,7 @@
 	.container-facts {
 	}
 	.bg-image {
-		background-image: url('https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,w_1400/v1576218442/HQ%20Images/bonnie-kittle-GiIZSko7Guk-unsplash_lalbmf.jpg'); 
+		background-image: url('https://res.cloudinary.com/dl9phqhv0/image/upload/v1578037130/HQ%20Images/ab06e62a-af34-497f-a603-957132fb78cc_fxm6g4.jpg'); 
 		-webkit-background-size: cover;
 		-moz-background-size: cover;
 		-o-background-size: cover;

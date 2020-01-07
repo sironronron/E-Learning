@@ -1,4 +1,6 @@
-import Vue from 'vue'
-import VueNumeralFilter from 'vue-numeral-filter'
+import Vue from 'vue';
+import VueNumeralFilter from 'vue-numeral-filter';
 
-Vue.use(VueNumeralFilter)
+if (process.client) {
+    Vue.use(VueNumeralFilter);
+}

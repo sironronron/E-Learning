@@ -14,3 +14,4 @@ yarn-error.log
 /dist
 /public/_nuxt
 *.code-workspace
+sw.*

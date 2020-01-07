@@ -28,7 +28,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token'
     ];
 
     /**
@@ -106,8 +106,18 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return [];
     }
 
+    /**
+     * @return array
+     */
     public function courses()
     {
         return $this->hasMany('App\Models\Course\Course', 'teacher_id');
+    }
+
+    /**
+     * @return array
+     */
+    public function userInstructorQuestion() {
+        return $this->hasOne('App\Models\User\UserInstructorQuestion', 'user_id');
     }
 }

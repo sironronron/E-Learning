@@ -94,7 +94,7 @@
 
 <style scoped>
 	.bg-image {
-		background-image: url('https://i.udemycdn.com/notices/featured_banner/image/0d4f1c65-363c-4c91-af1a-b8b10c8cb3ff.jpg'); 
+		background-image: url('https://res.cloudinary.com/dl9phqhv0/image/upload/v1578039329/HQ%20Images/eb91edb8-3561-4cf3-843a-a56790395ab1_itmr9l.jpg'); 
 		-webkit-background-size: cover;
 		-moz-background-size: cover;
 		-o-background-size: cover;

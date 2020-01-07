@@ -1,7 +1,7 @@
 <template>
 	<nav class="navbar navbar-expand-lg navbar-light bg-gradient-default shadow-sm" style="height: 80px;">
 		<div class="container">
-			<router-link :to="{ name: 'instructor.courses' }" class="navbar-brand">
+			<router-link :to="{ name: user.role_id === 3 ? 'instructor.courses' : 'welcome' }" class="navbar-brand">
 				<img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,w_172/v1574062722/Logos/logo-light_gwp73l.png" alt="E-Learning" class="m-t-5 img-fluid" />
 			</router-link>
 
@@ -67,10 +67,7 @@
 									<router-link :to="{ name: 'home' }" class="dropdown-item dropdown-item-2">
 										Go to home
 									</router-link>
-									<router-link :to="{ name: 'settings.account' }" class="dropdown-item dropdown-item-2" v-if="user.role_id === 2">
-										Account
-									</router-link>
-									<router-link :to="{ name: 'instructor.settings' }" class="dropdown-item dropdown-item-2" v-if="user.role_id === 3">
+									<router-link :to="{ name: 'instructor.settings.account' }" class="dropdown-item dropdown-item-2" v-if="user.role_id === 3">
 										Account
 									</router-link>
 									<div class="dropdown-divider"></div>

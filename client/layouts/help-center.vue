@@ -1,73 +1,75 @@
 <template>
-    <div class="bg-secondary">
-        <div>
-            <navbar />
-        </div>
+    <transition name="fade" mode="out-in">
+        <div class="bg-secondary">
+            <div>
+                <navbar />
+            </div>
 
-        <!-- Flash Notification -->
-        <div class="flash" v-if="flash.success">
-            <div class="toast toast--green">
-                <div class="uk-child-width-expand@s" uk-grid>
-                    <div class="uk-width-expand">
-                        <div class="toast__content">
-                            <p class="toast__message">{{ flash.success }}</p>
+            <!-- Flash Notification -->
+            <div class="flash" v-if="flash.success">
+                <div class="toast toast--green">
+                    <div class="uk-child-width-expand@s" uk-grid>
+                        <div class="uk-width-expand">
+                            <div class="toast__content">
+                                <p class="toast__message">{{ flash.success }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="flash" v-if="flash.error">
-            <div class="toast toast--red">
-                <div class="uk-child-width-expand@s" uk-grid>
-                    <div class="uk-width-expand">
-                        <div class="toast__content">
-                            <p class="toast__message">{{ flash.error }}</p>
+            <div class="flash" v-if="flash.error">
+                <div class="toast toast--red">
+                    <div class="uk-child-width-expand@s" uk-grid>
+                        <div class="uk-width-expand">
+                            <div class="toast__content">
+                                <p class="toast__message">{{ flash.error }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- End Flash Notification -->
+            <!-- End Flash Notification -->
 
-        <div>
-            <nuxt />
-        </div>
+            <div>
+                <nuxt />
+            </div>
 
-        <div>
-			<footer class="bg-white border-top" style="border-bottom: solid 5px #bc4e9c">
-				<section class="section-sm">
-					<div class="container">
-						<div class="row">
-							<div class="col-lg-6">
-								<img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,w_150/v1573175311/Logos/logo-dark_uaqwbf.png" alt="E-Learning" class="img-fluid" />
-							</div>
-							<div class="col-lg-6">
-								<ul class="nav justify-content-md-end footer-menu">
-									<li class="nav-item">
-										<a class="nav-link" href="http://demo.academy-lms.com/default/home/about_us">About</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="http://demo.academy-lms.com/default/home/privacy_policy">Privacy policy</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="http://demo.academy-lms.com/default/home/terms_and_condition">Terms &amp; condition</a>
-									</li>
-									<li class="nav-item">
-										<router-link class="nav-link" :to="{ name: 'help-center.index' }">
-										Help Center
-										</router-link>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</section>
-			</footer>
-		</div>
+            <div>
+                <footer class="bg-white border-top" style="border-bottom: solid 5px #bc4e9c">
+                    <section class="section-sm">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,w_150/v1573175311/Logos/logo-dark_uaqwbf.png" alt="E-Learning" class="img-fluid" />
+                                </div>
+                                <div class="col-lg-6">
+                                    <ul class="nav justify-content-md-end footer-menu">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="http://demo.academy-lms.com/default/home/about_us">About</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="http://demo.academy-lms.com/default/home/privacy_policy">Privacy policy</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="http://demo.academy-lms.com/default/home/terms_and_condition">Terms &amp; condition</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <router-link class="nav-link" :to="{ name: 'help-center.student' }">
+                                                Help Center
+                                            </router-link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </footer>
+            </div>
 
-  </div>
+    </div>
+    </transition>
 </template>
 
 <script>

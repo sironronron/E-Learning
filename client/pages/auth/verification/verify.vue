@@ -20,8 +20,8 @@
 								</svg>
 							</div>
 							<p class="lead mt-4">
-								Welcome to E-Learning! To learn how to use our service please click <a href="#">here</a>.
-								If you have any questions you can contact us or go to our <router-link :to="{ name:'help-center.index' }">Help Center</router-link>.
+								Welcome to E-Learning! To learn how to use our service please click <router-link :to="{ name: 'help-center.student.category', params: 'getting-started' }">here</router-link>.
+								If you have any questions you can contact us or go to our <router-link :to="{ name:'help-center.students' }">Help Center</router-link>.
 							</p>
 							<router-link :to="{ name: 'login' }" class="btn btn-white mt-4">
 								Go to Log in Page

@@ -1,7 +1,7 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm" style="border-top: solid 5px #bc4e9c">
 		<div class="container">
-			<router-link :to="{ name: 'help-center.index' }" class="navbar-brand">
+			<router-link :to="{ name: 'help-center.student' }" class="navbar-brand">
 				<img src="https://res.cloudinary.com/dl9phqhv0/image/upload/c_scale,w_150/v1573175311/Logos/logo-dark_uaqwbf.png" alt="E-Learning" class="m-t-5 img-fluid" />
 			</router-link>
 
@@ -23,7 +23,8 @@
 							<a class="nav-link dropdown-toggle"
 							href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
 							>
-								<img :src="user.photo_url" class="rounded-circle profile-photo mr-1">
+								<img v-if="user.avatar == 'users/default.png'" :src="user.photo_url" class="rounded-circle profile-photo mr-1">
+								<img v-if="user.avatar != 'users/default.png'" :src="user.avatar" class="rounded-circle profile-photo mr-1">
 								{{user.name}}
 							</a>
 							<div class="dropdown-menu dropdown-menu-right">
@@ -44,7 +45,7 @@
 							</router-link>
 						</li>
 						<li class="nav-item">
-							<router-link :to="{ name: 'register' }" class="btn btn-default text-capitalize text-white" active-class="active">
+							<router-link :to="{ name: 'register' }" class="btn btn-outline-danger rounded text-capitalize" active-class="active">
 								{{ $t('register') }}
 							</router-link>
 						</li>

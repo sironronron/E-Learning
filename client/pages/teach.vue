@@ -14,7 +14,10 @@
                                 Create an online video course and earn money by teaching people around the world.
                             </h6>
                             <div class="mt-5">
-                                <router-link :to="{ name: 'register.instructor' }" class="btn btn-danger btn-lg text-capitalize">
+                                <router-link v-if="!user" :to="{ name: 'register.instructor' }" class="btn btn-danger btn-lg text-capitalize">
+                                    Become an Instructor
+                                </router-link>
+                                <router-link v-if="user && user.role_id != 3" :to="{ name: 'register.instructor.v2' }" class="btn btn-danger btn-lg text-capitalize">
                                     Become an Instructor
                                 </router-link>
                             </div>
@@ -91,7 +94,10 @@
                     <div class="col-lg-6">
                         <h1 class="font-weight-300">Become an instructor today</h1>
                         <h5 class="mt-2 mb-3">Join the world's largest online learning marketplace.</h5>
-                        <router-link :to="{ name: 'register.instructor' }" class="btn btn-danger text-capitalize btn-lg w-25 mt-4">
+                        <router-link v-if="!user" :to="{ name: 'register.instructor' }" class="btn btn-danger text-capitalize btn-lg w-50 mt-4">
+                            Get Started
+                        </router-link>
+                        <router-link v-if="user && user.role_id != 3" :to="{ name: 'register.instructor.v2' }" class="btn btn-danger text-capitalize btn-lg w-50 mt-4">
                             Get Started
                         </router-link>
                     </div>
@@ -103,12 +109,18 @@
 </template>
 
 <script>
+    import { mapGetters } from 'vuex'
+
     export default {
         layout: 'default',
 
         head() {
             return { title: 'Teach in E-Learning' }
-        }
+        },
+
+        computed: mapGetters({
+            user: 'auth/user'
+        })
     }
 </script>
 
