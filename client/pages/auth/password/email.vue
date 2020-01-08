@@ -24,7 +24,7 @@
 								{{$t('send_password_reset_link')}}
 							</v-button>
 
-							<h6 class="mt-3">If you're still having problem, please contact us by clicking <a href="#">here</a>.</h6>
+							<h6 class="mt-3">If you're still having problem, please contact us by clicking <router-link :to="{ name: 'help-center.contact' }">here</router-link>.</h6>
 
 						</form>
 

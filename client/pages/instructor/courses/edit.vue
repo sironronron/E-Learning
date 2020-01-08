@@ -357,7 +357,7 @@
                                                 <div class="form-group row mb-4">
                                                     <label for="image" class="col-form-label col-lg-2">Image <span class="text-danger">*</span></label>
                                                     <div class="col-lg-10">
-                                                        <input class="mt-3" type="file" name="image" @change="selectFile">
+                                                        <input class="mt-3" type="file" name="image" accept="image/*" @change="selectFile">
                                                     </div>
                                                 </div>
 
@@ -541,30 +541,8 @@
 
             async update() {
                 try {
-                    const { data } = await this.form.submit('patch', `/instructor/courses/${this.course.id}`)
-                    .then((res) => {
-                        this.$router.push({ name: 'instructor.courses' })
-                        this.$swal({
-                            toast: true,
-                            position: 'bottom-end',
-                            timer: 5000,
-                            showConfirmButton: false,
-                            type: 'success',
-                            text: res.data.message
-                        })
-                    })
-                    .catch((err) => {
-                        this.$swal({
-                            toast: true,
-                            position: 'bottom-end',
-                            timer: 5000,
-                            showConfirmButton: false,
-                            type: 'warning',
-                            text: 'Please fill up the required fields.'
-                        })
-                    })
+                   
                 } catch (e) {
-                    console.log(e)
                     return
                 }
             },

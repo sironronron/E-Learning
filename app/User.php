@@ -120,4 +120,12 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function userInstructorQuestion() {
         return $this->hasOne('App\Models\User\UserInstructorQuestion', 'user_id');
     }
+
+    /**
+     * @return array
+     */
+    public function postReactions()
+    {
+        return $this->hasMany('App\Models\Reaction\PostVote', 'user_id')
+;    }
 }

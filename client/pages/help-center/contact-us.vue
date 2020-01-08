@@ -102,7 +102,7 @@
                                     BrainSparks will only use my information to process current and future transactions in accordance with the Data Privacy Act of 2012.
 								</checkbox>
 
-                                <button v-if="form.body == '' && form.agreed_terms == false" class="btn btn-danger rounded mt-4 text-capitalize" disabled>
+                                <button v-if="form.body == '' || form.agreed_terms === false" class="btn btn-danger rounded mt-4 text-capitalize" disabled>
                                     Submit Inquiry
                                 </button>
 

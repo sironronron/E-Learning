@@ -40,8 +40,21 @@
             <div class="container">
 
                 <div class="row">
-                    <!-- // Sidebar -->
-                    <div class="col-12 col-xl-2">
+                    <div class="col-lg-9">
+                        <!-- // Search Results -->
+                        <h4 class="font-weight-300">You searched for - "{{searchQuery}}"</h4>
+                        <template v-if="searchResults.length != 0">
+                            <div v-for="(group) in groups" :key="group.id">
+                                <ul class="list-unstyled mt-3">
+                                    <li v-for="item in group" :key="item.id">
+                                        <router-link :to="{ name: 'help-center.student.category.post', params: { categorySlug: item.searchable.category_id, postSlug: item.searchable.slug } }" class="btn btn-link p-0 font-weight-400 text-capitalize">{{item.title}}</router-link>
+                                    </li>
+                                </ul>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="col-lg-3">
+                        <!-- // Categories -->
                         <h6><b>Student Topics</b></h6>
                         <div class="pt-3">
                             <ul class="list-unstyled small">
@@ -57,27 +70,10 @@
                             </ul>
                         </div>
                     </div>
-                    <!-- // Main Content -->
-                    <div class="col-12 col-xl-10">
-                        <card class="p-3 main-content border h-100 h-100vh">
-                            <h4 class="font-weight-300">You searched for - "{{searchQuery}}"</h4>
-                            <template v-if="searchResults.length != 0">
-                                <div v-for="(group) in groups" :key="group.id">
-                                    <ul class="list-unstyled mt-3">
-                                        <li v-for="item in group" :key="item.id">
-                                            <router-link :to="{ name: 'help-center.student.category.post', params: { categorySlug: item.searchable.category_id, postSlug: item.searchable.slug } }" class="btn btn-link p-0 font-weight-400 text-capitalize">{{item.title}}</router-link>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </template>
-                        </card>
-                    </div>
-
                 </div>
-
+                
             </div>
         </section>
-
     </div>
 </template>
 
@@ -138,24 +134,6 @@
     }
 </script>
 
-<style scoped>
-    @media (min-width: 1200px) { 
-		.container {
-			max-width: 1024px !important;
-        }
-        .container-lg {
-            max-width: 100% !important;
-        }
-    }
-    .router-link-active {
-        font-weight: 700;
-    }
-    .breadcrumb-item + .breadcrumb-item::before {
-        color: #ffffff;
-    }
-    .main-content {
-        margin-top: -33px;
-        margin-bottom: -33px; 
-        height: 100%;
-    }
+<style>
+
 </style>

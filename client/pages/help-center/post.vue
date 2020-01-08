@@ -39,103 +39,109 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12 col-xl-8">
-                <div class="bg-white px-5 py-4 border-right h-100 h-100vh">
-                    <div class="container custom-container">
+        <section class="section-sm">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-lg-9">
+                        <!-- // Post -->
                         <span v-html="post.body">{{post.body}}</span>
+                        <div class="mt-5">
+                            <h6 class="text-muted">Updated {{post.updated_at | moment('from')}}</h6>
+                            <hr class="my-3">
+                            <h5>Was this article helpful?</h5>
+                            <div class="d-flex">
+                                <div>
+                                    <template>
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <fa :icon="['far', 'thumbs-up']" fixed-width />
+                                        </button>
+                                    </template>
+                                </div>
+                                <div class="ml-2">
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <fa :icon="['far', 'thumbs-down']" fixed-width />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-12 col-xl-2">
-                <div class="bg-transparent pt-4">
-                    <div class="container">
-                        <router-link :to="{ name: 'help-center.contact' }" class="btn btn-danger btn-block text-capitalize rounded">Contact Us</router-link>
-                        <div class="mt-4">
-                            <h6><b>Related Articles</b></h6>
-                            <ul class="list-unstyled mt-3">
-                                <li v-for="(item, index) in related" :key="index">
-                                    <router-link :to="{ name: 'help-center.student.category.post', params: { categorySlug: item.category_id, postSlug: item.slug } }" class="btn btn-link text-capitalize p-0 font-weight-400">
-                                        {{item.title}}
+                    <div class="col-lg-3">
+                        <!-- // Categories -->
+                        <h6><b>Student Topics</b></h6>
+                        <div class="pt-3">
+                            <ul class="list-unstyled small">
+                                <li class="mb-3" v-for="cat in categories" :key="cat.id">
+                                    <router-link :to="{ name: 'help-center.student.category', params: { slug: cat.slug } }" class="text-dark">
+                                        <svg width="15" height="15"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <image :xlink:href="cat.icon" height="15" width="15"/>
+                                        </svg>
+                                        <span class="ml-2">{{cat.name}}</span>
                                     </router-link>
                                 </li>
                             </ul>
                         </div>
-                        <div class="mt-4">
-                            <h6><b>Student Topics</b></h6>
-                            <ul class="list-unstyled mt-3">
-                                <li v-for="(category, key) in categories" :key="key">
-                                    <router-link :to="{ name: 'help-center.student.category', params: { slug: category.slug } }" class="btn btn-link text-capitalize p-0 font-weight-500">
-                                        {{category.name}}
-                                    </router-link>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
+
             </div>
-        </div>
+        </section>
 
     </div>
 </template>
-
 
 <script>
     import axios from 'axios'
 
     export default {
-
-        scrollToTop: true,
+        scrollToTop: false,
 
         head() {
-            return { title: `${this.post.title}` }
+            return { title: this.post.title }
         },
 
         data: () => ({
-            search: ''
+            search: '',
+            category: [],
+            categories: [],
+            related: []
         }),
 
-        methods: {
-            submit() {
-                this.$router.push('/help-center/student/search?q=' + this.search)
-            }
-        },
-
-        async asyncData({ params, error }) {
+        async asyncData({ params }) {
             try {
                 let { data } = await axios.get(`/help-center/category/post/${params.categorySlug}/${params.postSlug}`)
                 return {
-                    category: data.category,
-                    post: data.post,
-                    categories: data.categories,
-                    related: data.related
+                    post: data.post
                 }
             } catch (e) {
-                error({ statusCode: 500, message: 'Oopsss... Something went wrong!'})
+                return
+            }
+        },
+
+        created() {
+            this.getCategories()
+        },
+
+        methods: {
+            getCategories: function() {
+                axios.get(`/help-center/category/post/${this.$route.params.categorySlug}/${this.$route.params.postSlug}`)
+                .then((res) => {
+                    this.category = res.data.category
+                    this.categories = res.data.categories
+                    this.related = res.data.related 
+                }).catch((err) => {
+                    console.log(err)
+                })
+            },
+
+            submit: function() {
+                this.$router.push('/help-center/student/search?q=' + this.search)
             }
         }
-
     }
-
 </script>
 
-<style scoped>
-    @media (min-width: 1200px) { 
-		.container {
-			max-width: 1024px !important;
-        }
-        .container-lg {
-            max-width: 100% !important;
-        }
-        .custom-container {
-            padding-left: 8rem !important;
-        }
-    }
-    .router-link-active {
-        font-weight: 700;
-    }
-    .breadcrumb-item + .breadcrumb-item::before {
-        color: #ffffff;
-    }
-    
+<style>
+
 </style>

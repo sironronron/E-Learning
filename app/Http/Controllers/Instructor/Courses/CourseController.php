@@ -269,7 +269,7 @@ class CourseController extends Controller
             'level' => 'required',
             'price' => 'present',
             'discount' => 'present',
-            // 'image' => 'required|mimes:jpg,png,jpeg,webp|between:1,6000',
+            'image' => 'required|mimes:jpg,png,jpeg,webp|between:1,6000',
             'course_overview_provider' => 'required',
             'course_overview_url' => 'required',
             'meta_keywords' => 'required|max:255',

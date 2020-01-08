@@ -1,6 +1,6 @@
 <template>
 	<div class="row justify-content-center">
-		<div class="col-lg-4">
+		<div class="col-lg-5">
 			<div>
 				<form @submit.prevent="update" @keydown="form.onKeydown($event)">
 
@@ -41,7 +41,7 @@
 
 					<div class="form-group">
 						<div>
-							<v-button :loading="form.busy" class="btn-sm float-right">
+							<v-button :loading="form.busy" class="btn-lg btn-block">
 								Update Password
 							</v-button>
 						</div>

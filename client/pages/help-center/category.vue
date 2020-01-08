@@ -40,8 +40,26 @@
             <div class="container">
 
                 <div class="row">
-                    <!-- // Sidebar -->
-                    <div class="col-12 col-xl-2">
+                    <div class="col-lg-9">
+                        <!-- // Posts -->
+                        <h4 class="font-weight-300">{{category.name}} - General</h4>
+                        <template v-if="posts.length != 0">
+                            <div>
+                                <ul class="list-unstyled mt-3">
+                                    <li v-for="(item, key) in posts" :key="key">
+                                        <router-link :to="{ name: 'help-center.student.category.post', params: { categorySlug: category.id, postSlug: item.slug } }" class="btn btn-link p-0 font-weight-400 text-capitalize">{{item.title}}</router-link>
+                                    </li>
+                                </ul>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div>
+                                <p class="mt-3">There's no articles.</p>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="col-lg-3">
+                        <!-- // Categories -->
                         <h6><b>Student Topics</b></h6>
                         <div class="pt-3">
                             <ul class="list-unstyled small">
@@ -57,27 +75,6 @@
                             </ul>
                         </div>
                     </div>
-                    <!-- // Main Content -->
-                    <div class="col-12 col-xl-10">
-                        <card class="p-3 main-content border h-100 h-100vh">
-                            <h4 class="font-weight-300">{{category.name}} - General</h4>
-                            <template v-if="posts.length != 0">
-                                <div>
-                                    <ul class="list-unstyled mt-3">
-                                        <li v-for="(item, key) in posts" :key="key">
-                                            <router-link :to="{ name: 'help-center.student.category.post', params: { categorySlug: category.id, postSlug: item.slug } }" class="btn btn-link p-0 font-weight-400 text-capitalize">{{item.title}}</router-link>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <div>
-                                    <p class="mt-3">There's no articles.</p>
-                                </div>
-                            </template>
-                        </card>
-                    </div>
-
                 </div>
 
             </div>
@@ -87,9 +84,11 @@
 </template>
 
 <script>
-    import axios from 'axios'
+   import axios from 'axios'
 
     export default {
+        
+        scrollToTop: true,
 
         head() {
             return { title: `${this.category.name}` }
@@ -118,27 +117,8 @@
             }
         },
     }
-
 </script>
 
-<style scoped>
-    @media (min-width: 1200px) { 
-		.container {
-			max-width: 1024px !important;
-        }
-        .container-lg {
-            max-width: 100% !important;
-        }
-    }
-    .router-link-active {
-        font-weight: 700;
-    }
-    .breadcrumb-item + .breadcrumb-item::before {
-        color: #ffffff;
-    }
-    .main-content {
-        margin-top: -33px;
-        margin-bottom: -33px; 
-        height: 100%;
-    }
+<style>
+
 </style>

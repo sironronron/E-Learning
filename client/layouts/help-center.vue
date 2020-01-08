@@ -1,6 +1,6 @@
 <template>
-    <transition name="fade" mode="out-in">
-        <div class="bg-secondary">
+    <transition name="layout" mode="out-in">
+        <div class="layout bg-secondary">
             <div>
                 <navbar />
             </div>

@@ -30,7 +30,7 @@ class SearchController extends Controller
                     ->addSearchableAttribute('title') // return results for partial matches on usernames
                     ->addSearchableAttribute('language')
                     ->with(['user', 'outcomes', 'category'])
-                    ->paginate(20);
+                    ->paginate(5);
             })->search($search);
 
         $forBeginners = Course::where('level', 'BEGINNER')

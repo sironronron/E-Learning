@@ -183,20 +183,21 @@
 		methods: {
 
 			async save() {
+
+				let data
+
 				try {
-					let { data } = await this.form.post('/instructor/instructor-registration/v2')
-
-					.then((res) => {
-						// Update User Role State
-						this
-						
-						// Redirect User
-						this.$route.push({ name: 'instructor.courses' })
+					const response = await this.form.post('/instructor/instructor-registration/v2')
+					data = response.data
+					this.$swal({
+						type: 'success',
+						text: data.message
 					})
-
 				} catch (e) {
 					return
 				}
+
+				this.$router.push({ name: 'instructor.courses' })
 			},
 
 			next: function() {

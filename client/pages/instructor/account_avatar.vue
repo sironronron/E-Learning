@@ -1,22 +1,17 @@
 <template>
     <div class="row justify-content-center">
-        <div class="col-lg-4">
+        <div class="col-lg-5">
 
-            <div class="text-center">
-                <img v-if="user.avatar == 'users/default.png'" :src="user.photo_url" class="rounded-circle img-fluid profile-photo" alt="">
-                <img v-if="user.avatar != 'users/default.png'" :src="user.avatar" class="rounded-circle img-fluid profile-photo" alt="">
-            </div>
-
-            <hr>
-            
             <form @submit.prevent="save" @keydown="form.onKeydown($event)">
                 <alert-error :form="form" message="There were some problems with your input."></alert-error>
+
                 <div class="form-group">
                     <label for="avatar" class="col-form-label">Avatar</label>
                     <input type="file" name="avatar" @change="selectFile" class="form-control">
                     <has-error :form="form" field="avatar"></has-error>
                 </div>
-                <v-button :loading="form.busy" class="btn-sm float-right">
+
+                <v-button :loading="form.busy" class="btn-lg btn-block">
                     Upload Photo
                 </v-button>
             </form>

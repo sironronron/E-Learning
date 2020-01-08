@@ -40,17 +40,30 @@ class PageController extends Controller
 
             // Course Complete Lesson Duration
             $lessonDurations = CourseSectionLesson::where('course_id', $course->id)
-                ->get(['duration']);
-            // Calculate total hours
-            $sum = strtotime('00:00:00');
-            $total = 0;
-            foreach ($lessonDurations as $lesson) {
-                $sum1 = strtotime($lesson) - $sum;
-                $total = $total + $sum1;
-            }
-            $duration = $sum + $total;
-            $totalDuration = date("H:i:s", $duration);
+                ->where('duration', '!=', null)
+                ->pluck('duration');
+
+                // Calculate total hours
+                $x = null;
+                $sum = strtotime("00:00:00");
+                $sum2 = null;
+                $date2 = null;
+
+                foreach ($lessonDurations as $t) {
+                    $date = new \DateTime($t);
+                    if ($x) {
+                        $interval = $date->diff($date2);
+                        $sum1 = strtotime($interval->h.':'.$interval->i.':'.$interval->s) - $sum;
+                        $sum2 = $sum2 + $sum1;
+                    }
+                    $date2 = $date;
+                    $x = 1;
+                }
+
+                $sum3 = $sum + $sum2;
+
             // End
+        $totalDuration = date("H:i:s", $sum3);
 
         $countLessons = CourseSectionLesson::where('course_id', $course->id)
             ->count();

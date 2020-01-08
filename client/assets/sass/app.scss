@@ -103,7 +103,7 @@ h1 {
 
 body {
     margin: 0;
-    font-family: open sans,helvetica neue,Helvetica,Arial,sans-serif;
+    font-family: $font-family-sans-serif;
     background-color: $body-bg;
     font-size: 15px;
     line-height: 1.43;
@@ -441,4 +441,11 @@ p {
 .rating {
     margin-top: 7px;
     font-size: 11px;
+}
+
+.layout-enter-active, .layout-leave-to {
+    transition: opacity .3s;
+}
+.layout-enter, .layout-leave-to {
+    opacity: 0;
 }

@@ -39,7 +39,7 @@
                 </div>
                 <div class="d-block">
                     <div>
-                        <pagination class="justify-content-center mt-4" :data="courses" @pagination-change-page="getAllCourses"></pagination>
+                        <pagination class="justify-content-center mt-4" :data="courses" @pagination-change-page="getAllCourses" :showDisabled="true" :limit="10" align="center"></pagination>
                     </div>
                 </div>
             </div>

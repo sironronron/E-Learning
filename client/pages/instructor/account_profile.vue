@@ -61,7 +61,7 @@
                     </div>
 
                     <div class="form-group text-center">
-                        <v-button :loading="form.busy" class="btn-sm float-right" >Update Profile</v-button>
+                        <v-button :loading="form.busy" class="btn-lg btn-block" >Update Profile</v-button>
                     </div>
 
                 </form>

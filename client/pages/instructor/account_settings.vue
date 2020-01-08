@@ -1,17 +1,9 @@
 <template>
     <div class="row justify-content-center">
-        <div class="col-lg-4">
+        <div class="col-lg-5">
 
             <div>
-                <template v-if="!editEmail">
-                    <div class="form-group">
-                        <label for="email" class="col-form-label">Email: </label>
-                        <input type="email" class="form-control rounded" disabled v-model="form.email">
-                        <a href="#" @click="btnEdit" class="small"><fa :icon="['far', 'edit']" /> Edit</a>
-                    </div>
-                </template>
-
-                <template v-else>
+                <template>
                     <div class="">
                         <form @submit.prevent="update" @keydown="form.onKeydown($event)">
 
@@ -20,20 +12,20 @@
                                 <input type="email" class="form-control rounded" name="email" :class="{ 'is-invalid' : form.errors.has('email') }" v-model="form.email">
                                 <has-error :form="form" field="email"></has-error>
                             </div>
+
                             <div class="form-group">
                                 <label for="current_password" class="col-form-label">Current Password: </label>
                                 <input type="password" name="current_password" class="form-control rounded" :class="{ 'is-invalid' : form.errors.has('current_password') }" v-model="form.current_password" placeholder="Current Password">
                                 <has-error :form="form" field="current_password"></has-error>
                             </div>
-                            <a href="#" @click="btnCancel" class="small">Cancel</a>
-                            <v-button :loading="form.busy" class="btn-sm float-right">
+
+                            <v-button :loading="form.busy" class="btn-lg btn-block">
                                 Submit
                             </v-button>
                         </form>
                     </div>
                 </template>
             </div>
-
         </div>
     </div>
 </template>
@@ -53,7 +45,6 @@
                 email: '',
                 current_password: ''
             }),
-            editEmail: false
         }),
 
         computed: mapGetters({
@@ -83,14 +74,6 @@
                     return
                 }
             },
-
-            btnEdit() {
-                this.editEmail = true
-            },
-
-            btnCancel() {
-                this.editEmail = false
-            }
         }
 
     }

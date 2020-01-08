@@ -55,7 +55,7 @@
                 </div>
             </div>
         </div>
-        
+
         <section class="section-sm">
             <div class="container">
                 
@@ -66,8 +66,8 @@
                         <hr class="mb-0 mt-0">
                         <div v-if="searchResults.length != 0">
                             <!-- // Main Search  -->
-                            <div v-for="(group) in groups" :key="group.id">
-                                <div v-for="(item, key) in group.slice(0, 6)" :key="key">
+                            <div v-for="(group, key) in groups" :key="key">
+                                <div v-for="(item, key) in group" :key="key">
                                     <div v-if="item.type === 'courses'" class="search_body pt-2 pb-5 pl-2 pr-3 border-bottom">
                                         <router-link :to="{ name: 'course.show', params: { slug: item.searchable.slug } }">
                                             <div class="row">
@@ -103,6 +103,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <pagination :data="groups" @pagination-change-page="getSearchResults" align="center" :limit="5" :showDisabled="true"></pagination>
 
                             <!-- // For beginners -->
                             <div class="mt-5">
@@ -149,63 +151,35 @@
                             </div>
 
                             <!-- // Continuation -->
-                            <div class="mt-5" v-for="(group) in groups" :key="group.id">
-                                <div v-for="(item, key) in group" :key="key">
-                                    <div v-if="item.type === 'courses'" class="search_body pt-2 pb-5 pl-2 pr-3 border-bottom">
-                                        <router-link :to="{ name: 'course.show', params: { slug: item.searchable.slug } }">
-                                            <div class="row">
-                                                <div class="col-lg-3">
-                                                    <img :src="item.searchable.image" class="search_image img-fluid" alt="">
-                                                </div>
-                                                <div class="col-lg-7">
-                                                    <h5 class="mb-0 font-weight-600">{{item.title}}</h5>
-                                                    <div class="rating-row">
-                                                        <span class="course-badge best-seller mr-2">{{item.searchable.level}}</span>
-                                                        <small>
-                                                            <span class="d-inline-block average-rating text-dark mr-2"></span>
-                                                            <span class="text-dark mr-2"></span>
-                                                            <span class="enrolled-num">
-                                                            </span>
-                                                        </small>
-                                                    </div>
-                                                    <h6 class="text-muted mt-1"><small>{{item.searchable.excerpt}}</small></h6>
-                                                </div>
-                                                <div class="col-lg-2">
-                                                    <div class="float-right">
-                                                        <div v-if="item.searchable.has_discount == 0">
-                                                            <h5 class="font-weight-bold text-right">₱{{item.searchable.price | numeral('0,0.00')}}</h5>
-                                                        </div>
-                                                        <div v-if="item.searchable.has_discount == 1">
-                                                            <h5 class="font-weight-bold text-right">₱{{item.searchable.discount | numeral('0,0.00')}}</h5>
-                                                            <h6 class="text-muted float-right"><strike>₱{{item.searchable.price | numeral('0,0.00')}}</strike></h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </router-link>
-                                    </div>
-                                </div>
-                            </div>
-
-
                         </div>
 
                         <div v-else class="mt-5">
-                            <h3>Sorry, we couldn't find any results for "{{searchQuery}}"</h3>
-                            <h5 class="mt-4">Try adjusting your search. Here are some ideas:</h5>
-                            <ul class="mt-3 pl-3">
-                                <li>Make sure all words are spelled correctly.</li>
-                                <li>Try different search terms.</li>
-                                <li>Try more general search terms.</li>
-                            </ul>
+                            <template v-if="isLoading">
+                                <div class="text-center p-5">
+                                    <h6>Loading...</h6>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div>
+                                    <h3>Sorry, we couldn't find any results for "{{searchQuery}}"</h3>
+                                    <h5 class="mt-4">Try adjusting your search. Here are some ideas:</h5>
+                                    <ul class="mt-3 pl-3">
+                                        <li>Make sure all words are spelled correctly.</li>
+                                        <li>Try different search terms.</li>
+                                        <li>Try more general search terms.</li>
+                                    </ul>
+                                </div>
+                            </template>
                         </div>
                         
                     </div>
                     <div class="col-lg-3">
                         <!-- // Money Back Guarantee -->
-                        <div class="pt-4 pb-2 px-4 border rounded">
-                            <h6><b><fa icon="calendar-alt" class="text-info" /> &nbsp; Not Sure?</b></h6>
-                            <p>Every course comes with a 30-day money-back-guarantee</p>
+                        <div class="sticky-top" style="top: 10px;">
+                            <div class="pt-4 pb-2 px-4 border rounded">
+                                <h6><b><fa icon="calendar-alt" class="text-info" /> &nbsp; Not Sure?</b></h6>
+                                <p>Every course comes with a 30-day money-back-guarantee</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -217,8 +191,13 @@
 
 <script>
     import axios from 'axios'
+    import Pagination from 'laravel-vue-pagination'
 
     export default {
+
+        components: {
+            Pagination
+        },
 
         head() {
             return { title: `Searched for "${this.searchQuery}"`}
@@ -230,7 +209,6 @@
             try {
                 let { data } = await axios.get('/search_query?q=' + query.q)
                 return {
-                    searchResults: data.searchResults,
                     searchQuery: query.q,
                     forBeginners: data.forBeginners
                 }
@@ -239,10 +217,46 @@
             }
         },
 
+        data: () => ({
+            searchResults: [],
+            isLoading: false
+        }),
+
+        created: function () {
+            this.getSearchResults()
+        },
+
+        watch: {
+            '$route': 'getSearchResults'
+        },
+
         computed: {
-            groups() {
+            
+            groups: function () {
                 return groupBy(this.searchResults, 'groupName')
+            },
+            
+        },
+
+        methods: {
+            getSearchResults: function(page = 1) {
+                this.isLoading = !this.isLoading
+                axios.get('/search_query?&q=' + this.$route.query.q + '&page=' + page)
+                .then((res) => {
+                    this.isLoading = !this.isLoading
+                    this.searchResults = res.data.searchResults
+                }).catch((err) => {
+                    this.isLoading = !this.isLoading
+                    console.log(err)
+                })
             }
+        },
+
+        beforeRouteEnter (to, from, next) {
+            next(vm => {
+                vm.getSearchResults()
+                next()
+            })
         }
 
     }
