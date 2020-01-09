@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 use App\Models\Cart\Cart;
 use App\Models\Cart\CartItem;
 
+// User
+use Auth;
+
+// Course
+use App\Models\Course\Course;
+
 class CartController extends Controller
 {
     /**
@@ -18,7 +24,7 @@ class CartController extends Controller
      */
     public function index()
     {
-        // --
+        // Get all carts
     }
 
     /**
@@ -28,7 +34,7 @@ class CartController extends Controller
      */
     public function create()
     {
-        // --
+        //
     }
 
     /**
@@ -39,7 +45,42 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        // --
+        $this->validate($request, [
+            'price' => 'required'
+        ]);
+
+        $cartItem = new CartItem();
+
+        $cart = new Cart();
+
+
+        $alreadyExists = CartItem::where('course_id', $request->course_id)
+            ->first();
+
+        if (!$alreadyExists) {
+            $request->user()
+            ->cart()->save($cart);
+
+            $cartItem->cart_id = $cart->id;
+            $cartItem->course_id = $request->course_id;
+            $cartItem->price = $request->price;
+
+            $cartItem->save();
+        } else {
+            return response()
+                ->json([
+                    'saved' => false,
+                    'message' => 'Course is already in your cart.'
+                ], 422);
+        }
+
+        return response()
+            ->json([
+                'saved' => true,
+                'id' => $cart->id,
+                'message' => 'Item added to cart'
+            ]);
+
     }
 
     /**

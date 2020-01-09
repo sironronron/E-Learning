@@ -42,8 +42,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::patch('settings/password', 'Settings\PasswordController@update');
     Route::patch('settings/change-avatar', 'Settings\AvatarController@update');
 
-    // Post Reaction
-    Route::post('/post/reaction', 'Reaction\PostVoteController@store');
 });
 
 // Course
@@ -53,9 +51,12 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::resource('/courses', 'Instructor\Courses\CourseController');
         Route::get('/courses/{slug}/editImage', 'Instructor\Courses\CourseController@editImage');
         Route::post('/courses/{id}/updateImage', 'Instructor\Courses\CourseController@updateImage');
+
         // Course Section
         Route::post('/courses/section/add_section/{id}', 'Instructor\Courses\CourseSectionController@store');
-
+            /// Update Section Order
+            Route::put('/courses/section/order_index/{id}', 'Instructor\Courses\CourseSectionController@updateOrderIndex');
+            
         // Course Section Lesson
         Route::get('/courses/section/add_lesson/get/{id}', 'Instructor\Courses\CourseSectionLessonController@create');
         Route::post('/courses/section/add_lesson/post', 'Instructor\Courses\CourseSectionLessonController@store');
@@ -84,6 +85,16 @@ Route::group(['middleware' => 'guest:api'], function () {
 
     Route::post('oauth/{driver}', 'Auth\OAuthController@redirectToProvider');
     Route::get('oauth/{driver}/callback', 'Auth\OAuthController@handleProviderCallback')->name('oauth.callback');
+});
+
+
+Route::prefix('cart')->group(function () {
+    Route::group(['middleware' => 'auth:api'], function () {
+
+        // Add to cart
+        Route::post('/store', 'Cart\CartController@store');
+
+    });
 });
 
 // Help-center

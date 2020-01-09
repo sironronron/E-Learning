@@ -66,7 +66,6 @@ class CourseController extends Controller
         $courses = Course::where('teacher_id', Auth::user()->id)
             ->count();
 
-
         return response()
             ->json([
                 'activeCourses' => $activeCourses,
@@ -242,14 +241,19 @@ class CourseController extends Controller
             ->firstOrFail();
 
         $sections = CourseSection::where('course_id', $course->id)
-            ->with(['lessons', 'quizzes'])
-            ->get(['id', 'title', 'slug']);
+            ->orderBy('order_index', 'asc')
+            ->get(['id', 'title', 'slug', 'order_index']);
+
+        $lessons = CourseSectionLesson::where('course_id', $course->id)
+            ->orderBy('order_index', 'asc')
+            ->get();
 
         return response()
             ->json([
                 'course' => $course,
                 'categories' => $categories,
-                'sections' => $sections
+                'sections' => $sections,
+                'lessons' => $lessons
             ]);
     }
 

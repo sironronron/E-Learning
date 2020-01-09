@@ -43,6 +43,9 @@ class CreateCourseCurriculumSectionLessonsTable extends Migration
             $table->string('lesson_attachment')->nullable();
 
             $table->text('summary');
+
+            // Section Order
+            $table->integer('order_index')->unsigned()->default(0);
             
             $table->timestamps();
         });
