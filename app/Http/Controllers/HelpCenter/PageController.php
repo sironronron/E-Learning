@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\HelpCenter\Category;
 use App\Models\HelpCenter\Post;
+use App\Models\Reaction\PostVote;
 
+use Auth;
 class PageController extends Controller
 {
     public function index()
@@ -14,9 +16,14 @@ class PageController extends Controller
         $categories = Category::where('parent_id', 3)
             ->get(['icon', 'name', 'slug', 'description']);
 
+        $faqs = Post::where('category_id', 9)
+            ->take(6)
+            ->get(['title', 'category_id', 'slug', 'id']);
+
         return response()
             ->json([
-                'categories' => $categories
+                'categories' => $categories,
+                'faqs' => $faqs
             ]);
     }
 
@@ -51,15 +58,20 @@ class PageController extends Controller
         $post = Post::where('slug', $postSlug)
             ->where('status', 'PUBLISHED')
             ->firstOrFail();
-        
+
         $categories = Category::where('parent_id', 3)
             ->get(['name', 'slug', 'icon']);
+
+        $related = Post::where('category_id', $post->category_id)
+            ->where('id', '!=', $post->id)
+            ->take(5)
+            ->get(['title', 'slug', 'id', 'category_id']);
 
         return response()
             ->json([
                 'category' => $category,
                 'post' => $post,
-                'categories' => $categories
+                'categories' => $categories,
             ]);
     }
 }

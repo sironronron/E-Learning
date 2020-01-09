@@ -20,6 +20,11 @@ class Post extends Model implements Searchable
         return $this->belongsTo('App\Models\HelpCenter\Category');
     }
 
+    public function postVotes()
+    {
+        return $this->hasMany('App\Models\Reaction\PostVote');
+    }
+
     public function getSearchResult(): SearchResult 
     {
         $url = url('/help-center/category/'.$this->categorySlug.'/'. $this->postSlug);

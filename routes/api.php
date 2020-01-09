@@ -22,6 +22,7 @@ Route::get('/search_query', 'SearchController@searchCourses');
 Route::prefix('course')->group(function () {
     // Course Pages
     Route::get('/{slug}', 'PageController@showCourse');
+    Route::get('/getCourseOverviewURL/{slug}', 'PageController@getCourseOverviewURL');
     // Course Instructor Page
     Route::get('/instructor/{username}', 'PageController@showInstructor');
     // Course Category
@@ -40,13 +41,34 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::patch('settings/profile', 'Settings\ProfileController@update');
     Route::patch('settings/password', 'Settings\PasswordController@update');
     Route::patch('settings/change-avatar', 'Settings\AvatarController@update');
+
+    // Post Reaction
+    Route::post('/post/reaction', 'Reaction\PostVoteController@store');
 });
 
 // Course
 Route::group(['middleware' => 'auth:api'], function () {
     Route::prefix('instructor')->group(function () {
+        // CRUD for Courses
         Route::resource('/courses', 'Instructor\Courses\CourseController');
-        Route::get('/courses/active-courses', 'Instructor\Courses\PageController@activeCourses')->name('courses.activeCourses');
+        Route::get('/courses/{slug}/editImage', 'Instructor\Courses\CourseController@editImage');
+        Route::post('/courses/{id}/updateImage', 'Instructor\Courses\CourseController@updateImage');
+        // Course Section
+        Route::post('/courses/section/add_section/{id}', 'Instructor\Courses\CourseSectionController@store');
+
+        // Course Section Lesson
+        Route::get('/courses/section/add_lesson/get/{id}', 'Instructor\Courses\CourseSectionLessonController@create');
+        Route::post('/courses/section/add_lesson/post', 'Instructor\Courses\CourseSectionLessonController@store');
+
+        // Course Section Quiz
+        Route::get('/courses/section/add_quiz/get/{id}', 'Instructor\Courses\CourseSectionQuizController@create');
+        Route::post('/courses/section/add_quiz/post', 'Instructor\Courses\CourseSectionQuizController@store');
+
+        Route::patch('/settings/email', 'Settings\ProfileController@updateEmail');
+        Route::post('/settings/avatar', 'Settings\ProfileController@updateAvatar');
+
+        // Register as an Instructor
+        Route::post('/instructor-registration/v2', 'Instructor\UserInstructorQuestionController@store');
     });
 });
 
@@ -70,4 +92,7 @@ Route::prefix('help-center')->group(function () {
     Route::get('/category/{slug}', 'HelpCenter\PageController@category');
     Route::get('/category/post/{categoryId}/{postSlug}', 'HelpCenter\PageController@post');
     Route::get('/search', 'HelpCenter\SearchController@search');
+
+    // Contact Us
+    Route::post('/customer_inquiry', 'HelpCenter\ContactController@store');
 });

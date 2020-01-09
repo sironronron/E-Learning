@@ -13,11 +13,11 @@ class CreateCourseCurricilumSectionQuizzesTable extends Migration
      */
     public function up()
     {
-        Schema::create('course_curricilum_section_quizzes', function (Blueprint $table) {
+        Schema::create('course_curriculum_section_quizzes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title');
             $table->string('slug');
-            $table->integer('course_curricilum_section_id')->unsigned();
+            $table->integer('course_curriculum_section_id')->unsigned();
             $table->text('instruction');
             $table->timestamps();
         });
