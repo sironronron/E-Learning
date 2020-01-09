@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\HelpCenter\Post;
 use App\Models\Reaction\PostVote;
 
+use Auth;
+
 class PostVoteController extends Controller
 {
     /**
@@ -27,9 +29,30 @@ class PostVoteController extends Controller
      */
     public function store(Request $request)
     {
-        $user = $request->user();
+        $vote = new PostVote();
 
-        $reaction = new PostVote();
+        $vote->user_id = Auth::user()->id;
+        $vote->post_id = $request->post_id;
+        $vote->vote = 'LIKED';
 
+        $vote->save();
+
+        return response()
+            ->json([
+                'liked' => true,
+                'message' => "You liked this post?"
+            ]);
     }
+
+    /**
+     * Update Like/Dislike
+     * 
+     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Request
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
 }

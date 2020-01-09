@@ -41,6 +41,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::patch('settings/profile', 'Settings\ProfileController@update');
     Route::patch('settings/password', 'Settings\PasswordController@update');
     Route::patch('settings/change-avatar', 'Settings\AvatarController@update');
+
+    // Post Reaction
+    Route::post('/post/reaction', 'Reaction\PostVoteController@store');
 });
 
 // Course
@@ -48,7 +51,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::prefix('instructor')->group(function () {
         // CRUD for Courses
         Route::resource('/courses', 'Instructor\Courses\CourseController');
-
+        Route::get('/courses/{slug}/editImage', 'Instructor\Courses\CourseController@editImage');
+        Route::post('/courses/{id}/updateImage', 'Instructor\Courses\CourseController@updateImage');
         // Course Section
         Route::post('/courses/section/add_section/{id}', 'Instructor\Courses\CourseSectionController@store');
 

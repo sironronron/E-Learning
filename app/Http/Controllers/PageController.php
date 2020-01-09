@@ -149,7 +149,7 @@ class PageController extends Controller
 
     public function navCategories()
     {
-        $categories = CourseCategory::get(['id', 'name', 'slug']);
+        $categories = CourseCategory::get(['id', 'name', 'slug', 'icon']);
         
         return response()
             ->json([

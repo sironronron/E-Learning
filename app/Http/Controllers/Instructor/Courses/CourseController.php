@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Instructor\Courses;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 // Loggedin User
 use Auth;
 
@@ -19,7 +20,7 @@ use App\Models\Course\CourseSectionLesson;
 // Cloud Storage
 use JD\Cloudder\Facades\Cloudder;
 
-// Storeage
+// Storage
 use File;
 use Storage;
 
@@ -269,7 +270,6 @@ class CourseController extends Controller
             'level' => 'required',
             'price' => 'present',
             'discount' => 'present',
-            'image' => 'required|mimes:jpg,png,jpeg,webp|between:1,6000',
             'course_overview_provider' => 'required',
             'course_overview_url' => 'required',
             'meta_keywords' => 'required|max:255',
@@ -289,6 +289,9 @@ class CourseController extends Controller
         $course = Course::where('id', $id)
             ->where('teacher_id', Auth::user()->id)
             ->findOrFail($id);
+
+        $input = $request->all();
+        $course->fill($input);
 
         // Check if booleans are true or false
         if (isset($request->discount)) {
@@ -397,6 +400,48 @@ class CourseController extends Controller
 
     }
 
+    public function editImage($slug)
+    {   
+        $image = Course::where('slug', $slug)
+            ->where('teacher_id', Auth::user()->id)
+            ->firstOrFail(['id','image']);
+
+        return response()
+            ->json([
+                'image' => $image
+            ]);
+    }
+
+    public function updateImage(Request $request, $id)
+    {
+        $this->validate($request, [
+            'image' => 'required|mimes:jpg,png,jpeg,webp|between:1,6000',
+        ]);
+
+        $course = Course::where('id', $id)
+            ->where('teacher_id', Auth::user()->id)
+            ->findOrFail($id);
+
+        // Cloud Upload/Update using Cloudinary API
+            $image = $request->file('image');
+            $name = $request->file('image')->getClientOriginalName();
+            $image_name = $request->file('image')->getRealPath();
+            Cloudder::upload($image_name, null);
+            list($width, $height) = getimagesize($image_name);
+            $image_url = Cloudder::show(Cloudder::getPublicId(), ['width' => $width, 'height' => $height]);
+            $course->image = $image_url;
+            $course->image_public_id = Cloudder::getPublicId();
+
+        $course->save();
+
+        return response()
+            ->json([
+                'saved' => true,
+                'message' => 'Image changed.'
+            ]);
+
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -405,7 +450,22 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $course = Course::where('id', $id)
+            ->where('teacher_id', Auth::user()->id)
+            ->firstOrFail();
+
+        // RecipeIngredient::where('recipe_id', $recipe->id)->delete();
+        // RecipeDirection::where('recipe_id', $recipe->id)->delete();
+
+        // File::delete(public_path('storage/'.$recipe->thumbnail));
+
+        $course->delete();
+
+        return response()
+            ->json([
+                'deleted' => true
+            ]);
+
     }
 
 }
