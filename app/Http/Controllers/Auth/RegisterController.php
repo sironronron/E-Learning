@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
+// Cart
+use App\Models\Cart\Cart;
+
 class RegisterController extends Controller
 {
     use RegistersUsers;
@@ -49,7 +52,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|max:255',
-            'email' => 'required|email|allowed_domain|max:255|unique:users',
+            'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
             'role_id' => 'required'
         ]);
@@ -63,12 +66,22 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'username' => str_slug($data['name'], '-'),
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'role_id' => $data['role_id']
         ]);
+
+        // Create new cart instance for new registered user
+
+        $cart = new Cart();
+
+        $cart->user_id = $user->id;
+        $cart->save();
+
+        return $user;
+
     }
 }

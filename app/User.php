@@ -134,6 +134,31 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      */
     public function cart()
     {
-        return $this->hasMany('App\Models\Cart\Cart', 'user_id');
+        return $this->hasOne('App\Models\Cart\Cart', 'user_id');
     }
+
+    /**
+     * @return array
+     */
+    public function searches()
+    {
+        return $this->hasMany('App\Models\User\UserSearch', 'user_id');
+    }
+
+    /**
+     * @return array
+     */
+    public function reviews()
+    {
+        return $this->hasMany('Apps\Models\Course\CourseRating');
+    }
+
+    /**
+     * @return array
+     */
+    public function qnas()
+    {
+        return $this->hasMany('App\Models\Course\CourseQANDA');
+    }
+
 }

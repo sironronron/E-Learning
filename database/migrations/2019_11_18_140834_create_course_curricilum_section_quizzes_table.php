@@ -21,11 +21,14 @@ class CreateCourseCurricilumSectionQuizzesTable extends Migration
             $table->string('slug');
             
             // Relationship
+            $table->bigInteger('bank_id')->unsigned();
+            // $table->foreign('bank_id')->references('id')->on('course_quiz_banks')->onDelete('cascade');
+
             $table->bigInteger('course_id')->unsigned();
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
 
-            $table->bigInteger('course_curriculum_section_id')->unsigned();
-            $table->foreign('course_curriculum_section_id')->references('id')->on('course_curriculum_sections')->onDelete('unsigned');
+            $table->bigInteger('section_id')->unsigned();
+            $table->foreign('section_id')->references('id')->on('course_curriculum_sections')->onDelete('cascade');
 
             // Course Section Quiz Instruction
             $table->text('instruction');

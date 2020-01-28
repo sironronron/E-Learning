@@ -71,6 +71,7 @@ class PageController extends Controller
                 'category' => $category,
                 'post' => $post,
                 'categories' => $categories,
+                'related' => $related
             ]);
     }
 }

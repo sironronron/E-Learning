@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Spatie\Searchable\Search;
 use App\Models\HelpCenter\Post;
 use App\Models\HelpCenter\Category;
+use Spatie\Searchable\ModelSearchAspect;
 
 class SearchController extends Controller
 {
@@ -21,8 +22,14 @@ class SearchController extends Controller
 
         $search = $request->get('q');
         $searchResults = (new Search())
-            ->registerModel(Post::class, ['title', 'id', 'slug', 'category_id', 'excerpt', 'created_at'])
-            ->search($search);
+            ->registerModel(Post::class, function(ModelSearchAspect $modelSearchAspect) {
+                $modelSearchAspect
+                    ->addSearchableAttribute('title')
+                    ->addSearchableAttribute('meta_keywords')
+                    ->where('category_id', '!=', null)
+                    ->paginate(10, ['title', 'id', 'slug', 'category_id', 'excerpt', 'created_At']);
+            })->search($search);
+
         
         return response()
             ->json([

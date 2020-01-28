@@ -16,6 +16,7 @@ use App\Models\Course\CourseOutcome;
 use App\Models\Course\CourseWho;
 use App\Models\Course\CourseSection;
 use App\Models\Course\CourseSectionLesson;
+use App\Models\Course\CourseSectionQuiz;
 
 // Cloud Storage
 use JD\Cloudder\Facades\Cloudder;
@@ -177,7 +178,7 @@ class CourseController extends Controller
             $image = $request->file('image');
             $name = $request->file('image')->getClientOriginalName();
             $image_name = $request->file('image')->getRealPath();
-            Cloudder::upload($image_name, null);
+            Cloudder::upload($image_name, null, array('folder' => 'Course Images'));
             list($width, $height) = getImageSize($image_name);
             $image_url = Cloudder::show(Cloudder::getPublicId(), ['width' => $width, 'height' => $height]);
             $course->image = $image_url;
@@ -215,10 +216,10 @@ class CourseController extends Controller
     public function show($slug)
     {
         $course = Course::where('slug', $slug)
-            ->with(['user', 'category', 'requirements', 'outcomes', 'whos'])
+            ->with(['user', 'requirements', 'whos', 'outcomes', 'category'])
             ->where('teacher_id', Auth::user()->id)
             ->firstOrFail();
-
+            
         return response()
             ->json([
                 'course' => $course
@@ -248,12 +249,17 @@ class CourseController extends Controller
             ->orderBy('order_index', 'asc')
             ->get();
 
+        $quizzes = CourseSectionQuiz::where('course_id', $course->id)
+            ->orderBy('order_index', 'asc')
+            ->get();
+
         return response()
             ->json([
                 'course' => $course,
                 'categories' => $categories,
                 'sections' => $sections,
-                'lessons' => $lessons
+                'lessons' => $lessons,
+                'quizzes' => $quizzes
             ]);
     }
 
@@ -306,7 +312,9 @@ class CourseController extends Controller
 
         if (isset($request->price)) {
             $course->free_course = 0;
-        } else {
+        }
+
+        if (isset($request->free_course)) {
             $course->free_course = 1;
         }
 
@@ -360,7 +368,7 @@ class CourseController extends Controller
             $image = $request->file('image');
             $name = $request->file('image')->getClientOriginalName();
             $image_name = $request->file('image')->getRealPath();
-            Cloudder::upload($image_name, null);
+            Cloudder::upload($image_name, null, ['folder' => 'Course Images']);
             list($width, $height) = getimagesize($image_name);
             $image_url = Cloudder::show(Cloudder::getPublicId(), ['width' => $width, 'height' => $height]);
             $course->image = $image_url;
@@ -430,7 +438,7 @@ class CourseController extends Controller
             $image = $request->file('image');
             $name = $request->file('image')->getClientOriginalName();
             $image_name = $request->file('image')->getRealPath();
-            Cloudder::upload($image_name, null);
+            Cloudder::upload($image_name, null, ['folder' => 'Course Images']);
             list($width, $height) = getimagesize($image_name);
             $image_url = Cloudder::show(Cloudder::getPublicId(), ['width' => $width, 'height' => $height]);
             $course->image = $image_url;
@@ -468,6 +476,36 @@ class CourseController extends Controller
         return response()
             ->json([
                 'deleted' => true
+            ]);
+
+    }
+
+    /**
+     * Edit status of a course
+     * 
+     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Request
+     */
+    public function editStatus(Request $request, $id)
+    {
+        $this->validate($request, [
+            'status' => 'required'
+        ]);
+
+        $course = Course::where('id', $id)
+            ->where('teacher_id', Auth::user()->id)
+            ->firstOrFail();
+
+        $course->status = $request->status;
+
+        $course->save();
+
+        return response()
+            ->json([
+                'saved' => true,
+                'id' => $course->id,
+                'status' => $course->status,
+                'message' => 'Course status changed'
             ]);
 
     }

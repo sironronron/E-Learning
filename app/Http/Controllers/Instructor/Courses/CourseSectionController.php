@@ -12,14 +12,6 @@ use App\Models\Course\CourseSection;
 class CourseSectionController extends Controller
 {
     /**
-     * Middleware API
-     *
-     */
-    public function __construct() {
-        return $this->middleware('auth:api');
-    }
-
-    /**
      * Create new section in courses
      * 
      * @param int id // Course ID
@@ -52,6 +44,50 @@ class CourseSectionController extends Controller
     }
 
     /**
+     * Get data for editting
+     *
+     * @return \Illuminate\Http\Response
+    */
+    public function edit($id) 
+    {
+        $section = CourseSection::where('id', $id)
+            ->firstOrFail();
+
+        return response()
+            ->json([
+                'section' => $section
+            ]);
+    }
+
+    /**
+     * Update section
+     *
+     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Request
+    */
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'title' => 'required|max:255'
+        ]);
+
+        $section = CourseSection::where('id', $id)
+            ->firstOrFail();
+
+        $input = $request->all();
+        $section->fill($input);
+
+        $section->save();
+
+        return response()
+            ->json([
+                'saved' => true,
+                'id' => $section->id,
+                'message' => "Section #$section->id, updated succesfully"
+            ]);
+    }
+
+    /**
      *  Update order_index of Section
      *
      * @return \Illuminate\Http\Response
@@ -60,30 +96,23 @@ class CourseSectionController extends Controller
     public function updateOrderIndex(Request $request, $id)
     {
         $this->validate($request, [
-            'sections.*.order_index' => 'required|numeric'
+            'sections.*.order_index' => 'required'
         ]);
 
-        $course = Course::where('id', $id)
-            ->firstOrFail();
-
-        $sections = CourseSection::where('course_id', $course->id)
-            ->get();
-
-            foreach ($sections as $testimonial) {
-                $testimonial->timestamps = false;
-                $id = $testimonial->id;
-                foreach ($request->sections as $testimonialFrontEnd) {
-                    if ($testimonialFrontEnd['id'] == $id) {
-                        $testimonial->update(['order_index' => $testimonialFrontEnd['order_index']]);
-                    }
-                }
+        $sections = CourseSection::all();
+ 
+        foreach($sections as $section) {
+            $id = $section->id;
+            foreach ($request->sections as $section) {
+                CourseSection::find($section['id'])->update(['order_index' => $section['order_index']]);
             }
+        }
 
         return response()
             ->json([
                 'saved' => true,
-                'message' => 'Item has changed its order'
-            ]);
+                'message' => 'Order changed'
+            ], 200);
 
     }
 }

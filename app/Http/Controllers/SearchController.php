@@ -20,16 +20,15 @@ class SearchController extends Controller
         ]);
 
         $search = $request->get('q');
-        // $searchResults = (new Search())
-        //     ->registerModel(CourseCategory::class, ['id', 'name', 'slug'])
-        //     ->registerModel(Course::class, ['id', 'title', 'image', 'has_discount', 'free_course', 'teacher_id', 'category_id', 'price', 'discount'])
-        //     ->search($search);
+  
         $searchResults = (new Search())
             ->registerModel(Course::class, function(ModelSearchAspect $modelSearchAspect) {
                 $modelSearchAspect
                     ->addSearchableAttribute('title') // return results for partial matches on usernames
                     ->addSearchableAttribute('language')
+                    ->addSearchableAttribute('meta_keywords')
                     ->with(['user', 'outcomes', 'category'])
+                    ->where('status', 'PUBLISHED')
                     ->paginate(5);
             })->search($search);
 

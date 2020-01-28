@@ -15,18 +15,24 @@ class CreateCourseCategoriesTable extends Migration
     {
         Schema::create('course_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('parent_id')->unsigned()->nullable()->default(null);
-            // $table->foreign('parent_id')->references('id')->on('course_categories')->onUpdate('cascade')->onDelete('set null');
-            // Category Order
-            $table->integer('order')->default(1);
+
+            // Relationships 
+            $table->bigInteger('parent_id')->unsigned()->nullable()->default(null);
+            $table->foreign('parent_id')->references('id')->on('course_categories')->onUpdate('cascade')->onDelete('set null');
+
+            // Featured Course
+            $table->bigInteger('featured_course_id')->unsigned();
+            $table->foreign('featured_course_id')->references('id')->on('courses')->onDelete('cascade');
             
             // Category Icon
             $table->string('icon')->nullable();
-
             $table->string('name');
             
             // Category URL Friendly
             $table->string('slug')->unique();
+
+            // Category Order
+            $table->integer('order_index')->default(1);
             
             $table->timestamps();
         });

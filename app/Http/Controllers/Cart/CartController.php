@@ -18,6 +18,15 @@ use App\Models\Course\Course;
 class CartController extends Controller
 {
     /**
+     * Middleware
+     */
+    public function __construct()
+    {
+        return $this->middleware('auth:api');
+    }
+
+
+    /**
      * Display a listing of the resource
      * 
      * @return \Illuminate\Http\Response
@@ -25,6 +34,13 @@ class CartController extends Controller
     public function index()
     {
         // Get all carts
+        $carts = Cart::where('user_id', Auth::user()->id)
+            ->get();
+
+        return response()
+            ->json([
+                'carts' => $carts
+            ]);
     }
 
     /**
@@ -45,42 +61,29 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'price' => 'required'
-        ]);
+        if (Auth::user()->cart) {
+            $cart = Cart::where('user_id', Auth::user()->id)
+            ->firstOrFail();
+        } else {
+            $cart = new Cart();
+            $cart->user_id = Auth::user()->id;
+            $cart->save();
+        }
 
         $cartItem = new CartItem();
 
-        $cart = new Cart();
+        $cartItem->cart_id = $cart->id;
+        $cartItem->course_id = $request->course_id;
+        $cartItem->price = $request->price;
 
-
-        $alreadyExists = CartItem::where('course_id', $request->course_id)
-            ->first();
-
-        if (!$alreadyExists) {
-            $request->user()
-            ->cart()->save($cart);
-
-            $cartItem->cart_id = $cart->id;
-            $cartItem->course_id = $request->course_id;
-            $cartItem->price = $request->price;
-
-            $cartItem->save();
-        } else {
-            return response()
-                ->json([
-                    'saved' => false,
-                    'message' => 'Course is already in your cart.'
-                ], 422);
-        }
+        $cartItem->save();
 
         return response()
             ->json([
                 'saved' => true,
-                'id' => $cart->id,
-                'message' => 'Item added to cart'
+                'id' => $cartItem->id,
+                'message' => "Course is added to your cart."
             ]);
-
     }
 
     /**

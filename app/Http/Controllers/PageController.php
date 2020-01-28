@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 // Authenticated User
 use Auth;
+
 // Courses
 use App\Models\Course\Course;
 use App\Models\Course\CourseCategory;
 use App\Models\Course\CourseSection;
 use App\Models\Course\CourseSectionLesson;
+use App\Models\Course\CourseSectionQuiz;
+
 // Instructor
 use App\User;
+
+// Cart
+use App\Models\Cart\Cart;
+use App\Models\Cart\CartItem;
 
 class PageController extends Controller
 {
@@ -29,14 +37,43 @@ class PageController extends Controller
 
     public function showCourse($slug)
     {
+
         $course = Course::where('status', 'PUBLISHED')
-            ->with(['user', 'category', 'requirements', 'outcomes', 'whos'])
+            ->with(['category', 'requirements', 'outcomes', 'whos'])
             ->where('slug', $slug)
             ->firstOrFail();
 
+        $enrolled_course = Auth::check() && $course->students()->where('user_id', \Auth::id())->count() > 0;
+        $enrolled_students = $course->students()->count();
+
+            $enrolled_at = null;
+
+            if ($enrolled_course == true) {
+                $enrolled_at = $course->students()->where('user_id', \Auth::id())
+                    ->where('course_id', $course->id)
+                    ->first();
+            }
+
+            // add delay on course view
+            $visitorIp = \Request::getClientIp(true);
+
+            views($course)
+                ->collection('course')
+                ->overrideVisitor($visitorIp)
+                ->record();
+
         $sections = CourseSection::where('course_id', $course->id)
-            ->with(['lessons', 'quizzes'])
+            ->with(['lessons'])
             ->get(['id', 'title']);
+
+            $lessons = CourseSectionLesson::where('course_id', $course->id)
+                ->where('duration', '!=', null)
+                ->get(['course_id', 'course_section_id', 'title', 'lesson_type', 'duration', 'summary', 'order_index']);
+
+            $quizzes = CourseSectionQuiz::where('course_id', $course->id)
+                ->get([
+                    'title', 'slug', 'course_id', 'instruction', 'course_curriculum_section_id'
+                ]);
 
             // Course Complete Lesson Duration
             $lessonDurations = CourseSectionLesson::where('course_id', $course->id)
@@ -44,26 +81,35 @@ class PageController extends Controller
                 ->pluck('duration');
 
                 // Calculate total hours
-                $x = null;
-                $sum = strtotime("00:00:00");
-                $sum2 = null;
-                $date2 = null;
+                $hrs = 0;
+                $mins = 0;
+                $secs = 0;
 
-                foreach ($lessonDurations as $t) {
-                    $date = new \DateTime($t);
-                    if ($x) {
-                        $interval = $date->diff($date2);
-                        $sum1 = strtotime($interval->h.':'.$interval->i.':'.$interval->s) - $sum;
-                        $sum2 = $sum2 + $sum1;
+                foreach ($lessonDurations as $time) {
+                    list ($hours, $minutes, $seconds) = explode(':', $time);
+
+                    $hrs += (int) $hours;
+                    $mins += (int) $minutes;
+                    $secs += (int) $seconds;
+
+                    // Convert each 60 minutes to an hour
+                    if ($mins >= 60) {
+                        $hrs++;
+                        $mins -= 60;
                     }
-                    $date2 = $date;
-                    $x = 1;
+
+                    // Convert each 60 seconds to a minute
+                    if ($secs >= 60) {
+                        $mins++;
+                        $secs -= 60;
+                    }
                 }
 
-                $sum3 = $sum + $sum2;
+            $totalDuration = sprintf('%d:%d:%d', $hrs, $mins, $secs);
 
-            // End
-        $totalDuration = date("H:i:s", $sum3);
+        $instructor = User::where('id', $course->teacher_id)
+            ->with(['courses'])
+            ->firstOrFail();
 
         $countLessons = CourseSectionLesson::where('course_id', $course->id)
             ->count();
@@ -82,7 +128,14 @@ class PageController extends Controller
                 'mightLikes' => $mightLikes,
                 'sections' => $sections,
                 'countLessons' => $countLessons,
-                'totalDuration' => $totalDuration
+                'totalDuration' => $totalDuration,
+                'lessons' => $lessons,
+                'quizzes' => $quizzes,
+                // 'addedToCart' => $addedToCart,
+                'enrolled_course' => $enrolled_course,
+                'enrolled_at' => $enrolled_at,
+                'enrolled_students' => $enrolled_students,
+                'instructor' => $instructor
             ]);
     }
 
@@ -128,9 +181,10 @@ class PageController extends Controller
         $countCourses = Course::where('category_id', $category->id)
             ->count();
             
-        $mostPopular = Course::where('category_id', $category->id)
-            ->with(['user', 'category'])
-            ->get(['id', 'title', 'slug', 'image', 'image_public_id', 'excerpt', 'has_discount', 'free_course', 'price', 'discount']);
+        $mostPopular = Course::orderByViews('desc')
+            ->where('category_id', $category->id)
+            ->with(['user', 'views'])
+            ->get(['id', 'title', 'slug', 'image', 'image_public_id', 'excerpt', 'has_discount', 'free_course', 'price', 'discount', 'teacher_id']);
 
         $featuredCourse = Course::where('category_id', $category->id)
             ->where('featured', 1)

@@ -11,7 +11,7 @@ class CourseSectionLesson extends Model
     protected $fillable = [
         'course_section_id', 'lesson_image', 'title', 'slug',
         'lesson_type', 'lesson_provider', 'video_url', 'duration', 'lesson_attachment', 'summary',
-        'thumbnail', 'course_id'
+        'thumbnail', 'course_id', 'order_index'
     ];
 
     public function course()
@@ -22,5 +22,10 @@ class CourseSectionLesson extends Model
     public function section()
     {
         return $this->belongsTo('App\Models\Course\CourseSection');
+    }
+
+    public function totalDuration()
+    {
+        
     }
 }

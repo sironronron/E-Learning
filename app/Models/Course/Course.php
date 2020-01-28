@@ -86,6 +86,7 @@ class Course extends Model implements Searchable, ViewableContract
         return $this->hasMany('App\Models\Course\CourseWho');
     }
 
+
     /**
      * @return array
      */
@@ -98,4 +99,35 @@ class Course extends Model implements Searchable, ViewableContract
             $url
         );
     }
+
+    /**
+     * Get enrolled students
+     *
+     * @return array
+     */
+    public function students()
+    {
+        return $this->belongsToMany('App\User', 'course_student')->withTimestamps();
+    }
+
+    /**
+     * Get Course Reviews
+     *
+     * @return array
+     */
+    public function ratings()
+    {
+        return $this->hasMany('App\Models\Course\CourseRating');
+    }
+
+    /**
+     * Get Course Questions and Answers
+     *
+     * @return array
+     */
+    public function qnas()
+    {
+        return $this->hasMany('App\Models\Course\CourseQANDA', 'course_id');
+    }
+
 }
