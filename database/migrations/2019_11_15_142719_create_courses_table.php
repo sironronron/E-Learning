@@ -34,6 +34,8 @@ class CreateCoursesTable extends Migration
 
             // Published
             $table->enum('status', ['UNPUBLISH', 'PUBLISHED', 'DRAFT', 'PENDING', 'APPROVED'])->default('PENDING');
+            $table->boolean('approved')->default(0)
+                ->comments('0 if not approved', '1 if approved');
 
             // Language
             $table->enum('language', ['English'])->default('English');

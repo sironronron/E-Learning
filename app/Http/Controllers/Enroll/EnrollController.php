@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Course\Course;
 use App\Models\Course\CourseSection;
 use App\Models\Course\CourseSectionLesson;
-
+use App\Models\Course\CourseUserProgress;
 use Auth;
 
 // Notification
@@ -37,33 +37,49 @@ class EnrollController extends Controller
 
     	$course = Course::where('id', $id)
     		->firstOrFail();
-        
-        if ($user->id == $course->teacher_id) {
+
+        if (Auth::check() && $course->students()->where('user_id', \Auth::id())->count() != 0)
+        {
+            die();
+
             return response()
                 ->json([
-                    'enrolled' => false,
-                    'message' => "Sorry, you can't enroll on your own course."
+                    'saved' => false,
+                    'message' => 'You are already enrolled on this course.'
                 ], 401);
         } else {
             $course->students()->attach(Auth::user()->id);
         }
 
+		foreach ($course->lessons as $lesson) {
+			$userProgress = new CourseUserProgress();
+
+			$userProgress->course_id = $course->id;
+			$userProgress->user_id = $user->id;
+            $userProgress->section_id = $lesson->course_section_id;
+			$userProgress->lesson_id = $lesson->id;
+			$userProgress->status = 0;
+
+			$userProgress->save();
+		}
+
+        $firstLesson = $course->firstLesson()->first();
+
 		$appUrl = config('app.client_url', config('app.url'));
-		
 		$details = [
 			'subject' => "Hello $user->name! Welcome to $course->title",
             'greeting' => 'Enrollment Confirmation',
             'body' => "Thanks for enrolling in the course, " . '"' . $course->title . '"!',
             'actionText' => 'Start Learning',
-            'actionURL' => url("$appUrl"),
+            'actionURL' => url("$appUrl" . "/student/account/my-courses/learning/" . $firstLesson->id . '/lesson/' . $course->slug . "/show/overview"),
         ];
-
 		Notification::send($user, new CourseSubscriptionNotification($details));
 
     	return response()
     		->json([
     			'enrolled' => true,
-    			'message' => "Great pick! You are now enrolled to $course->title."
+				'message' => "Great pick! You are now enrolled to $course->title.",
+				'lesson_id' => $firstLesson->id
     		]);
     }
 

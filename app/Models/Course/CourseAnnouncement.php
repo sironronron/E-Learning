@@ -4,20 +4,15 @@ namespace App\Models\Course;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CourseRating extends Model
+class CourseAnnouncement extends Model
 {
-    protected $table = 'course_ratings';
+    protected $table = 'course_announcements';
 
     protected $fillable = [
-    	'user_id', 'course_id', 'rating', 'comments'
-    ];
-
-    protected $casts = [
-        'rating' => 'float',
+    	'course_id', 'user_id', 'title', 'description'
     ];
 
     /**
-     * Get User
      * @return array
      */
     public function user()
@@ -26,9 +21,8 @@ class CourseRating extends Model
     }
 
     /**
-     * Get Course
-	 * @return array
-	 */
+     * @return array
+     */
     public function course()
     {
     	return $this->belongsTo('App\Models\Course\Course');

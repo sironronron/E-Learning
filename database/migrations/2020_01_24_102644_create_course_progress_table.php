@@ -23,6 +23,9 @@ class CreateCourseProgressTable extends Migration
             $table->bigInteger('course_id')->unsigned();
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
 
+            $table->bigInteger('section_id')->unsigned();
+            $table->foreign('section_id')->references('id')->on('course_sections')->onDelete('cascade');
+
             $table->bigInteger('lesson_id')->unsigned();
             $table->foreign('lesson_id')->references('id')->on('course_curriculum_section_lessons')->onDelete('cascade');
 

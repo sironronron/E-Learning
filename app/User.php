@@ -19,7 +19,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'biography', 'facebook_link', 'twitter_link', 'youtube_link', 'role_id', 'birthday', 'phone', 'introduction'
+        'name', 'username', 'email', 'password', 'biography', 'facebook_link', 'twitter_link', 'youtube_link', 'role_id', 'birthday', 'phone', 'introduction', 'last_login_at', 'last_login_ip'
     ];
 
     /**
@@ -150,7 +150,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      */
     public function reviews()
     {
-        return $this->hasMany('Apps\Models\Course\CourseRating');
+        return $this->hasMany('App\Models\Course\CourseRating');
     }
 
     /**
@@ -159,6 +159,24 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function qnas()
     {
         return $this->hasMany('App\Models\Course\CourseQANDA');
+    }
+
+    /**
+     * @return array
+     */
+    public function announcement()
+    {
+        return $this->hasMany('App\Models\Course\CourseAnnouncement');
+    }
+
+    /**
+     * Return Lessons
+     * 
+     * @return array
+     */
+    public function lesson()
+    {
+        return $this->hasMany('App\Models\Course\CourseUserProgress');
     }
 
 }

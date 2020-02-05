@@ -24,8 +24,14 @@ class CourseSectionLesson extends Model
         return $this->belongsTo('App\Models\Course\CourseSection');
     }
 
-    public function totalDuration()
+    public function progress()
     {
-        
+        return $this->hasMany('App\Models\Course\CourseUserProgress', 'lesson_id');
     }
+
+    public function getProgress()
+    {
+        return $this->hasOne('App\Models\Course\CourseUserProgress', 'lesson_id');
+    }
+
 }

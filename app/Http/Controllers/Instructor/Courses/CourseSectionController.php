@@ -50,8 +50,7 @@ class CourseSectionController extends Controller
     */
     public function edit($id) 
     {
-        $section = CourseSection::where('id', $id)
-            ->firstOrFail();
+        $section = CourseSection::find($id);
 
         return response()
             ->json([
@@ -83,7 +82,8 @@ class CourseSectionController extends Controller
             ->json([
                 'saved' => true,
                 'id' => $section->id,
-                'message' => "Section #$section->id, updated succesfully"
+                'message' => "Section #$section->id, updated succesfully",
+                'section' => $section
             ]);
     }
 

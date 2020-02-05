@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Course\Course;
 use App\Models\Course\CourseSection;
 use App\Models\Course\CourseSectionLesson;
+use App\Models\Course\CourseUserProgress;
 
 // Course Questions and Answers
 use App\Models\Course\CourseQANDA;
@@ -18,6 +19,10 @@ use Auth;
 
 class UserCoursesController extends Controller
 {
+	public function __construct()
+	{
+		return $this->middleware('auth:api');
+	}
 	/**
 	 * Get my array of my courses
 	 * 
@@ -26,15 +31,22 @@ class UserCoursesController extends Controller
 	{
 		$enrolled_courses = null;
 
-        if (\Auth::check()) {
-            $enrolled_courses = Course::whereHas('students', function($query) {
-                $query->where('user_id', \Auth::id());
-            })
-            ->with(['user'])
-            ->orderBy('id', 'desc')
-            ->get(['image', 'title', 'excerpt', 'price', 'discount', 'has_discount', 'id', 'teacher_id', 'category_id', 'slug', 'free_course']);
-        }
-        
+        $enrolled_courses = Course::whereHas('students', function($query) {
+            $query->where('user_id', \Auth::id());
+        })
+        ->with(['user:id,name', 'firstLesson:id,course_id', 'firstProgress' => function ($query) {
+        	$query->where('user_id', \Auth::id());
+        }, 'rating' => function ($query) {
+        	$query->where('user_id', \Auth::id());
+		}])
+		->withCount(['lessons'])
+		->withCount(['progress' => function ($query) {
+			$query->where('user_id', \Auth::id())
+				->where('status', 1);
+		}])
+        ->orderBy('id', 'desc')
+        ->get();
+
         return response()
             ->json([
                 'enrolled_courses' => $enrolled_courses
@@ -46,11 +58,14 @@ class UserCoursesController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function showCourseLessons($slug)
+	public function showCourseLessons($id, $slug)
 	{
 		$user = Auth::user();
+
 		$course = Course::where('slug', $slug)
-			->with(['user'])
+			->with(['user:id,name,introduction,email,avatar,avatar_public_id,biography', 'rating' => function ($query) {
+				$query->where('user_id', Auth::user()->id);
+			}])
 			->firstOrFail();
 
 		if ($user->id === $course->teacher_id) {
@@ -70,14 +85,34 @@ class UserCoursesController extends Controller
 		}
 
 		$sections = CourseSection::where('course_id', $showCourse->id)
-			->with(['lessons'])
+			->withCount(['lessons'])
+			->withCount(['progress' => function ($query) {
+				$query->where('status', 1)
+					->where('user_id', Auth::user()->id);
+			}])
 			->orderby('order_index', 'asc')
 			->get(['title', 'slug', 'id', 'order_index']);
+
+		$lessons = CourseSectionLesson::where('course_id', $showCourse->id)
+			->with(['getProgress' => function ($query) {
+				$query->where('user_id', Auth::user()->id);
+			}])
+			->get();
+
+		$lesson = CourseSectionLesson::find($id);
+
+		$userProgress = CourseUserProgress::where('status', 1)
+			->where('user_id', Auth::user()->id)
+			->where('course_id', $showCourse->id)
+			->count();
 		
 		return response()
 			->json([
 				'showCourse' => $showCourse,
 				'sections' => $sections,
+				'lessons' => $lessons,
+				'progress' => $userProgress,
+				'lesson' => $lesson
 			]);
 	}
 
@@ -109,11 +144,15 @@ class UserCoursesController extends Controller
 		$lessons = CourseSectionLesson::where('course_id', $courseDetails->id)
 			->orderBy('order_index', 'asc')
 			->get();
+
+		$lessonDurations = CourseSectionLesson::where('course_id', $courseDetails->id)
+			->where('lesson_type', 'VIDEO')
+			->get(['duration']);
 			// Calculate total hours
             $hrs = 0;
             $mins = 0;
             $secs = 0;
-            foreach ($lessons as $time) {
+            foreach ($lessonDurations as $time) {
                 list ($hours, $minutes, $seconds) = explode(':', $time->duration);
 
                 $hrs += (int) $hours;
@@ -146,6 +185,7 @@ class UserCoursesController extends Controller
 	public function getQandA($slug) 
 	{
 		$user = Auth::user();
+
 		$course = Course::where('slug', $slug)
 			->firstOrFail(['id', 'teacher_id']);
 
@@ -178,6 +218,45 @@ class UserCoursesController extends Controller
 				'courseId' => $courseQna->id,
 				'teacherId' => $courseQna->teacher_id
 			]);
+	}
+
+	/**
+	 * Show lessons video
+	 * 
+	 * @return \Illuminate\Http\Response
+	 */
+	public function showLesson($slug, $id)
+	{
+		$user = Auth::user();
+
+		$course = Course::where('slug', $slug)
+			->firstOrFail();
+
+		if ($user->id === $course->teacher_id) {
+			$enrolled_course = true;
+		} else {
+			$enrolled_course = Auth::check() && $course->students()->where('user_id', \Auth::id())->count();
+		}
+
+		if ($enrolled_course == true) {
+			$enrolledCourse = $course;
+			$lesson = CourseSectionLesson::where('id', $id)
+				->firstOrFail();
+		} else {
+			// If user is not enrolled
+			return response()
+				->json([
+					'enrolled' => false,
+					'message' => "Sorry, but	 you are not enrolled to this course."
+				]);
+		}
+	
+		return response()
+			->json([
+				'enrolledCourse' => $enrolledCourse,
+				'lesson' => $lesson
+			]);
+
 	}
 
 }

@@ -46,6 +46,11 @@ class Course extends Model implements Searchable, ViewableContract
         return $this->belongsTo('App\Models\Course\CourseCategory');
     }
 
+    public function firstLesson()
+    {
+        return $this->hasOne('App\Models\Course\CourseSectionLesson')->oldest();
+    }
+
     /**
      * @return array
      */
@@ -110,6 +115,11 @@ class Course extends Model implements Searchable, ViewableContract
         return $this->belongsToMany('App\User', 'course_student')->withTimestamps();
     }
 
+    public function rating()
+    {
+        return $this->hasOne('App\Models\Course\CourseRating', 'course_id');
+    }
+
     /**
      * Get Course Reviews
      *
@@ -117,7 +127,7 @@ class Course extends Model implements Searchable, ViewableContract
      */
     public function ratings()
     {
-        return $this->hasMany('App\Models\Course\CourseRating');
+        return $this->hasMany('App\Models\Course\CourseRating', 'course_id');
     }
 
     /**
@@ -128,6 +138,29 @@ class Course extends Model implements Searchable, ViewableContract
     public function qnas()
     {
         return $this->hasMany('App\Models\Course\CourseQANDA', 'course_id');
+    }
+
+    /**
+     * Return single data
+     */
+    public function firstProgress()
+    {
+        return $this->hasOne('App\Models\Course\CourseUserProgress', 'course_id')
+            ->oldest();
+    }
+
+    /**
+     * User Progress
+     * @return array
+     */
+    public function progress()
+    {
+        return $this->hasMany('App\Models\Course\CourseUserProgress', 'course_id');
+    }
+
+    public function quizBanks()
+    {
+        return $this->hasMany('App\Models\Course\CourseQuizBank', 'course_id');
     }
 
 }

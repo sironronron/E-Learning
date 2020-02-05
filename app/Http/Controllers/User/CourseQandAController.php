@@ -28,7 +28,7 @@ class CourseQandAController extends Controller
 
    		$this->validate($request, [
    			'title' => 'required|max:255',
-   			'details' => 'required|max:1000'
+   			'details' => 'required'
    		]);
 
    		$qna = new CourseQANDA($request->all());
@@ -77,7 +77,7 @@ class CourseQandAController extends Controller
     public function reply(Request $request, $id)
     {
       $this->validate($request, [
-        'details' => 'required|max:1000'
+        'details' => 'required'
       ]);
 
       $question = CourseQANDA::where('id', $id)

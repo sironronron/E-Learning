@@ -79,7 +79,7 @@ class CourseSectionLessonController extends Controller
             $name = $request->file('lesson_attachment')->getClientOriginalName();
             $file_name = $request->file('lesson_attachment')->getRealPath();
             Cloudder::upload($file_name, null, array('resource_type' => 'auto', 'folder' => 'Lesson Attachments'));
-            $file_url = Cloudder::show(Cloudder::getPublicId());
+            $file_url = Cloudder::getPublicId(['resource_type' => 'auto']);
             $lesson->lesson_attachment = $file_url;
         }
 
@@ -121,8 +121,44 @@ class CourseSectionLessonController extends Controller
     */
     public function edit($id) 
     {
-        // ... code
+        $lesson = CourseSectionLesson::where('id', $id)
+            ->firstOrFail();
+
+        return response()
+            ->json([
+                'lesson' => $lesson
+            ]);
     }
+
+    /**
+     * Update Lesson Data
+     *
+     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Request
+     */
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'title' => 'required|max:255',
+            'lesson_type' => 'required',
+            'summary' => 'required'
+        ]);
+
+        $lesson = CourseSectionLesson::find($id);
+
+        $input = $request->all();
+        $lesson->fill($input);
+
+        $lesson->save();
+
+        return response()
+            ->json([
+                'updated' => true,
+                'lesson' => $lesson,
+                'message' => "Lesson is updated"
+            ]);
+    }
+        
 
     /**
      * Update order_index of Lessons

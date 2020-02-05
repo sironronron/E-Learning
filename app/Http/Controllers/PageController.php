@@ -13,6 +13,8 @@ use App\Models\Course\CourseCategory;
 use App\Models\Course\CourseSection;
 use App\Models\Course\CourseSectionLesson;
 use App\Models\Course\CourseSectionQuiz;
+use App\Models\Course\CourseUserProgress;
+use App\Models\Course\CourseRating;
 
 // Instructor
 use App\User;
@@ -26,6 +28,7 @@ class PageController extends Controller
     public function welcome()
     {
         $courses = Course::where('status', 'PUBLISHED')
+            ->has('lessons')
             ->with(['category', 'user'])
             ->get(['image', 'title', 'excerpt', 'price', 'discount', 'has_discount', 'id', 'teacher_id', 'category_id', 'slug', 'free_course']);
 
@@ -39,9 +42,38 @@ class PageController extends Controller
     {
 
         $course = Course::where('status', 'PUBLISHED')
-            ->with(['category', 'requirements', 'outcomes', 'whos'])
+            ->has('lessons')
+            ->with(['category:id,name,slug', 'requirements:course_id,description', 'outcomes:course_id,description', 'whos:course_id,description', 'firstLesson:id,course_id'])
+            ->withCount('ratings')
             ->where('slug', $slug)
             ->firstOrFail();
+
+        $avgRating = round($course->ratings()->avg('rating'), 1);
+
+
+        $feedBacks = CourseRating::where('course_id', $course->id)
+            ->with(['user:id,name,email,avatar,avatar_public_id'])
+            ->get();
+
+        $fiveRating = CourseRating::where('course_id', $course->id)
+            ->where('rating', 5)
+            ->count();
+
+        $fourRating = CourseRating::where('course_id', $course->id)
+            ->whereIn('rating', [4, 4.5])
+            ->count();
+
+        $threeRating = CourseRating::where('course_id', $course->id)
+            ->whereIn('rating', [3, 3.5])
+            ->count();
+
+        $twoRating = CourseRating::where('course_id', $course->id)
+            ->whereIn('rating', [2, 2.5])
+            ->count();
+
+        $oneRating = CourseRating::where('course_id', $course->id)
+            ->whereIn('rating', [0.5, 1, 1.5])
+            ->count();
 
         $enrolled_course = Auth::check() && $course->students()->where('user_id', \Auth::id())->count() > 0;
         $enrolled_students = $course->students()->count();
@@ -55,7 +87,7 @@ class PageController extends Controller
             }
 
             // add delay on course view
-            $visitorIp = \Request::getClientIp(true);
+            $visitorIp = trim(shell_exec("dig +short myip.opendns.com @resolver1.opendns.com"));
 
             views($course)
                 ->collection('course')
@@ -63,16 +95,16 @@ class PageController extends Controller
                 ->record();
 
         $sections = CourseSection::where('course_id', $course->id)
-            ->with(['lessons'])
+            ->with(['lessons:id,course_section_id'])
             ->get(['id', 'title']);
 
             $lessons = CourseSectionLesson::where('course_id', $course->id)
                 ->where('duration', '!=', null)
-                ->get(['course_id', 'course_section_id', 'title', 'lesson_type', 'duration', 'summary', 'order_index']);
+                ->get(['course_id', 'course_section_id', 'title', 'duration', 'order_index']);
 
             $quizzes = CourseSectionQuiz::where('course_id', $course->id)
                 ->get([
-                    'title', 'slug', 'course_id', 'instruction', 'course_curriculum_section_id'
+                    'title', 'slug', 'course_id', 'instruction', 'section_id'
                 ]);
 
             // Course Complete Lesson Duration
@@ -108,13 +140,15 @@ class PageController extends Controller
             $totalDuration = sprintf('%d:%d:%d', $hrs, $mins, $secs);
 
         $instructor = User::where('id', $course->teacher_id)
-            ->with(['courses'])
-            ->firstOrFail();
+            ->with(['courses:id,teacher_id'])
+            ->firstOrFail(['id', 'name', 'avatar', 'avatar_public_id', 'introduction', 'biography']);
 
         $countLessons = CourseSectionLesson::where('course_id', $course->id)
             ->count();
+        
 
         $mightLikes = Course::where('slug', '!=', $slug)
+            ->has('lessons')
             ->with(['user', 'category'])
             ->where('status', 'PUBLISHED')
             ->where('category_id', $course->category_id)
@@ -135,7 +169,14 @@ class PageController extends Controller
                 'enrolled_course' => $enrolled_course,
                 'enrolled_at' => $enrolled_at,
                 'enrolled_students' => $enrolled_students,
-                'instructor' => $instructor
+                'instructor' => $instructor,
+                'avgRating' => $avgRating,
+                'feedBacks' => $feedBacks,
+                'fiveRating' => $fiveRating,
+                'fourRating' => $fourRating,
+                'threeRating' => $threeRating,
+                'twoRating' => $twoRating,
+                'oneRating' => $oneRating
             ]);
     }
 
@@ -171,33 +212,18 @@ class PageController extends Controller
     public function showCategory($slug)
     {
         $category = CourseCategory::where('slug', $slug)
-            ->firstOrFail();
-
-        $courses = Course::where('category_id', $category->id)
-            ->with(['user', 'category'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-        $countCourses = Course::where('category_id', $category->id)
-            ->count();
+            ->first();
             
         $mostPopular = Course::orderByViews('desc')
+            ->has('lessons')
             ->where('category_id', $category->id)
-            ->with(['user', 'views'])
+            ->with(['user:id,name', 'views'])
             ->get(['id', 'title', 'slug', 'image', 'image_public_id', 'excerpt', 'has_discount', 'free_course', 'price', 'discount', 'teacher_id']);
-
-        $featuredCourse = Course::where('category_id', $category->id)
-            ->where('featured', 1)
-            ->with(['user', 'category', 'sections', 'lessons'])
-            ->firstOrFail();
 
         return response()
             ->json([
                 'category' => $category,
-                'courses' => $courses,
                 'mostPopular' => $mostPopular,
-                'featuredCourse' => $featuredCourse,
-                'countCourses' => $countCourses
             ]);
     }
 

@@ -9,7 +9,7 @@ class CourseSectionQuiz extends Model
     protected $table = 'course_curriculum_section_quizzes';
 
     protected $fillable = [
-        'title', 'slug', 'instruction', 'section_id'
+        'title', 'slug', 'instruction', 'section_id', 'course_id', 'bank_id'
     ];
 
     protected $dates = [

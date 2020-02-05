@@ -17,20 +17,35 @@ use App\Models\Course\CourseSection;
 class CourseSectionQuizBankController extends Controller
 {
     /**
-     * Get number of quiz banks
-     *
+     * Store new Quiz Bank
      */
-    public function index()
-    {
-    	// Code
+    public function store(Request $request) {
+        $quizBankExists = CourseQuizBank::where('section_id', $request->section_id)
+        	->first();
+
+        $this->validate($request, [
+        	'section_id' => 'required',
+        	'number_of_questions' => 'required'	
+        ]);
+
+        $quizBank = new CourseQuizBank($request->all());
+       	
+       	if (!$quizBankExists) {
+       		$quizBank->save();
+       	} else {
+       		return response()
+       			->json([
+       				'saved' => false,
+       				'message' => "There's already an existing quiz bank on that section."
+       			]);
+       	}
+
+        return response()
+        	->json([
+        		'saved' => true,
+        		'bank' => $quizBank,
+        		'message' => 'Quiz bank is created'
+        	]);
     }
 
-    /**
-     * Create New Quiz Bank
-     *
-	 */
-    public function create()
-    {
-
-    }
 }

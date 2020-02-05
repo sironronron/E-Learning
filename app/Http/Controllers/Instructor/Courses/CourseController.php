@@ -17,6 +17,10 @@ use App\Models\Course\CourseWho;
 use App\Models\Course\CourseSection;
 use App\Models\Course\CourseSectionLesson;
 use App\Models\Course\CourseSectionQuiz;
+use App\Models\Course\CourseAnnouncement;
+use App\Models\Course\CourseQANDA;
+use App\Models\Course\CourseQuizBank;
+use App\Models\Course\CourseUserProgress;
 
 // Cloud Storage
 use JD\Cloudder\Facades\Cloudder;
@@ -39,41 +43,16 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $activeCourses = Course::where('status', 'PUBLISHED')
-            ->where('teacher_id', Auth::user()->id)
-            ->count();
-
-        $pendingCourses = Course::where('status', 'PENDING')
-            ->where('teacher_id', Auth::user()->id)
-            ->count();
-
-        $draftCourses = Course::where('status', 'DRAFT')
-            ->where('teacher_id', Auth::user()->id)
-            ->count();
-
-        $freeCourses = Course::where('free_course', 1)
-            ->where('teacher_id', Auth::user()->id)
-            ->count();
-
-        $paidCourses = Course::where('free_course', 0)
-            ->where('teacher_id', Auth::user()->id)
-            ->count();
-
         $allCourses = Course::where('teacher_id', Auth::user()->id)
-            ->with(['category', 'user'])
+            ->with(['category', 'user', 'firstLesson:id,course_id', 'sections:id,course_id', 'lessons:id,course_id', 'students'])
             ->orderBy('created_at', 'desc')
-            ->paginate(7, ['id', 'title', 'slug', 'teacher_id', 'category_id', 'status']);
+            ->paginate(7);
 
         $courses = Course::where('teacher_id', Auth::user()->id)
             ->count();
 
         return response()
             ->json([
-                'activeCourses' => $activeCourses,
-                'pendingCourses' => $pendingCourses,
-                'draftCourses' => $draftCourses,
-                'freeCourses' => $freeCourses,
-                'paidCourses' => $paidCourses,
                 'allCourses' => $allCourses,
                 'courses' => $courses
             ]);
@@ -189,6 +168,17 @@ class CourseController extends Controller
         $request->user()
             ->courses()->save($course);
 
+        // Create Course Sections
+        $section = new CourseSection();
+        $lesson = new CourseSectionLesson();
+
+        $section->course_id = $course->id;
+        $section->title = 'Sample 1';
+        $section->slug = str_slug($section->title, '-');
+        $section->order_index = 1;
+
+        $section->save();
+        
         // Save to Public path
         $image->move(public_path('uploads'), $name);
 
@@ -216,7 +206,7 @@ class CourseController extends Controller
     public function show($slug)
     {
         $course = Course::where('slug', $slug)
-            ->with(['user', 'requirements', 'whos', 'outcomes', 'category'])
+            ->with(['user', 'requirements', 'whos', 'outcomes', 'category', 'firstLesson:id,course_id'])
             ->where('teacher_id', Auth::user()->id)
             ->firstOrFail();
             
@@ -249,6 +239,9 @@ class CourseController extends Controller
             ->orderBy('order_index', 'asc')
             ->get();
 
+        $quizBanks = CourseQuizBank::where('course_id', $course->id)
+            ->get();
+
         $quizzes = CourseSectionQuiz::where('course_id', $course->id)
             ->orderBy('order_index', 'asc')
             ->get();
@@ -259,6 +252,7 @@ class CourseController extends Controller
                 'categories' => $categories,
                 'sections' => $sections,
                 'lessons' => $lessons,
+                'quizBanks' => $quizBanks,
                 'quizzes' => $quizzes
             ]);
     }
@@ -465,9 +459,15 @@ class CourseController extends Controller
         $course = Course::where('id', $id)
             ->where('teacher_id', Auth::user()->id)
             ->firstOrFail();
-
-        // RecipeIngredient::where('recipe_id', $recipe->id)->delete();
-        // RecipeDirection::where('recipe_id', $recipe->id)->delete();
+        
+        CourseSection::where('course_id', $course->id)->delete();
+        CourseSectionLesson::where('course_id', $course->id)->delete();
+        CourseSectionQuiz::where('course_id', $course->id)->delete();
+        CourseAnnouncement::where('course_id', $course->id)->delete();
+        CourseQANDA::where('course_id', $course->id)->delete();
+        CourseQuizBank::where('course_id', $course->id)->delete();
+        CourseUserProgress::where('course_id', $course->id)->delete();
+        CourseWho::where('course_id', $course->id)->delete();
 
         // File::delete(public_path('storage/'.$recipe->thumbnail));
 

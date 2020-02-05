@@ -4,7 +4,11 @@ namespace App\Models\Course;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CourseQANDA extends Model
+// Search Model
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
+
+class CourseQANDA extends Model implements Searchable
 {
     protected $table = 'course_questions_and_answers';
 
@@ -34,6 +38,19 @@ class CourseQANDA extends Model
     public function replies()
     {
         return $this->hasMany(self::class, 'parent_id');
+    }
+
+    
+    /**
+     * @return array
+     */
+    public function getSearchResult(): \Spatie\Searchable\SearchResult
+    {
+        // $url = url('course/' . $this->slug);
+        return new SearchResult(
+            $this,
+            $this->title,
+        );
     }
 
 }

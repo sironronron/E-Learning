@@ -34,7 +34,7 @@ class CreateCourseCurriculumSectionLessonsTable extends Migration
             $table->enum('lesson_type', ['NULL', 'VIDEO', 'TFILE', 'PDF', 'DF', 'IFILE'])->default('NULL');
 
             // Lesson Provider if lesson_type = VIDEO
-            $table->enum('lesson_provider', ['Youtube', 'Vimeo', 'HTML5', 'NULL'])->default('NULL');
+            $table->enum('lesson_provider', ['Youtube', 'Vimeo', 'HTML5', 'NULL'])->default('NULL')->nullable();
             $table->string('thumbnail')->nullable();
             // Video
             $table->string('video_url')->nullable();

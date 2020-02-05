@@ -19,6 +19,16 @@ class CourseSection extends Model
 
     public function quizzes()
     {
-        return $this->hasMany('App\Models\Course\CourseSectionQuiz', 'course_curriculum_section_id');
+        return $this->hasMany('App\Models\Course\CourseSectionQuiz', 'section_id');
+    }
+
+    public function quizBank()
+    {
+        return $this->hasOne('App\Models\Course\CourseQuizBank', 'section_id');
+    }
+
+    public function progress()
+    {
+        return $this->hasMany('App\Models\Course\CourseUserProgress', 'section_id');
     }
 }
