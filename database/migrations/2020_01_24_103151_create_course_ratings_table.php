@@ -23,10 +23,13 @@ class CreateCourseRatingsTable extends Migration
             $table->bigInteger('course_id')->unsigned();
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
 
+            $table->bigInteger('teacher_id')->unsigned();
+            $table->foreign('teacher_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->decimal('rating', 8, 1)->nullable();
 
             $table->longText('comments')->nullable();
-            
+
             $table->timestamps();
         });
     }

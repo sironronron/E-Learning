@@ -25,23 +25,26 @@ class UserCoursesController extends Controller
 	}
 	/**
 	 * Get my array of my courses
-	 * 
+	 *
 	 */
 	public function myCourses()
 	{
 		$enrolled_courses = null;
 
         $enrolled_courses = Course::whereHas('students', function($query) {
-            $query->where('user_id', \Auth::id());
+            $query->where('user_id', \Auth::user()->id);
         })
         ->with(['user:id,name', 'firstLesson:id,course_id', 'firstProgress' => function ($query) {
-        	$query->where('user_id', \Auth::id());
+        	$query->where('user_id', \Auth::user()->id);
         }, 'rating' => function ($query) {
-        	$query->where('user_id', \Auth::id());
+        	$query->where('user_id', \Auth::user()->id);
+		}, 'hasFinishedLesson' => function ($query) {
+			$query->where('user_id', \Auth::user()->id)
+				->where('status', 1);
 		}])
 		->withCount(['lessons'])
 		->withCount(['progress' => function ($query) {
-			$query->where('user_id', \Auth::id())
+			$query->where('user_id', \Auth::user()->id)
 				->where('status', 1);
 		}])
         ->orderBy('id', 'desc')
@@ -105,7 +108,7 @@ class UserCoursesController extends Controller
 			->where('user_id', Auth::user()->id)
 			->where('course_id', $showCourse->id)
 			->count();
-		
+
 		return response()
 			->json([
 				'showCourse' => $showCourse,
@@ -182,7 +185,7 @@ class UserCoursesController extends Controller
 			]);
 	}
 
-	public function getQandA($slug) 
+	public function getQandA($slug)
 	{
 		$user = Auth::user();
 
@@ -222,7 +225,7 @@ class UserCoursesController extends Controller
 
 	/**
 	 * Show lessons video
-	 * 
+	 *
 	 * @return \Illuminate\Http\Response
 	 */
 	public function showLesson($slug, $id)
@@ -250,13 +253,55 @@ class UserCoursesController extends Controller
 					'message' => "Sorry, but	 you are not enrolled to this course."
 				]);
 		}
-	
+
 		return response()
 			->json([
 				'enrolledCourse' => $enrolledCourse,
 				'lesson' => $lesson
 			]);
 
+	}
+
+	/**
+	 * Searches
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function search(Request $request)
+	{
+		$this->validate($request, [
+			'q' => 'required|string'
+		]);
+
+		$search = $request->get('q');
+
+		$searchResults = (new Search())
+			->registerModel(Course::class, function (ModelSearchAspect $modelSearchAspect) {
+				$modelSearchAspect
+					->addSearchableAttribute('title')
+					->addSearchableAttribute('language')
+					->whereHas('students', function ($query) {
+						$query->where('user_id', \Auth::id());
+					})
+                    ->withCount(['students', 'lessons', 'ratings', 'progress' => function ($query) {
+						$query->where('user_id', \Auth::id())
+							->where('status', 1);
+					}])
+                    ->with(['user:id,name', 'firstLesson:id,course_id', 'firstProgress' => function ($query) {
+						$query->where('user_id', \Auth::id());
+					}, 'rating' => function ($query) {
+						$query->where('user_id', \Auth::id());
+					}, 'hasFinishedLesson' => function ($query) {
+						$query->where('user_id', \Auth::id())
+							->where('status', 1);
+					}])
+					->get();
+			})->search($search);
+
+		return response()
+			->json([
+				'$searchResults' => $searchResults
+			]);
 	}
 
 }

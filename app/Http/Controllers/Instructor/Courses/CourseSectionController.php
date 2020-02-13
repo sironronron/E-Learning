@@ -13,7 +13,7 @@ class CourseSectionController extends Controller
 {
     /**
      * Create new section in courses
-     * 
+     *
      * @param int id // Course ID
      * @return \Illuminate\Http\Response
      * @return \Illuminate\Http\Request
@@ -30,6 +30,7 @@ class CourseSectionController extends Controller
         $section = new CourseSection($request->all());
         $section->slug = str_slug($request->title, '-');
         $section->course_id = $course->id;
+        $section->order_index++;
 
         $section->save();
 
@@ -48,7 +49,7 @@ class CourseSectionController extends Controller
      *
      * @return \Illuminate\Http\Response
     */
-    public function edit($id) 
+    public function edit($id)
     {
         $section = CourseSection::find($id);
 
@@ -88,6 +89,19 @@ class CourseSectionController extends Controller
     }
 
     /**
+     * Delete Section
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $section = CourseSection::where('id', $id)
+            ->firstOrFail();
+
+        $section->delete();
+    }
+
+    /**
      *  Update order_index of Section
      *
      * @return \Illuminate\Http\Response
@@ -100,7 +114,7 @@ class CourseSectionController extends Controller
         ]);
 
         $sections = CourseSection::all();
- 
+
         foreach($sections as $section) {
             $id = $section->id;
             foreach ($request->sections as $section) {

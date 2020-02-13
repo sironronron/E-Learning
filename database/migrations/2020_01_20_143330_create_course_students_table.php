@@ -23,6 +23,8 @@ class CreateCourseStudentsTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
+            $table->time('total_time')->nullable();
+
             $table->timestamps();
         });
     }

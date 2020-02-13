@@ -18,6 +18,7 @@ class Course extends Model implements Searchable, ViewableContract
 
     protected $table = 'courses';
 
+
     /**
      * The attributes that are mass assignable.
      *
@@ -28,6 +29,10 @@ class Course extends Model implements Searchable, ViewableContract
         'status', 'language_id', 'level', 'free_course', 'price',
         'has_discount', 'discount', 'image', 'course_overview_provider', 'course_overview_url',
         'meta_keywords', 'meta_description'
+    ];
+
+    protected $casts = [
+        'rating_average' => 'float'
     ];
 
     /**
@@ -115,6 +120,11 @@ class Course extends Model implements Searchable, ViewableContract
         return $this->belongsToMany('App\User', 'course_student')->withTimestamps();
     }
 
+    public function courseDuration()
+    {
+        return $this->hasOne('App\Models\Cart\Subscription\CourseStudent', 'course_id');
+    }
+
     public function rating()
     {
         return $this->hasOne('App\Models\Course\CourseRating', 'course_id');
@@ -146,9 +156,17 @@ class Course extends Model implements Searchable, ViewableContract
     public function firstProgress()
     {
         return $this->hasOne('App\Models\Course\CourseUserProgress', 'course_id')
-            ->oldest();
+            ->orderBy('id', 'asc');
     }
 
+    /**
+     *
+     *
+     */
+    public function hasFinishedLesson()
+    {
+        return $this->hasOne('App\Models\Course\CourseUserProgress', 'course_id');
+    }
     /**
      * User Progress
      * @return array

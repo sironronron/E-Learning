@@ -9,6 +9,9 @@ use App\Models\Course\Course;
 use App\Models\Course\CourseSection;
 use App\Models\Course\CourseSectionLesson;
 use App\Models\Course\CourseUserProgress;
+use App\Models\Cart\Subscription\CourseStudent;
+
+// Authenticated User
 use Auth;
 
 // Notification
@@ -40,15 +43,43 @@ class EnrollController extends Controller
 
         if (Auth::check() && $course->students()->where('user_id', \Auth::id())->count() != 0)
         {
-            die();
-
             return response()
                 ->json([
                     'saved' => false,
                     'message' => 'You are already enrolled on this course.'
                 ], 401);
         } else {
-            $course->students()->attach(Auth::user()->id);
+            $courseStudent = new CourseStudent();
+            $courseStudent->user_id = $user->id;
+            $courseStudent->course_id = $course->id;
+            // Calculate total hours
+            $hrs = 0;
+            $mins = 0;
+            $secs = 0;
+            foreach ($course->lessons as $time) {
+                if ($time->duration != null) {
+                    list ($hours, $minutes, $seconds) = explode(':', $time->duration);
+
+                    $hrs += (int) $hours;
+                    $mins += (int) $minutes;
+                    $secs += (int) $seconds;
+
+                    // Convert each 60 minutes to an hour
+                    if ($mins >= 60) {
+                        $hrs++;
+                        $mins -= 60;
+                    }
+
+                    // Convert each 60 seconds to a minute
+                    if ($secs >= 60) {
+                        $mins++;
+                        $secs -= 60;
+                    }
+                }
+            }
+            $totalDuration = sprintf('%d:%d:%d', $hrs, $mins, $secs);
+            $courseStudent->total_time = $totalDuration;
+            $courseStudent->save();
         }
 
 		foreach ($course->lessons as $lesson) {
@@ -121,10 +152,10 @@ class EnrollController extends Controller
         	]);
 
 	}
-	
+
 	/**
 	 * Show learning page
-	 * 
+	 *
 	 * @return \Illuminate\Http\Response
 	 */
 	public function showLessons($slug, $id)

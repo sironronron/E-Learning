@@ -41,17 +41,20 @@ class CourseRatingController extends Controller
 
     	$rating = new CourseRating($request->all());
 
+        $rating->teach_id = $request->teacher_id;
+
     	$request->user()
     		->reviews()->save($rating);
 
     	return response()
     		->json([
     			'saved' => true,
-                
+
                 // Push new values
                 'id' => $rating->id,
                 'user_id' => $rating->user_id,
                 'course_id' => $rating->course_id,
+                'teacher_id' => $rating->teacher_id,
                 'rating' => $rating->rating,
                 'comments' => $rating->comments,
                 'created_at' => $rating->created_at,
@@ -63,7 +66,7 @@ class CourseRatingController extends Controller
 
     /**
      * Update Rating
-     * 
+     *
      */
     public function edit($id)
     {
@@ -80,7 +83,7 @@ class CourseRatingController extends Controller
         $this->validate($request, [
     		'rating' => 'required|min:1|max:5'
         ]);
-        
+
         $rating = CourseRating::where('id', $id)
             ->firstOrFail();
 

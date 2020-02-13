@@ -22,6 +22,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'name', 'username', 'email', 'password', 'biography', 'facebook_link', 'twitter_link', 'youtube_link', 'role_id', 'birthday', 'phone', 'introduction', 'last_login_at', 'last_login_ip'
     ];
 
+    protected $primaryKey = 'id';
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -171,12 +173,18 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     /**
      * Return Lessons
-     * 
+     *
      * @return array
      */
     public function lesson()
     {
         return $this->hasMany('App\Models\Course\CourseUserProgress');
+    }
+
+    public function myReviews()
+    {
+        return $this->hasMany('App\Models\Course\CourseRating', 'teach_id')
+            ->where('comments', '!=', null);
     }
 
 }

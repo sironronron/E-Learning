@@ -33,6 +33,9 @@ class CreateCourseCurriculumSectionLessonsTable extends Migration
             // Lesson Type
             $table->enum('lesson_type', ['NULL', 'VIDEO', 'TFILE', 'PDF', 'DF', 'IFILE'])->default('NULL');
 
+            // If type of File
+            $table->longText('text_file')->nullable();
+
             // Lesson Provider if lesson_type = VIDEO
             $table->enum('lesson_provider', ['Youtube', 'Vimeo', 'HTML5', 'NULL'])->default('NULL')->nullable();
             $table->string('thumbnail')->nullable();
@@ -45,11 +48,11 @@ class CreateCourseCurriculumSectionLessonsTable extends Migration
             // Lesson Provider if lesson_type = ['TFILE', 'PDF', 'DF', 'IFILE']
             $table->string('lesson_attachment')->nullable();
 
-            $table->text('summary');
+            $table->text('summary')->nullable();
 
             // Section Order
             $table->integer('order_index')->unsigned()->default(1);
-            
+
             $table->timestamps();
         });
     }

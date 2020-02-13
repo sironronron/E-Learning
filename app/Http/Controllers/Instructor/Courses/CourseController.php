@@ -31,11 +31,11 @@ use Storage;
 
 class CourseController extends Controller
 {
-    public function __construct() 
+    public function __construct()
     {
         return $this->middleware('auth:api');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -93,7 +93,7 @@ class CourseController extends Controller
             'course_overview_provider' => 'required',
             'course_overview_url' => 'required',
             'meta_keywords' => 'required|max:255',
-            'meta_description' => 'required|max:120', 
+            'meta_description' => 'required|max:120',
             'requirements' => 'required|array|min:1',
             'requirements.*.description' => 'required|max:255',
             'outcomes' => 'required|array|min:1',
@@ -124,7 +124,7 @@ class CourseController extends Controller
         // End
 
         // Save Multiple For who?
-        
+
         $whos = [];
 
         foreach ($request->whos as $who)
@@ -178,7 +178,7 @@ class CourseController extends Controller
         $section->order_index = 1;
 
         $section->save();
-        
+
         // Save to Public path
         $image->move(public_path('uploads'), $name);
 
@@ -209,7 +209,7 @@ class CourseController extends Controller
             ->with(['user', 'requirements', 'whos', 'outcomes', 'category', 'firstLesson:id,course_id'])
             ->where('teacher_id', Auth::user()->id)
             ->firstOrFail();
-            
+
         return response()
             ->json([
                 'course' => $course
@@ -277,7 +277,7 @@ class CourseController extends Controller
             'course_overview_provider' => 'required',
             'course_overview_url' => 'required',
             'meta_keywords' => 'required|max:255',
-            'meta_description' => 'required|max:120', 
+            'meta_description' => 'required|max:120',
             'requirements' => 'required|array|min:1',
             'requirements.*.id' => 'integer|exists:course_requirements',
             'requirements.*.description' => 'required',
@@ -407,7 +407,7 @@ class CourseController extends Controller
     }
 
     public function editImage($slug)
-    {   
+    {
         $image = Course::where('slug', $slug)
             ->where('teacher_id', Auth::user()->id)
             ->firstOrFail(['id','image']);
@@ -459,7 +459,7 @@ class CourseController extends Controller
         $course = Course::where('id', $id)
             ->where('teacher_id', Auth::user()->id)
             ->firstOrFail();
-        
+
         CourseSection::where('course_id', $course->id)->delete();
         CourseSectionLesson::where('course_id', $course->id)->delete();
         CourseSectionQuiz::where('course_id', $course->id)->delete();
@@ -482,7 +482,7 @@ class CourseController extends Controller
 
     /**
      * Edit status of a course
-     * 
+     *
      * @return \Illuminate\Http\Response
      * @return \Illuminate\Http\Request
      */

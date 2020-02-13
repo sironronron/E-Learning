@@ -50,6 +50,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     // My Courses
     Route::prefix('student/account/my-courses')->group(function () {
         Route::get('/learning', 'User\UserCoursesController@myCourses');
+        Route::get('/learning/search', 'User\UserCoursesController@search');
         Route::get('/learning/{id}/lesson/{slug}/show', 'User\UserCoursesController@showCourseLessons');
 
         // Get Course overview
@@ -80,7 +81,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         // Update Rating
         Route::patch('/rating/patch/{id}', 'User\CourseRatingController@update');
     });
-    
+
 
 });
 
@@ -107,17 +108,21 @@ Route::group(['middleware' => 'auth:api'], function () {
         // Get Editable data / Update Section
         Route::get('/courses/section/edit_section/{id}/get', 'Instructor\Courses\CourseSectionController@edit');
         Route::patch('/courses/section/edit_section/{id}/patch', 'Instructor\Courses\CourseSectionController@update');
+        // Delete Section
+        Route::delete('/courses/section/delete_section/{id}', 'Instructor\Courses\CourseSectionController@destroy');
         // Update Section Order
         Route::put('/courses/section/order_index/{id}', 'Instructor\Courses\CourseSectionController@updateOrderIndex');
         // Update Section Lessons Order
         Route::put('/courses/section/lesson/order_index/{id}', 'Instructor\Courses\CourseSectionLessonController@updateOrderIndex');
-            
+
         // Course Section Lesson
         Route::get('/courses/section/add_lesson/get/{id}', 'Instructor\Courses\CourseSectionLessonController@create');
         Route::post('/courses/section/add_lesson/post', 'Instructor\Courses\CourseSectionLessonController@store');
 
         Route::get('/courses/section/edit_lesson/get/{id}', 'Instructor\Courses\CourseSectionLessonController@edit');
         Route::patch('/courses/section/edit_lesson/patch/{id}', 'Instructor\Courses\CourseSectionLessonController@update');
+
+        Route::delete('/courses/section/delete_lesson/{id}', 'Instructor\Courses\CourseSectionLessonController@destroy');
 
         // Course Section Quiz
         Route::get('/courses/section/add_quiz/get/{id}', 'Instructor\Courses\CourseSectionQuizController@create');
