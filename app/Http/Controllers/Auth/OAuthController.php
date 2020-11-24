@@ -9,6 +9,12 @@ use App\Exceptions\EmailTakenException;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
+// Notify user 
+use Notification;
+use App\Notifications\UserLoggedIn;
+
+use Illuminate\Support\Carbon;
+
 class OAuthController extends Controller
 {
     use AuthenticatesUsers;
@@ -74,9 +80,37 @@ class OAuthController extends Controller
             ->first();
 
         if ($oauthProvider) {
+
             $oauthProvider->update([
                 'access_token' => $user->token,
                 'refresh_token' => $user->refreshToken,
+            ]);
+
+            $getUserLoggedIn = User::where('id', $oauthProvider->user_id)
+            ->first();
+
+            // Notify user of new logged In
+            $ip = trim(shell_exec("dig +short myip.opendns.com @resolver1.opendns.com"));
+            $appUrl = config('app.client_url', config('app.url'));
+            $appName = config('app.name');
+
+            if ($getUserLoggedIn->last_login_ip != $ip || $getUserLoggedIn->last_login_ip == null) {
+                $details = [
+                    'subject' => "New Login to $appName",
+                    'greeting' => "We noticed a login to your account $getUserLoggedIn->email from a different IP. Was this you?",
+                    'you' => "If this was you",
+                    'ignore' => "You can ignore this message. There's no need to take any action.",
+                    'notYou' => "If this wasn't you",
+                    'respond' => "Click the button below to change your password",
+                    'actionText' => 'Reset Password',
+                    'actionURL' => url("$appUrl" . "/password/reset")
+                ];
+                Notification::send($getUserLoggedIn, new UserLoggedIn($details));
+            }
+
+            $getUserLoggedIn->update([
+                'last_login_at' => Carbon::now()->toDateTimeString(),
+                'last_login_ip' => $ip         
             ]);
 
             return $oauthProvider->user;

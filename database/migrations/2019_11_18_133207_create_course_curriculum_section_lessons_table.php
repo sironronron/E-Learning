@@ -17,11 +17,11 @@ class CreateCourseCurriculumSectionLessonsTable extends Migration
             $table->bigIncrements('id');
 
             // Course ID Relationship
-            $table->integer('course_id')->unsigned();
-            $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
+            $table->bigInteger('course_id')->unsigned();
+            // $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
 
-            $table->integer('course_section_id')->unsigned();
-            $table->foreign('course_section_id')->references('id')->on('course_sections')->onDelete('cascade');
+            $table->bigInteger('course_section_id')->unsigned();
+            // $table->foreign('course_section_id')->references('id')->on('course_sections')->onDelete('cascade');
 
             // Media
             $table->string('lesson_image')->nullable();
@@ -33,17 +33,26 @@ class CreateCourseCurriculumSectionLessonsTable extends Migration
             // Lesson Type
             $table->enum('lesson_type', ['NULL', 'VIDEO', 'TFILE', 'PDF', 'DF', 'IFILE'])->default('NULL');
 
+            // If type of File
+            $table->longText('text_file')->nullable();
+
             // Lesson Provider if lesson_type = VIDEO
-            $table->enum('lesson_provider', ['Youtube', 'Vimeo', 'HTML5', 'NULL'])->default('NULL');
+            $table->enum('lesson_provider', ['Youtube', 'Vimeo', 'HTML5', 'NULL'])->default('NULL')->nullable();
             $table->string('thumbnail')->nullable();
+            // Video
             $table->string('video_url')->nullable();
+            $table->string('video_html5_public_id')->nullable();
+
             $table->time('duration')->nullable();
 
             // Lesson Provider if lesson_type = ['TFILE', 'PDF', 'DF', 'IFILE']
             $table->string('lesson_attachment')->nullable();
 
-            $table->text('summary');
-            
+            $table->text('summary')->nullable();
+
+            // Section Order
+            $table->integer('order_index')->unsigned()->default(1);
+
             $table->timestamps();
         });
     }

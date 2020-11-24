@@ -10,6 +10,9 @@ use App\Models\Course\Course;
 use App\Models\Course\CourseSection;
 use App\Models\Course\CourseSectionQuiz;
 
+// Course Quiz Bank
+use App\Models\Course\CourseQuizBank;
+
 class CourseSectionQuizController extends Controller
 {
     public function __construct()
@@ -20,15 +23,15 @@ class CourseSectionQuizController extends Controller
 
     /**
      * Get All Sections
-     * 
+     *
      * @param $course_section_id
      * @return Illuminate\Http\Response
      */
-    public function create($id) 
+    public function create($id)
     {
         $course = Course::where('id', $id)
         ->firstOrFail(['id']);
-        
+
         $sections = CourseSection::where('course_id', $course->id)
             ->get(['id', 'title']);
 
@@ -40,11 +43,11 @@ class CourseSectionQuizController extends Controller
 
     /**
      * Create a lesson on each section
-     * 
+     *
      * @return Illuminate\Http\Response
      * @return Illuminate\Http\Request
      */
-    public function store(Request $request) 
+    public function store(Request $request)
     {
         $this->validate($request, [
             'title' => 'required|max:255',
@@ -53,13 +56,13 @@ class CourseSectionQuizController extends Controller
 
         $quiz = new CourseSectionQuiz($request->all());
         $quiz->slug = str_slug($request->title, '-');
-        
+
         $quiz->save();
 
         return response()
             ->json([
                 'saved' => true,
-                'id' => $quiz->id,
+                'quiz' => $quiz,
                 'message' => 'Quiz Saved'
             ]);
 

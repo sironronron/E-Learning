@@ -9,8 +9,23 @@ use Illuminate\Http\Request;
 use App\Models\Cart\Cart;
 use App\Models\Cart\CartItem;
 
+// User
+use Auth;
+
+// Course
+use App\Models\Course\Course;
+
 class CartController extends Controller
 {
+    /**
+     * Middleware
+     */
+    public function __construct()
+    {
+        return $this->middleware('auth:api');
+    }
+
+
     /**
      * Display a listing of the resource
      * 
@@ -18,7 +33,14 @@ class CartController extends Controller
      */
     public function index()
     {
-        // --
+        // Get all carts
+        $carts = Cart::where('user_id', Auth::user()->id)
+            ->get();
+
+        return response()
+            ->json([
+                'carts' => $carts
+            ]);
     }
 
     /**
@@ -28,7 +50,7 @@ class CartController extends Controller
      */
     public function create()
     {
-        // --
+        //
     }
 
     /**
@@ -39,7 +61,29 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        // --
+        if (Auth::user()->cart) {
+            $cart = Cart::where('user_id', Auth::user()->id)
+            ->firstOrFail();
+        } else {
+            $cart = new Cart();
+            $cart->user_id = Auth::user()->id;
+            $cart->save();
+        }
+
+        $cartItem = new CartItem();
+
+        $cartItem->cart_id = $cart->id;
+        $cartItem->course_id = $request->course_id;
+        $cartItem->price = $request->price;
+
+        $cartItem->save();
+
+        return response()
+            ->json([
+                'saved' => true,
+                'id' => $cartItem->id,
+                'message' => "Course is added to your cart."
+            ]);
     }
 
     /**

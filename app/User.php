@@ -19,8 +19,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'biography', 'facebook_link', 'twitter_link', 'youtube_link', 'role_id', 'birthday', 'phone', 'introduction'
+        'name', 'username', 'email', 'password', 'biography', 'facebook_link', 'twitter_link', 'youtube_link', 'role_id', 'birthday', 'phone', 'introduction', 'last_login_at', 'last_login_ip'
     ];
+
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that should be hidden for arrays.
@@ -124,8 +126,65 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     /**
      * @return array
      */
-    public function postReactions()
+    public function instructorQuestions()
     {
-        return $this->hasMany('App\Models\Reaction\PostVote', 'user_id');   
+        return $this->belongsTo('App\Models\User\UserInstructorQuestion', 'user_id');
     }
+
+    /**
+     * @return array
+     */
+    public function cart()
+    {
+        return $this->hasOne('App\Models\Cart\Cart', 'user_id');
+    }
+
+    /**
+     * @return array
+     */
+    public function searches()
+    {
+        return $this->hasMany('App\Models\User\UserSearch', 'user_id');
+    }
+
+    /**
+     * @return array
+     */
+    public function reviews()
+    {
+        return $this->hasMany('App\Models\Course\CourseRating');
+    }
+
+    /**
+     * @return array
+     */
+    public function qnas()
+    {
+        return $this->hasMany('App\Models\Course\CourseQANDA');
+    }
+
+    /**
+     * @return array
+     */
+    public function announcement()
+    {
+        return $this->hasMany('App\Models\Course\CourseAnnouncement');
+    }
+
+    /**
+     * Return Lessons
+     *
+     * @return array
+     */
+    public function lesson()
+    {
+        return $this->hasMany('App\Models\Course\CourseUserProgress');
+    }
+
+    public function myReviews()
+    {
+        return $this->hasMany('App\Models\Course\CourseRating', 'teach_id')
+            ->where('comments', '!=', null);
+    }
+
 }

@@ -18,7 +18,8 @@ class CreateCourseCurriculumSectionsTable extends Migration
             $table->integer('course_id')->unsigned();
             $table->string('title');
             $table->string('slug');
-            $table->integer('order_index')->default(0);
+            $table->integer('order_index')->unsigned()->default(1);
+            $table->time('total_duration')->nullable();
             $table->timestamps();
         });
     }

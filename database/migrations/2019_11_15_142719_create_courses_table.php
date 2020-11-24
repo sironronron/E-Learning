@@ -17,8 +17,8 @@ class CreateCoursesTable extends Migration
             $table->bigIncrements('id');
 
             // User
-            $table->integer('teacher_id')->unsigned();
-            // $table->foreign('teacher_id')->references('id')->on('users');
+            $table->bigInteger('teacher_id')->unsigned();
+            $table->foreign('teacher_id')->references('id')->on('users');
 
             // Course Basic
             $table->string('title');
@@ -29,16 +29,16 @@ class CreateCoursesTable extends Migration
             $table->longText('description');
 
             // Category
-            $table->integer('category_id')->unsigned();
-            // $table->foreign('category_id')->references('id')->on('course_categories');
+            $table->bigInteger('category_id')->unsigned();
+            $table->foreign('category_id')->references('id')->on('course_categories');
 
             // Published
-            $table->enum('status', ['PUBLISHED', 'DRAFT', 'PENDING', 'APPROVED'])->default('PENDING');
+            $table->enum('status', ['UNPUBLISH', 'PUBLISHED', 'DRAFT', 'PENDING', 'APPROVED'])->default('PENDING');
+            $table->boolean('approved')->default(0)
+                ->comments('0 if not approved', '1 if approved');
 
             // Language
-            $table->enum('language', ['ENGLISH'])->default('ENGLISH');
-
-            // Befire $table->integer('language_id')->unsigned();
+            $table->enum('language', ['English'])->default('English');
 
             // Level
             $table->enum('level', ['BEGINNER', 'ADVANCE', 'INTERMEDIATE'])->default('BEGINNER');

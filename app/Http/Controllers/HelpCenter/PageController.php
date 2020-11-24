@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\HelpCenter\Category;
 use App\Models\HelpCenter\Post;
-use App\Models\Reaction\PostVote;
 
 use Auth;
 class PageController extends Controller
@@ -72,6 +71,7 @@ class PageController extends Controller
                 'category' => $category,
                 'post' => $post,
                 'categories' => $categories,
+                'related' => $related
             ]);
     }
 }

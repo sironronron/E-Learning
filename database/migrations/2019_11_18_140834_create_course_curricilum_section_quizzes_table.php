@@ -15,10 +15,27 @@ class CreateCourseCurricilumSectionQuizzesTable extends Migration
     {
         Schema::create('course_curriculum_section_quizzes', function (Blueprint $table) {
             $table->bigIncrements('id');
+
+            // Title - Slug
             $table->string('title');
             $table->string('slug');
-            $table->integer('course_curriculum_section_id')->unsigned();
+            
+            // Relationship
+            $table->bigInteger('bank_id')->unsigned();
+            // $table->foreign('bank_id')->references('id')->on('course_quiz_banks')->onDelete('cascade');
+
+            $table->bigInteger('course_id')->unsigned();
+            $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
+
+            $table->bigInteger('section_id')->unsigned();
+            $table->foreign('section_id')->references('id')->on('course_curriculum_sections')->onDelete('cascade');
+
+            // Course Section Quiz Instruction
             $table->text('instruction');
+            
+            // Order Index
+            $table->integer('order_index')->unsigned()->default(0);
+            
             $table->timestamps();
         });
     }

@@ -18,15 +18,15 @@ class CartItem extends Model
      */
     public function cart()
     {
-        return $this->hasMany('App\Models\Cart\Cart', 'cart_id');
+        return $this->belongsTo('App\Models\Cart\Cart', 'cart_id');
     }
 
     /**
      * 
      * @return array
      */
-    public function course()
+    public function courses()
     {
-        return $this->hasMany('App\Models\Course\Course', 'course_id');
+        return $this->belongsToMany('App\Models\Course\Course', 'course_id');
     }
 }

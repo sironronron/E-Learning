@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Heroacademy'),
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'env' => env('APP_ENV', 'production'),
+    'env' => env('APP_ENV', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,11 +52,11 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://127.0.0.1:8000'),
+    'url' => env('APP_URL', 'http://192.168.2.112:8000'),
 
     'asset_url' => env('ASSET_URL', null),
 
-    'client_url' => env('CLIENT_URL', 'http://localhost:3000'),
+    'client_url' => env('CLIENT_URL', 'http://http://192.168.2.112:3000'),
 
     /*
     |--------------------------------------------------------------------------
